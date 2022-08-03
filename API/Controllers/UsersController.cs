@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
@@ -22,17 +23,17 @@ namespace API.Controllers
         }
 
         [HttpGet] // api/users
-        public ActionResult<IEnumerable<AppUser>> GetUsers()
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
-           var users = _context.Users.ToList();
-           return users;
+           var users = await _context.Users.ToListAsync();
+           return Ok(users);
         }
 
         [HttpGet("{id}")] // api/users/1
-        public ActionResult<AppUser> GetUser(int id)
+        public async Task<ActionResult<AppUser>> GetUser(int id)
         {
-            var user = _context.Users.Find(id);
-            return user;
+            var user = await _context.Users.FindAsync(id);
+            return Ok(user);
         }
     }
     
