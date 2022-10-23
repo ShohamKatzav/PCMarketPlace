@@ -1,0 +1,77 @@
+[
+    {
+      "UserName": "Julie",
+      "DateOfBirth": "2002-01-27",
+      "KnownAs": "Julie",
+      "Created": "2019-11-09",
+      "LastActive": "2020-06-13",
+      "City": "Leland",
+      "Country": "Uzbekistan",
+      "Products": [
+        {
+          "Category": "Mouse",
+          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Mouse"
+        }
+      ]
+    },
+    {
+      "UserName": "Araceli",
+      "DateOfBirth": "1968-10-16",
+      "KnownAs": "Araceli",
+      "Created": "2019-07-20",
+      "LastActive": "2020-06-13",
+      "City": "Cumberland",
+      "Country": "Armenia",
+      "Products": [
+        {
+          "Category": "PC",
+          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\PC"
+        }
+      ]
+    },
+    {
+      "UserName": "Rochelle",
+      "DateOfBirth": "1952-06-09",
+      "KnownAs": "Rochelle",
+      "Created": "2020-02-09",
+      "LastActive": "2020-06-14",
+      "City": "Sparkill",
+      "Country": "Uganda",
+      "Products": [
+        {
+          "Category": "Keyboard",
+          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Keyboard"
+        }
+      ]
+    },
+    {
+      "UserName": "Shawn",
+      "DateOfBirth": "1959-11-02",
+      "KnownAs": "Shawn",
+      "Created": "2020-01-01",
+      "LastActive": "2020-05-09",
+      "City": "Brooktrails",
+      "Country": "British Indian Ocean Territory",
+      "Products": [
+        {
+          "Category": "Keyboard",
+          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Keyboard"
+        }
+      ]
+    },
+    {
+      "UserName": "Laurel",
+      "DateOfBirth": "1995-08-08",
+      "KnownAs": "Laurel",
+      "Created": "2019-05-08",
+      "LastActive": "2020-05-17",
+      "City": "Muse",
+      "Country": "Martinique",
+      "Products": [
+        {
+          "Category": "Mouse",
+          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Mouse"
+        }
+      ]
+    }
+  ]
