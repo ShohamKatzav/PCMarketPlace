@@ -10,7 +10,7 @@
       "Products": [
         {
           "Category": "Mouse",
-          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Mouse"
+          "PhotoUrl": "https://localhost:5001:/Users/Shoham/Desktop/HackerU/MarketingApp/API/Pictures/Mouse"
         }
       ]
     },

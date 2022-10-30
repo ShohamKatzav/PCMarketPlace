@@ -18,6 +18,7 @@ namespace API.Extensions
         {
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 

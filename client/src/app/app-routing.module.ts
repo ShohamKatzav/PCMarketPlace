@@ -7,6 +7,7 @@ import { ListsComponent } from './lists/lists.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
+import { ProductListComponent } from './product/product-list/product-list.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'members', // localhost:4200/members
         loadChildren: () => import('./modules/members.module').then(mod => mod.MembersModule)
+      },
+      {
+        path: 'products', 
+        loadChildren: () => import('./modules/products.module').then(mod => mod.ProductsModule)
       },
       {
         path: 'lists',

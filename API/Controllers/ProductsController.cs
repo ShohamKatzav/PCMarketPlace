@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet] // api/products
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
         {
            var products = await _productRepository.GetProductsAsync();
            return Ok(products);
