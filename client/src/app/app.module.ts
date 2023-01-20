@@ -16,6 +16,7 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { SharedModule } from './modules/shared.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
     BrowserAnimationsModule,
     FormsModule,
     CoreModule,
+    SharedModule
   ],
   providers: [
     {

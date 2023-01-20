@@ -10,7 +10,7 @@
       "Products": [
         {
           "Category": "Mouse",
-          "PhotoUrl": "https://localhost:5001:/Users/Shoham/Desktop/HackerU/MarketingApp/API/Pictures/Mouse"
+          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
         }
       ]
     },
@@ -25,7 +25,7 @@
       "Products": [
         {
           "Category": "PC",
-          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\PC"
+          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
         }
       ]
     },
@@ -40,7 +40,7 @@
       "Products": [
         {
           "Category": "Keyboard",
-          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Keyboard"
+          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
         }
       ]
     },
@@ -55,7 +55,7 @@
       "Products": [
         {
           "Category": "Keyboard",
-          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Keyboard"
+          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
         }
       ]
     },
@@ -70,7 +70,7 @@
       "Products": [
         {
           "Category": "Mouse",
-          "PhotoUrl": "C:\\Users\\Shoham\\Desktop\\HackerU\\MarketingApp\\API\\Pictures\\Mouse"
+          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
         }
       ]
     }
