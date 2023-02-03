@@ -1,0 +1,24 @@
+
+  
+  <form [formGroup]="createDealForm" (ngSubmit)="create()" >
+
+    <table formArrayName="products">
+      <tbody>
+        <tr *ngFor="let item of getProducts().controls;let i=index" [formGroupName]="i">
+          <td><input placeholder="Name" formControlName="Name"></td>
+          <td><input placeholder="Category" formControlName="Category"></td>
+          <td><input placeholder="Price" formControlName="Price"></td>
+          <td><button mat-button color="accent" (click)="Removeitem(i)">(-)</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      <a mat-raised-button color="primary" (click)="Addnewrow()">Add New (+)</a>
+    </div>
+
+    <div class="example-button-row" style="margin-top: 5px">
+      <button mat-raised-button color="primary">Submit</button> |
+      <button mat-raised-button color="accent">Clear</button>
+    </div>
+  </form>

@@ -1,4 +1,6 @@
-import { Product } from "./product";
+import { AppUserPhoto } from "./appUserPhoto";
+
+
 
 export interface Member {
     id: number;
@@ -9,5 +11,5 @@ export interface Member {
     lastActive: Date;
     city: string;
     country: string;
-    products: Product[];
+    appUserPhoto: AppUserPhoto;
 }

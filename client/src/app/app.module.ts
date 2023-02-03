@@ -10,14 +10,17 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { MessagesComponent } from './messages/messages.component';
-import { ListsComponent } from './lists/lists.component'
 import { CoreModule } from './modules/core.module';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { SharedModule } from './modules/shared.module';
-
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { CreateDealComponent } from './deals/create-deal/create-deal.component';
+import { DealListComponent } from './deals/deal-list/deal-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,8 +28,11 @@ import { SharedModule } from './modules/shared.module';
     HomeComponent,
     RegisterComponent,
     MessagesComponent,
-    ListsComponent,
     TestErrorsComponent,
+    NotFoundComponent,
+    ServerErrorComponent,
+    CreateDealComponent,
+    DealListComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +41,8 @@ import { SharedModule } from './modules/shared.module';
     BrowserAnimationsModule,
     FormsModule,
     CoreModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

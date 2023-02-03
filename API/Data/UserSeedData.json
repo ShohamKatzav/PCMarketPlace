@@ -1,77 +1,80 @@
 [
-    {
-      "UserName": "Julie",
-      "DateOfBirth": "2002-01-27",
-      "KnownAs": "Julie",
-      "Created": "2019-11-09",
-      "LastActive": "2020-06-13",
-      "City": "Leland",
-      "Country": "Uzbekistan",
-      "Products": [
-        {
-          "Category": "Mouse",
-          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
-        }
-      ]
+  {
+    "UserName": "Caitlin",
+    "DateOfBirth": "1977-07-11",
+    "KnownAs": "Caitlin",
+    "Created": "2020-03-18",
+    "LastActive": "2020-05-04",
+    "City": "Kimmell",
+    "Country": "Uzbekistan",
+    "AppUserPhoto": {
+      "Url": "https://randomuser.me/api/portraits/women/54.jpg"
     },
-    {
-      "UserName": "Araceli",
-      "DateOfBirth": "1968-10-16",
-      "KnownAs": "Araceli",
-      "Created": "2019-07-20",
-      "LastActive": "2020-06-13",
-      "City": "Cumberland",
-      "Country": "Armenia",
-      "Products": [
-        {
-          "Category": "PC",
-          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
-        }
-      ]
-    },
-    {
-      "UserName": "Rochelle",
-      "DateOfBirth": "1952-06-09",
-      "KnownAs": "Rochelle",
-      "Created": "2020-02-09",
-      "LastActive": "2020-06-14",
-      "City": "Sparkill",
-      "Country": "Uganda",
-      "Products": [
-        {
-          "Category": "Keyboard",
-          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
-        }
-      ]
-    },
-    {
-      "UserName": "Shawn",
-      "DateOfBirth": "1959-11-02",
-      "KnownAs": "Shawn",
-      "Created": "2020-01-01",
-      "LastActive": "2020-05-09",
-      "City": "Brooktrails",
-      "Country": "British Indian Ocean Territory",
-      "Products": [
-        {
-          "Category": "Keyboard",
-          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
-        }
-      ]
-    },
-    {
-      "UserName": "Laurel",
-      "DateOfBirth": "1995-08-08",
-      "KnownAs": "Laurel",
-      "Created": "2019-05-08",
-      "LastActive": "2020-05-17",
-      "City": "Muse",
-      "Country": "Martinique",
-      "Products": [
-        {
-          "Category": "Mouse",
-          "PhotoUrl": "https://res.cloudinary.com/diamedrhv/image/upload/v1667156891/jnvvvs7y9sc4x8j8zl7q.jpg"
-        }
-      ]
+    "Deals": [
+      {
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "PC",
+            "Category": "PC",
+            "Price": 50
+          },
+          {
+            "Name": "PC2",
+            "Category": "PC",
+            "Price": 50
+          }
+        ],
+        "Status": ""
+      }
+    ]
+  },
+  {
+    "UserName": "Fanny",
+    "DateOfBirth": "1973-05-19",
+    "KnownAs": "Fanny",
+    "Created": "2019-08-01",
+    "LastActive": "2020-06-23",
+    "City": "Thornport",
+    "Country": "Bhutan",
+    "AppUserPhoto": {
+      "Url": "https://randomuser.me/api/portraits/women/54.jpg"
     }
-  ]
+  },
+  {
+    "UserName": "Leonor",
+    "DateOfBirth": "1980-11-18",
+    "KnownAs": "Leonor",
+    "Created": "2019-04-04",
+    "LastActive": "2020-06-25",
+    "City": "Dale",
+    "Country": "Benin",
+    "AppUserPhoto": {
+      "Url": "https://randomuser.me/api/portraits/women/54.jpg"
+    }
+  },
+  {
+    "UserName": "Marie",
+    "DateOfBirth": "2004-03-05",
+    "KnownAs": "Marie",
+    "Created": "2019-05-15",
+    "LastActive": "2020-06-19",
+    "City": "Grazierville",
+    "Country": "Nauru",
+    "AppUserPhoto": {
+      "Url": "https://randomuser.me/api/portraits/women/54.jpg"
+    }
+  },
+  {
+    "UserName": "Justine",
+    "DateOfBirth": "2001-12-07",
+    "KnownAs": "Justine",
+    "Created": "2020-06-03",
+    "LastActive": "2020-06-08",
+    "City": "Magnolia",
+    "Country": "Kenya",
+    "AppUserPhoto": {
+      "Url": "https://randomuser.me/api/portraits/women/54.jpg"
+    }
+  }
+]

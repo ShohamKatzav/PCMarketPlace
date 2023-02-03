@@ -4,6 +4,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FileUploadModule } from "ng2-file-upload";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     BsDropdownModule,
     ToastrModule,
     TabsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FileUploadModule,
+    FormsModule,
   ]
 })
 export class SharedModule { }

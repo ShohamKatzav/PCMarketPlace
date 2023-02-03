@@ -10,6 +10,7 @@ export class TestErrorsComponent implements OnInit {
 
 
   baseUrl = 'https://localhost:5001/api/'
+  validationErrors: string[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -49,12 +50,12 @@ export class TestErrorsComponent implements OnInit {
     );
   }
   get400Validation() {
-    this.http.post(this.baseUrl + 'account/register', {}).subscribe(
-      {
-        next: res => console.log(res),
-        error: error => console.log(error)
-      }
-    );
+    this.http.post(this.baseUrl + 'account/register', {}).subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+      this.validationErrors = error;
+    });
   }
 
 }

@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CreateDealComponent } from './deals/create-deal/create-deal.component';
+import { DealListComponent } from './deals/deal-list/deal-list.component';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { AuthGuard } from './guards/auth.guard';
+import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 import { HomeComponent } from './home/home.component';
-import { ListsComponent } from './lists/lists.component';
-import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-import { MemberListComponent } from './members/member-list/member-list.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MessagesComponent } from './messages/messages.component';
-import { ProductListComponent } from './product/product-list/product-list.component';
 
 const routes: Routes = [
   {
@@ -25,12 +27,17 @@ const routes: Routes = [
         loadChildren: () => import('./modules/members.module').then(mod => mod.MembersModule)
       },
       {
-        path: 'products', 
-        loadChildren: () => import('./modules/products.module').then(mod => mod.ProductsModule)
+        path: 'member/edit',
+        component: MemberEditComponent,
+        canDeactivate: [PreventUnsavedChangesGuard]
       },
       {
-        path: 'lists',
-        component: ListsComponent,
+        path: 'newdeal', 
+        component: CreateDealComponent
+      },
+      {
+        path: 'deals', 
+        component: DealListComponent
       },
       {
         path: 'messages',
@@ -42,7 +49,8 @@ const routes: Routes = [
     path: 'errors',
     component: TestErrorsComponent
   },
-
+  {path: 'not-found', component: NotFoundComponent},
+  {path: 'server-error', component: ServerErrorComponent},
   {
     path: '**', // catch undefined address
     component: HomeComponent,

@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 })
 export class AccountService {
 
-  //baseUrl = 'https://localhost:5001/api/';
   baseUrl = environment.apiUrl;
   private currentUserSource$ = new ReplaySubject<User>(1);
   public currentUser$ = this.currentUserSource$.asObservable();

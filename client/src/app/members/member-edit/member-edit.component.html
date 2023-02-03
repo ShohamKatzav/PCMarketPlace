@@ -1,0 +1,65 @@
+<div *ngIf="member" class="row">
+    <div class="col-4">
+      <h1>{{member.knownAs}}</h1>
+    </div>
+    <div class="col-8">
+      <div class="alert alert-info" *ngIf="editForm.dirty">
+        <strong>Information</strong>
+        You have made changes. any unsaved changes will be lost
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card">
+        <img [src]="member.appUserPhoto.url" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
+  
+        <div class="card-body">
+          <div>
+            <strong>Location:</strong>
+            <p>{{member.city}}, {{member.country}}</p>
+          </div>
+          <div>
+            <strong>Age:</strong>
+            <p>{{member.age}}</p>
+          </div>
+          <div>
+            <strong>Last Active:</strong>
+            <p>{{member.lastActive}}</p>
+          </div>
+          <div>
+            <strong>Member since:</strong>
+            <p>{{member.created}}</p>
+          </div>
+  
+        </div>
+        <div class="card-footer">
+          <button [disabled]="editForm.pristine" form="editForm" type="submit" class="btn btn-success btn-block">Save Changes</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <tabset class="member-tabset">
+        <tab heading="Location"><br/>
+          <form #editForm="ngForm" (ngSubmit)="updateMember()" id="editForm">
+            <h4 class="mt-2">Location Details</h4> <br/><br/>
+  
+            <div class="form-block form-group">
+              
+              <label for="city">City:</label>
+              <input name="city" [(ngModel)]="member.city" class="form-control mx-2" type="text">
+              <label for="country">Country:</label>
+              <input name="country" [(ngModel)]="member.country" class="form-control mx-2" type="text">
+            </div>
+          </form>
+        </tab>
+        <tab heading="Contact">
+          <app-photo-change [member]="member"></app-photo-change>
+        </tab>
+        <tab heading="Photo">
+          <app-photo-change [member]="member"></app-photo-change>
+        </tab>
+      </tabset>
+  
+    </div>
+  
+  </div>
+  

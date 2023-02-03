@@ -4,13 +4,13 @@
         <ul class="navbar-nav mr-auto">
             <ng-container *ngIf="currentUser$ | async">
                 <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active" routerLink="/products">Products</a>
+                    <a class="nav-link" routerLinkActive="active" routerLink="/deals">Available Deals</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="/newdeal">List a new deal</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active">List a new product</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLinkActive="active">Messages</a>
@@ -26,7 +26,8 @@
                 {{user.username | titlecase}}
             </a>
             <div class="dropdown-menu mt-3" *dropdownMenu>
-                <a class="dropdown-item">Edit Profile</a>
+                <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
+                <li class="dropdown-divider"></li>
                 <a class="dropdown-item" (click)="logout();">Logout</a>
             </div>
         </div>

@@ -19,12 +19,8 @@ namespace API.Entities
         public DateTime LastActive { get; set; } = DateTime.Now;
         public string City { get; set; }
         public string Country { get; set; }
+        public Photo AppUserPhoto { get; set; }
+        public ICollection<Deal> Deals { get; set; } = new List<Deal>();
 
-        public ICollection<Product> Products { get; set; }
-
-        public int GetAge()
-        {
-            return DateOfBirth.CalculateAge();
-        }
     }
 }
