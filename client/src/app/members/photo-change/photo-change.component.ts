@@ -31,7 +31,7 @@ export class PhotoChangeComponent implements OnInit {
 
   deletePhoto(photoId: number) {
     this.memberService.deletePhoto(photoId).subscribe(() => {
-      this.member.appUserPhoto.url = "./assets/user.png";
+      this.member.appUserPhoto.url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn2IRi5cxtjkZed0OKEB0mJTN7Uvb0QVS1lqiFHVh5&s";
     });
   }
 

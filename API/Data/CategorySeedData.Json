@@ -21,6 +21,10 @@
     },
     {
         "Id": 6,
+        "Name": "Headphones"
+    },
+    {
+        "Id": 7,
         "Name": "Other"
     }
 ]

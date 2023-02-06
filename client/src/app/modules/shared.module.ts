@@ -13,6 +13,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
+
     
   ],
   declarations: [],
@@ -23,7 +24,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     NgxSpinnerModule,
     FileUploadModule,
     ReactiveFormsModule,
-    FormsModule 
+    FormsModule,
+
   ]
 })
 export class SharedModule { }

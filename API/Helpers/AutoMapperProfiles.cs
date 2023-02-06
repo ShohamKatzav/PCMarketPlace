@@ -20,7 +20,6 @@ namespace API.Helpers
                 {
                     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
                 });
-
             CreateMap<Photo, PhotoDto>();
 
             CreateMap<MemberUpdateDto, AppUser>();
@@ -34,13 +33,7 @@ namespace API.Helpers
                 });
             CreateMap<DealDto, Deal>();
 
-            CreateMap<DealUpdateDto, Deal>()
-            .ForMember(
-                dest => dest.LastModified,
-                opt =>
-                {
-                    opt.MapFrom((x) => DateTime.Now);
-                });
+            CreateMap<DealUpdateDto, Deal>();
 
 
             CreateMap<Product, ProductDto>();
@@ -48,6 +41,8 @@ namespace API.Helpers
             CreateMap<Deal, CreateDealDto>();
             CreateMap<CreateDealDto, Deal>();
             CreateMap<DealUpdateDto, DealDto>();
+
+            CreateMap<DealPhoto, PhotoDto>();
         }
     }
 }

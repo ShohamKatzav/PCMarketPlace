@@ -1,3 +1,4 @@
+import { Photo } from "./Photo";
 import { Product } from "./product";
 
 
@@ -9,4 +10,5 @@ export interface Deal{
     tottalPrice: number;
     status: string;
     description: string;
+    dealPhoto: Photo;
 }

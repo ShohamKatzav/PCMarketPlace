@@ -18,6 +18,7 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { CreateDealComponent } from './deals/create-deal/create-deal.component';
 import { FooterComponent } from './footer/footer.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { FooterComponent } from './footer/footer.component';
     ServerErrorComponent,
     CreateDealComponent,
     FooterComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

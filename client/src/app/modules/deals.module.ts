@@ -6,7 +6,9 @@ import { DealDetailsComponent } from '../deals/deal-details/deal-details.compone
 import { SharedModule } from './shared.module';
 import { MyDealsComponent } from '../deals/my-deals/my-deals.component';
 import { EditDealComponent } from '../deals/edit-deal/edit-deal.component';
+import { ProductListComponent } from '../products/product-list/product-list.component';
 import { ProductCardComponent } from '../products/product-card/product-card.component';
+import { PhotoChangeComponent } from '../deals/photo-change/photo-change.component';
 
 
 const routes: Routes = [
@@ -23,8 +25,11 @@ const routes: Routes = [
     MyDealsComponent,
     DealListComponent,
     DealDetailsComponent,
-    ProductCardComponent,
     EditDealComponent,
+    ProductListComponent,
+    ProductCardComponent,
+    PhotoChangeComponent
+
   ],
   imports: [
     CommonModule,

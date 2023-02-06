@@ -8,6 +8,7 @@ using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -18,12 +19,14 @@ namespace API.Controllers
         private readonly IDealRepository _dealRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IPhotoService _photoService;
 
-        public DealsController(IDealRepository dealRepository, IMapper mapper, IUserRepository userRepository)
+        public DealsController(IDealRepository dealRepository, IMapper mapper, IUserRepository userRepository, IPhotoService photoService)
         {
             _dealRepository = dealRepository;
             _mapper = mapper;
             _userRepository = userRepository;
+            _photoService = photoService;
         }
 
         [HttpGet]
@@ -40,7 +43,7 @@ namespace API.Controllers
             return Ok(deals);
         }
 
-        
+
 
         [HttpGet("GetDeal/{dealId}", Name = "GetDeal")]
         public async Task<ActionResult<DealDto>> GetDealDto(int dealId)
@@ -75,7 +78,8 @@ namespace API.Controllers
             var deal = await _dealRepository.GetDealForUpdateAsync(dealUpdateDto.Id);
             deal.Description = dealUpdateDto.Description;
             List<Product> Products = _mapper.Map<List<Product>>(dealUpdateDto.Products);
-            deal.Products = Products; 
+            deal.LastModified = DateTime.Now;
+            deal.Products = Products;
             _dealRepository.Update(deal);
 
             if (await _userRepository.SaveAllAsync()) return NoContent();
@@ -96,6 +100,53 @@ namespace API.Controllers
             if (await _userRepository.SaveAllAsync()) return Ok();
 
             return BadRequest("Failed to delete the deal");
+        }
+
+        [HttpPost("add-photo")] // api/users/add-photo
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
+        {
+            Request.Headers.TryGetValue("DealId", out var headerValue);
+
+            var dealId = headerValue;
+            var deal = await _dealRepository.GetDealForUpdateAsync(int.Parse(dealId));
+            var result = await _photoService.UploadPhotoAsync(file);
+
+            if (result.Error != null) return BadRequest(result.Error.Message);
+
+            var photo = new DealPhoto
+            {
+                Url = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId
+            };
+            deal.DealPhoto = photo;
+
+            if (await _dealRepository.SaveAllAsync())
+            {
+                return CreatedAtRoute("GetDeal", new { dealId = deal.Id }, _mapper.Map<PhotoDto>(photo));
+            }
+            return BadRequest("Problem adding photo");
+
+        }
+        [HttpDelete("delete-photo/{dealId}")] // api/users/delete-photo/1
+        public async Task<ActionResult> DeletePhoto(int dealId)
+        {
+            var deal = await _dealRepository.GetDealForUpdateAsync(dealId);
+
+            var photo = deal.DealPhoto;
+
+            if (photo == null) return NotFound();
+
+            if (photo.PublicId != null)
+            {
+                var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+                if (result.Error != null) return BadRequest(result.Error.Message);
+            }
+
+            deal.DealPhoto = new DealPhoto() { Url = "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" };
+
+            if (await _userRepository.SaveAllAsync()) return Ok();
+
+            return BadRequest("Failed to delete the photo");
         }
     }
 }

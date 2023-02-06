@@ -1,22 +1,28 @@
 <div class="card mb-4">
+  <ul class="list-inline member-icons animate text-center">
+    <li class="list-inline-item">
+      <button routerLink="/members/{{member.userName}}" class="btn btn-primary">
+        <i class="fa fa-user"></i>
+      </button>
+    </li>
+  </ul>
   <div class="card-img-wrapper">
+    
+  </div>
+  <div *ngIf="member.appUserPhoto?.url" else hasNoImg>
     <img class="card-img-top" src="{{member.appUserPhoto.url}}" alt="{{member.knownAs}}">
-    <ul class="list-inline member-icons animate text-center">
-      <li class="list-inline-item">
-        <button routerLink="/members/{{member.userName}}" class="btn btn-primary">
-          <i class="fa fa-user"></i>
-        </button>
-      </li>
-      <li class="list-inline-item"><button class="btn btn-primary"><i class="fa fa-envelope"></i></button></li>
-    </ul>
   </div>
-  <div class="card-body p-1">
-    <h6 class="card-title text-center mb-1">
-      <i class="fa fa-user mr-2"></i>
-      {{member.knownAs}}
-    </h6>
-    <p class="card-text text-muted text-center">
-      {{member.city}}
-    </p>
-  </div>
+  <ng-template #hasNoImg>
+    <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn2IRi5cxtjkZed0OKEB0mJTN7Uvb0QVS1lqiFHVh5&s" alt="{{member.knownAs}}">
+  </ng-template>
+
+</div>
+<div class="card-body p-1">
+  <h6 class="card-title text-center mb-1">
+    <i class="fa fa-user mr-2"></i>
+    {{member.knownAs}}
+  </h6>
+  <p class="card-text text-muted text-center">
+    {{member.city}}
+  </p>
 </div>

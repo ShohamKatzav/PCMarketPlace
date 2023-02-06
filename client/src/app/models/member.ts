@@ -1,4 +1,4 @@
-import { AppUserPhoto } from "./appUserPhoto";
+import { Photo } from "./Photo";
 import { Deal } from "./deal";
 
 
@@ -9,9 +9,11 @@ export interface Member {
     age: number;
     knownAs: string;
     created: Date;
-    lastActive: Date;
     city: string;
     country: string;
-    appUserPhoto: AppUserPhoto;
+    authorization: string;
+    email: string;
+    phone: number;
+    appUserPhoto: Photo;
     deals: Deal[];
 }

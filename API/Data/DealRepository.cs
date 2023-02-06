@@ -44,7 +44,8 @@ namespace API.Data
         public async Task<Deal>GetDealForUpdateAsync(int dealid)
         {
             return await _context.Deals.Include(p => p.Products)
-            .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
+            .Include(d => d.DealPhoto)
+            .Where(d=> d.Id == dealid).SingleAsync();
         }
     
         public void Insert(Deal deal)

@@ -1,8 +1,9 @@
 <div *ngIf="deal">
     <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col" *ngFor="let product of products">
-            <app-product-card [product]="product"></app-product-card>
-        </div>
+        <h2 class="mt-3">Deal Description:</h2>
+        <h2>{{deal.description}}</h2>
+        <h3 class="mt-3">Include the products:</h3>
+        <app-product-list class="col-7" [products]="products"></app-product-list>
 
         <h4 class="mt-5">Created on: {{deal.created | date:'medium'}}</h4>
         <h4>Last Modified on: {{deal.lastModified | date:'medium'}}</h4>

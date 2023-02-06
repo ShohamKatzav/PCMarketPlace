@@ -1,9 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
+import { Member } from 'src/app/models/member';
 import { Product } from 'src/app/models/product';
 import { DealService } from 'src/app/services/deal.service';
+import { MemberService } from 'src/app/services/member.service';
 
 
 @Component({
@@ -12,13 +18,27 @@ import { DealService } from 'src/app/services/deal.service';
   styleUrls: ['./edit-deal.component.css']
 })
 export class EditDealComponent implements OnInit {
+  deals$: Observable<Deal[]>;
+  member: Member;
 
+  categories: Category[];
   deal: Deal;
   products: Product[];
   model: any = {};
   items!: FormArray;
   dealForm: FormGroup;
-  constructor(private route: ActivatedRoute, private dealService: DealService, private fb: FormBuilder) { }
+  constructor(private route: ActivatedRoute, private dealService: DealService,
+    private memberService: MemberService,private fb: FormBuilder,
+    private toastr: ToastrService, private router: Router) { 
+    this.memberService.currentMember$.pipe(take(1)).subscribe(
+      {
+        next: response => {
+          this.member = response;
+          this.loadDeals();
+        }
+      }
+    );
+  }
 
   ngOnInit(): void {
     this.loadDeal();
@@ -26,14 +46,23 @@ export class EditDealComponent implements OnInit {
       description: new FormControl('', Validators.required),
       products: new FormArray([]),
     });
+    this.categories = JSON.parse(localStorage.getItem("categories") || '{}')
   }
 
   getProducts() {
     return this.dealForm.get("products") as FormArray;
   }
+  getDescription() {
+    return this.dealForm.get("description")?.value as string;
+  }
   addNewRow() {
-    this.items = this.getProducts();
-    this.items.push(this.genRow());
+    if (this.getProducts().controls.length < 10)
+    {
+      this.items = this.getProducts();
+      this.items.push(this.genRow());
+    }
+    else
+      this.toastr.warning("Sorry, maximux 10 products per deal.");
   }
   removeItem(index: any) {
     this.items = this.getProducts();
@@ -43,7 +72,6 @@ export class EditDealComponent implements OnInit {
 
   initTheFormWithDealInfo(deal: Deal) {
     var items2: FormArray[] = [this.rowForEveryProduct()];
-    console.log(items2);
     this.dealForm.patchValue({
       description: deal.description,
       products: items2
@@ -75,15 +103,29 @@ export class EditDealComponent implements OnInit {
   }
 
   clear() {
-    while (this.items.length > 0)
-      this.removeItem(0);
+    this.dealForm.patchValue({
+      description: "",
+    });
+    if (this.items)
+      while (this.items.length > 0)
+        this.removeItem(0);
   }
 
   edit() {
     this.model.id = this.deal.id;
-    this.model.description = this.dealForm.get("description")?.value;
-    this.model.products = Array.from(this.items.value);
-    this.dealService.edit(this.model).subscribe();
+
+    if (this.checkValidation() == 1)
+      this.toastr.error("Please Enter description (8 characters) and at least 1 product");
+
+    else if (this.checkValidation() == 2)
+      this.toastr.warning("Please do not forget any field");
+    else {
+      this.model.description = this.dealForm.get("description")?.value;
+      this.model.products = Array.from(this.items.value);
+      this.dealService.edit(this.model).subscribe();
+      this.toastr.success("Deal edited successfully");
+      this.router.navigateByUrl("/deals/my-deals");
+    }
   }
 
   loadDeal() {
@@ -94,4 +136,25 @@ export class EditDealComponent implements OnInit {
       this.initTheFormWithDealInfo(this.deal);
     });
   }
+
+  checkValidation(): number {
+    if (!this.dealForm.get("description")?.value || !Array.from(this.items.value))
+      return 1;
+    else {
+      this.model.description = this.dealForm.get("description")?.value;
+      this.model.products = Array.from(this.items.value);
+    }
+    if (!this.model.description || !this.model.products ||
+      this.model.description.length < 8 || this.model.products.length < 1) {
+      return 1;
+    }
+    if (this.items.invalid)
+      return 2;
+    return 3;
+  }
+
+  loadDeals() {
+    this.deals$ = this.dealService.getDealsForUser(this.member.id);
+  }
+
 }

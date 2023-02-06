@@ -33,9 +33,6 @@ export class DealService {
   create(model: any): Observable<any> {
     return this.http.post<Deal>(this.baseUrl + 'deals/create', model).pipe(
       map((deal: Deal) => {
-        if (deal) {
-          console.log(deal)
-        }
         return deal;
       })
     );
@@ -44,9 +41,6 @@ export class DealService {
   edit(model: any): Observable<any> {
     return this.http.put<Deal>(this.baseUrl + 'deals', model).pipe(
       map((deal: Deal) => {
-        if (deal) {
-          console.log(deal)
-        }
         return deal;
       })
     );
@@ -54,5 +48,9 @@ export class DealService {
 
   deleteDeal(dealId: number) {
     return this.http.delete(`${this.baseUrl}deals/delete-deal/${dealId}`);
+  }
+
+  deletePhoto(dealId: number) {
+    return this.http.delete(`${this.baseUrl}deals/delete-photo/${dealId}`);
   }
 }

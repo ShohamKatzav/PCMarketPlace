@@ -1,8 +1,8 @@
 
-<div class="row" *ngIf="member.appUserPhoto.url!='./assets/user.png'">
+<div class="row" *ngIf="member?.appUserPhoto?.url!='https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg'">
   <div class="col-2">
 
-    <img [src]="member.appUserPhoto.url" [alt]="member.appUserPhoto.url" class="img-thumbnail p-1">
+    <img [src]="member?.appUserPhoto?.url" [alt]="member.appUserPhoto.url" class="img-thumbnail p-1">
     <div class="text-center">
       <button (click)="deletePhoto(member.appUserPhoto.id)" class="btn btn-sm btn-danger"><i
           class="fa fa-trash fa-3x"></i></button>

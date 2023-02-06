@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IsActiveMatchOptions, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { Member } from '../models/member';
 import { User } from '../models/user';
 import { AccountService } from '../services/account.service';
 
@@ -13,6 +14,7 @@ import { AccountService } from '../services/account.service';
 export class NavComponent implements OnInit {
   model: any = {};
   currentUser$?: Observable<User>;
+  member: Member;
 
   constructor(private accountService: AccountService,
     private router: Router,
@@ -21,7 +23,11 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    this.loadMember();
+  }
+
+  loadMember() {
+    this.member = JSON.parse(localStorage.getItem("member"));
   }
 
   login() {

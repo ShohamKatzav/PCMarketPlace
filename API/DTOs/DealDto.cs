@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Entities;
 
 namespace API.DTOs
 {
@@ -14,5 +15,7 @@ namespace API.DTOs
         public ICollection<ProductDto> Products { get; set; }
         public string Status { get; set; }
         public double TottalPrice { get; set; }
+        public DealPhoto DealPhoto { get; set; }
+
     }
 }

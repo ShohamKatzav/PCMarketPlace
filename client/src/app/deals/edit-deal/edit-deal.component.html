@@ -15,9 +15,18 @@
               <div class="col">
                 <td><input type="text" class="form-control" placeholder="Name" formControlName="Name"></td>
               </div>
+              
               <div class="col">
-                <td><input type="text" class="form-control" placeholder="Category" formControlName="Category"></td>
+                <td>
+                  <select class="form-select mt-2" matNativeControl required formControlName="Category">
+                    <option *ngFor="let category of categories" [value]="category.name" [selected]="true">
+                      {{category.name}}
+                    </option>
+                  </select>
+                </td>
               </div>
+
+
               <div class="col">
                 <td><input type="number" min="0" class="form-control" placeholder="Price" formControlName="Price"></td>
               </div>
@@ -31,17 +40,17 @@
         </tbody>
       </table>
 
-
       <div>
         <button type='button' class="btn btn-sm btn-success mt-5" color="primary" (click)="addNewRow()"><i
             class="fa fa-plus fa-3x">Add Product</i></button>
       </div>
 
       <div class="example-button-row" style="margin-top: 5px">
-        <button type="submit" class="btn btn-primary" [disabled]="getProducts().length<1">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
         <button type="button" (click)="clear()" class="btn btn-secondary"
-          [disabled]="getProducts().length<1">Clear</button>
+          [disabled]="getProducts().length<1 && !getDescription()">Clear</button>
       </div>
     </form>
   </div>
+  <app-photo-change [deal]="deal"></app-photo-change>
 </div>

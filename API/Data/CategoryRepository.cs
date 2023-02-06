@@ -19,5 +19,24 @@ namespace API.Data
         {
             return  _context.Categories.ToList();
         }
+        public void Add(string categoryName)
+        {
+            _context.Categories.Add(new Category(){Name=categoryName});
+        }
+        public void Remove(int categoryId)
+        {
+            Category categoryToRemove = _context.Categories.Where(c => c.Id == categoryId).SingleOrDefault();
+            _context.Categories.Remove(categoryToRemove);
+        }
+        public void GetCategories(Category category)
+        {
+            Category categoryToUpdate = _context.Categories.Where(c => c.Id == category.Id).SingleOrDefault();
+            categoryToUpdate.Name = category.Name;
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }
