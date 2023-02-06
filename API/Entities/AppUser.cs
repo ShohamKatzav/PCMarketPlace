@@ -20,7 +20,7 @@ namespace API.Entities
         public string City { get; set; }
         public string Country { get; set; }
         public Photo AppUserPhoto { get; set; }
-        public ICollection<Deal> Deals { get; set; } = new List<Deal>();
+        public ICollection<Deal> Deals { get; set; }
 
     }
 }

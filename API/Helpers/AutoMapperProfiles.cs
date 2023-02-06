@@ -23,7 +23,7 @@ namespace API.Helpers
 
             CreateMap<Photo, PhotoDto>();
 
-            CreateMap<MemberUpdateDTO, AppUser>();
+            CreateMap<MemberUpdateDto, AppUser>();
 
             CreateMap<Deal, DealDto>()
             .ForMember(
@@ -32,10 +32,22 @@ namespace API.Helpers
                 {
                     opt.MapFrom(d => d.Products.GetTottalPrice());
                 });
+            CreateMap<DealDto, Deal>();
+
+            CreateMap<DealUpdateDto, Deal>()
+            .ForMember(
+                dest => dest.LastModified,
+                opt =>
+                {
+                    opt.MapFrom((x) => DateTime.Now);
+                });
+
 
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<Deal, CreateDealDto>();
+            CreateMap<CreateDealDto, Deal>();
+            CreateMap<DealUpdateDto, DealDto>();
         }
     }
 }

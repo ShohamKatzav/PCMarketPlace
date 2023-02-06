@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { IsActiveMatchOptions, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
@@ -21,7 +21,7 @@ export class NavComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.getCurrentUser();
+    
   }
 
   login() {
@@ -29,7 +29,6 @@ export class NavComponent implements OnInit {
       next: response => {
         this.toastr.success("Success")
         this.router.navigateByUrl('/members');
-        console.log(response);
       }
     });
   }
@@ -38,6 +37,12 @@ export class NavComponent implements OnInit {
     this.accountService.logout();
   }
 
+  myMatchOptions: IsActiveMatchOptions = {
+    queryParams: 'ignored',
+    matrixParams: 'exact',
+    paths: 'exact',
+    fragment: 'exact',
+  };
 }
 
 

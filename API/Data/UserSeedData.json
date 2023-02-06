@@ -39,7 +39,25 @@
     "Country": "Bhutan",
     "AppUserPhoto": {
       "Url": "https://randomuser.me/api/portraits/women/54.jpg"
-    }
+    },
+    "Deals": [
+      {
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Keyboard",
+            "Category": "PC",
+            "Price": 50
+          },
+          {
+            "Name": "Keyboard2",
+            "Category": "PC",
+            "Price": 50
+          }
+        ],
+        "Status": ""
+      }
+    ]
   },
   {
     "UserName": "Leonor",

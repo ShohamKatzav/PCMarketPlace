@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { take } from 'rxjs/operators';
-import { AppUserPhoto } from 'src/app/models/appUserPhoto';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
-import { MembersService } from 'src/app/services/member.service';
+import { MemberService } from 'src/app/services/member.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -20,7 +19,7 @@ export class PhotoChangeComponent implements OnInit {
   user: User;
 
   @Input() member: Member;
-  constructor(private accountService: AccountService, private memberService: MembersService) {
+  constructor(private accountService: AccountService, private memberService: MemberService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
   }
 

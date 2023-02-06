@@ -27,14 +27,14 @@ namespace API.Controllers
         // 404
         [HttpGet("not-found")]
         public ActionResult<AppUser> GetNotFound(){
-            var user = _context.Users.Find(-1);
+            var user = _context.AppUsers.Find(-1);
             if (user == null) return NotFound();
             return Ok(user);
         }
         // 500
         [HttpGet("server-error")]
         public ActionResult<string> GetServerError(){
-            var user = _context.Users.Find(-1);
+            var user = _context.AppUsers.Find(-1);
             var toReturn = user.ToString();
             return toReturn;
         }

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateDealComponent } from './deals/create-deal/create-deal.component';
 import { DealListComponent } from './deals/deal-list/deal-list.component';
+import { MyDealsComponent } from './deals/my-deals/my-deals.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
@@ -9,7 +10,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 import { HomeComponent } from './home/home.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
-import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
   {
@@ -32,16 +32,12 @@ const routes: Routes = [
         canDeactivate: [PreventUnsavedChangesGuard]
       },
       {
-        path: 'newdeal', 
-        component: CreateDealComponent
+        path: 'deals',
+        loadChildren: () => import('./modules/deals.module').then(mod => mod.DealsModule) 
       },
       {
-        path: 'deals', 
-        component: DealListComponent
-      },
-      {
-        path: 'messages',
-        component: MessagesComponent,
+        path: 'new-deal',
+        component: CreateDealComponent,
       },
     ]
   },

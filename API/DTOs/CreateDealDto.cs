@@ -7,6 +7,7 @@ namespace API.DTOs
 {
     public class CreateDealDto
     {
+        public string Description { get; set; }
         public ICollection<ProductDto> Products { get; set; }
     }
 }

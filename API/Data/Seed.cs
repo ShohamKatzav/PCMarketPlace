@@ -12,12 +12,14 @@ namespace API.Data
     {
         public static async Task SeedUsers(DataContext context)
         {
-            if (await context.Users.AnyAsync()) return;
+            if (await context.AppUsers.AnyAsync()) return;
 
 
             var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
+            var categoriesData = await System.IO.File.ReadAllTextAsync("Data/CategorySeedData.json");
 
             var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+            var categories = JsonSerializer.Deserialize<List<Category>>(categoriesData);
 
             foreach (var user in users)
             {
@@ -26,8 +28,11 @@ namespace API.Data
                 user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes("Pa$$w0rd"));
                 user.PasswordSalt = hmac.Key;
 
-                context.Users.Add(user);
+                context.AppUsers.Add(user);
             }
+
+            foreach (var category in categories)
+                context.Categories.Add(category);
 
             await context.SaveChangesAsync();
 

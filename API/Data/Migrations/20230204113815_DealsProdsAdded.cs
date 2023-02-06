@@ -3,10 +3,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Data.Migrations
 {
-    public partial class DealsProdAdded : Migration
+    public partial class DealsProdsAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AppUserPhotos_Users_AppUserId",
+                table: "AppUserPhotos");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Users",
+                table: "Users");
+
+            migrationBuilder.RenameTable(
+                name: "Users",
+                newName: "AppUsers");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_AppUsers",
+                table: "AppUsers",
+                column: "Id");
+
             migrationBuilder.CreateTable(
                 name: "Deals",
                 columns: table => new
@@ -15,17 +32,17 @@ namespace API.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
-                    AppUserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    AppUserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Deals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Deals_Users_AppUserId",
+                        name: "FK_Deals_AppUsers_AppUserId",
                         column: x => x.AppUserId,
-                        principalTable: "Users",
+                        principalTable: "AppUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,15 +76,48 @@ namespace API.Data.Migrations
                 name: "IX_Products_DealId",
                 table: "Products",
                 column: "DealId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppUserPhotos_AppUsers_AppUserId",
+                table: "AppUserPhotos",
+                column: "AppUserId",
+                principalTable: "AppUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AppUserPhotos_AppUsers_AppUserId",
+                table: "AppUserPhotos");
+
             migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Deals");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_AppUsers",
+                table: "AppUsers");
+
+            migrationBuilder.RenameTable(
+                name: "AppUsers",
+                newName: "Users");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Users",
+                table: "Users",
+                column: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppUserPhotos_Users_AppUserId",
+                table: "AppUserPhotos",
+                column: "AppUserId",
+                principalTable: "Users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

@@ -3,21 +3,23 @@
         <a class="navbar-brand" routerLink="/">PC Marketplace</a>
         <ul class="navbar-nav mr-auto">
             <ng-container *ngIf="currentUser$ | async">
-                <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active" routerLink="/deals">Available Deals</a>
+                <li class="nav-item" >
+                    <a class="nav-link" routerLinkActive="active" 
+                    [routerLinkActiveOptions]="{exact: true}"  routerLink="/deals/my-deals">My Deals</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active" routerLink="/newdeal">List a new deal</a>
+                    <a class="nav-link" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}" routerLink="/deals">Available Deals</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="/new-deal">List a new deal</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active">Messages</a>
-                </li>
             </ng-container>
             <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="/errors">Errors</a>
+                <a class="nav-link" routerLinkActive="active"  routerLink="/errors">Errors</a>
               </li>
         </ul>
 

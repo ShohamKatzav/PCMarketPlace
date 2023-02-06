@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from 'src/app/models/member';
-import { MembersService } from 'src/app/services/member.service';
+import { MemberService } from 'src/app/services/member.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -12,7 +12,7 @@ export class MemberDetailComponent implements OnInit {
 
   member: Member;
 
-  constructor(private route: ActivatedRoute, private membersService: MembersService) {}
+  constructor(private route: ActivatedRoute, private memberService: MemberService) {}
 
   ngOnInit(): void {
     this.loadMember();
@@ -20,7 +20,7 @@ export class MemberDetailComponent implements OnInit {
 
   loadMember() {
     const username = this.route.snapshot.paramMap.get('username') as string;
-    this.membersService.getMember(username).subscribe(member => {
+    this.memberService.getMember(username).subscribe(member => {
       this.member = member;
     });
   }

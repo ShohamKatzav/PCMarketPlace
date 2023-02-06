@@ -1,0 +1,47 @@
+<div *ngIf="deal">
+  <div class="mt-5">
+    <form [formGroup]="dealForm" (ngSubmit)="edit()" autocomplete="off">
+      <div class="row">
+        <div class="col-6">
+          <label for="description">Describe your deal:</label>
+          <input input type="text" class="form-control" placeholder="Description" formControlName="description">
+        </div>
+      </div>
+      <table formArrayName="products">
+        <tbody>
+          <tr *ngFor="let item of getProducts().controls;let i=index" [formGroupName]="i">
+            <label for="product">Product number {{i+1}} details:</label>
+            <div class="row row-cols-4 mt-2" name="product">
+              <div class="col">
+                <td><input type="text" class="form-control" placeholder="Name" formControlName="Name"></td>
+              </div>
+              <div class="col">
+                <td><input type="text" class="form-control" placeholder="Category" formControlName="Category"></td>
+              </div>
+              <div class="col">
+                <td><input type="number" min="0" class="form-control" placeholder="Price" formControlName="Price"></td>
+              </div>
+              <div class="col-1">
+                <button type='button' (click)="removeItem(i)" class="btn btn-sm btn-danger">
+                  <i class="fa fa-trash fa-3x"></i>
+                </button>
+              </div>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div>
+        <button type='button' class="btn btn-sm btn-success mt-5" color="primary" (click)="addNewRow()"><i
+            class="fa fa-plus fa-3x">Add Product</i></button>
+      </div>
+
+      <div class="example-button-row" style="margin-top: 5px">
+        <button type="submit" class="btn btn-primary" [disabled]="getProducts().length<1">Submit</button>
+        <button type="button" (click)="clear()" class="btn btn-secondary"
+          [disabled]="getProducts().length<1">Clear</button>
+      </div>
+    </form>
+  </div>
+</div>

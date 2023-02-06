@@ -1,3 +1,16 @@
-.color {
-    color: darkmagenta;
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+app-footer {
+    margin-top: auto;
+}
+
+::ng-deep .form-control{
+    padding-top: 0.75rem;
+    padding-right: 1.5rem;
+    padding-bottom: 0;
+    padding-left: 1.5rem;
 }

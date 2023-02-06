@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
 import { DealService } from 'src/app/services/deal.service';
 
@@ -11,10 +12,12 @@ import { DealService } from 'src/app/services/deal.service';
 export class DealListComponent implements OnInit {
 
   deals$: Observable<Deal[]>;
+  categories: Category[];
   constructor(private dealService: DealService) { }
 
   ngOnInit(): void {
     this.deals$ = this.dealService.getDeals();
+    this.categories = JSON.parse(localStorage.getItem("categories") || '{}')
   }
 
 }

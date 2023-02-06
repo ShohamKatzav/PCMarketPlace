@@ -5,17 +5,15 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from "ng2-file-upload";
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
-    ToastrModule.forRoot({
-      positionClass: 'toast-bottom-right'
-    }),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    
   ],
   declarations: [],
   exports: [
@@ -24,7 +22,8 @@ import { FormsModule } from '@angular/forms';
     TabsModule,
     NgxSpinnerModule,
     FileUploadModule,
-    FormsModule,
+    ReactiveFormsModule,
+    FormsModule 
   ]
 })
 export class SharedModule { }

@@ -1,4 +1,5 @@
 import { AppUserPhoto } from "./appUserPhoto";
+import { Deal } from "./deal";
 
 
 
@@ -12,4 +13,5 @@ export interface Member {
     city: string;
     country: string;
     appUserPhoto: AppUserPhoto;
+    deals: Deal[];
 }

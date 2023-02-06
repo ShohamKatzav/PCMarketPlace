@@ -27,6 +27,13 @@ namespace API.Data
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
         }
+
+        public async Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId)
+        {
+            return await _context.Deals.Where(deal => deal.AppUserId == userId)
+            .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+        }
         public async Task<DealDto> GetDealAsync(int dealid)
         {
             return await _context.Deals
@@ -34,9 +41,20 @@ namespace API.Data
             .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
         }
 
+        public async Task<Deal>GetDealForUpdateAsync(int dealid)
+        {
+            return await _context.Deals.Include(p => p.Products)
+            .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
+        }
+    
         public void Insert(Deal deal)
         {
             _context.Deals.Add(deal);
+        }
+
+        public void Remove(Deal deal)
+        {
+            _context.Deals.Remove(deal);
         }
 
         public async Task<bool> SaveAllAsync()

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Deal } from '../models/deal';
+import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -14,20 +15,44 @@ export class DealService {
 
   constructor(private http: HttpClient) { }
 
+  getDeal(dealId: number): Observable<Deal> {
+    return this.http.get<Deal>(`${this.baseUrl}deals/GetDeal/${dealId}`);
+  }
+
   getDeals(): Observable<Deal[]> {
     return this.http.get<Deal[]>(`${this.baseUrl}deals`);
+  }
+  
+  getDealsForUser(userId: number): Observable<Deal[]> {
+    return this.http.get<Deal[]>(`${this.baseUrl}deals/GetDealsForUser/${userId}`);
+  }
+  getProductsForDeal(dealId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}deals/GetProductsForDeal/${dealId}`);
   }
 
   create(model: any): Observable<any> {
     return this.http.post<Deal>(this.baseUrl + 'deals/create', model).pipe(
       map((deal: Deal) => {
         if (deal) {
-          //localStorage.setItem('user', JSON.stringify(user));
-          //this.currentUserSource$.next(user);
           console.log(deal)
         }
         return deal;
       })
     );
+  }
+
+  edit(model: any): Observable<any> {
+    return this.http.put<Deal>(this.baseUrl + 'deals', model).pipe(
+      map((deal: Deal) => {
+        if (deal) {
+          console.log(deal)
+        }
+        return deal;
+      })
+    );
+  }
+
+  deleteDeal(dealId: number) {
+    return this.http.delete(`${this.baseUrl}deals/delete-deal/${dealId}`);
   }
 }
