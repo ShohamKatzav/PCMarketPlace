@@ -15,7 +15,7 @@ namespace API.DTOs
         public ICollection<ProductDto> Products { get; set; }
         public string Status { get; set; }
         public double TottalPrice { get; set; }
-        public DealPhoto DealPhoto { get; set; }
+        public PhotoDto DealPhoto { get; set; }
 
     }
 }

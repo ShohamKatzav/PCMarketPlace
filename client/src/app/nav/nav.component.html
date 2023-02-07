@@ -14,10 +14,10 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/new-deal">List a new deal</a>
                 </li>
-                <li *ngIf=" member && member.authorization=='Admin'" class="nav-item">
+                <li *ngIf="currentMember && currentMember.authorization=='Admin'" class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
                 </li>
-                <li *ngIf=" member && member.authorization=='Admin'" class="nav-item">
+                <li *ngIf="currentMember && currentMember.authorization=='Admin'" class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/categories">Categories</a>
                 </li>
             </ng-container>

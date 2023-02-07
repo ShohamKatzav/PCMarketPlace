@@ -10,13 +10,9 @@
   </div>
   <div class="col-4">
     <div class="card"></div>
-    <div *ngIf="member.appUserPhoto?.url" else HasNoImg>
+    <div *ngIf="member.appUserPhoto?.url">
       <img src="{{member.appUserPhoto?.url}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
     </div>
-    <ng-template #HasNoImg>
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn2IRi5cxtjkZed0OKEB0mJTN7Uvb0QVS1lqiFHVh5&s"
-        alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
-    </ng-template>
 
     <div class="card-body">
       <div>

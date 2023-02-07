@@ -9,17 +9,17 @@ namespace API.Entities
     public class AppUser
     {
         public int Id { get; set; } 
-        public string UserName { get; set; }= string.Empty;
+        public string UserName { get; set; }= "";
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; } = "";
         public string Authorization { get; set; } = "User";
-        public int Phone { get; set; }
+        public string Phone { get; set; }= "";
         public DateTime DateOfBirth { get; set; } 
-        public string KnownAs { get; set; } = string.Empty;
+        public string KnownAs { get; set; } = "";
         public DateTime Created { get; set; } = DateTime.Now;
-        public string City { get; set; } = string.Empty;
-        public string Country { get; set; } = string.Empty;
+        public string City { get; set; } = "";
+        public string Country { get; set; } = "";
         public Photo AppUserPhoto { get; set; } 
         public ICollection<Deal> Deals { get; set; }
 

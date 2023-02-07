@@ -25,8 +25,8 @@ const routes: Routes = [
     children: [
       {
         path: 'members', // localhost:4200/members
+        canActivate: [AdminGuard],
         loadChildren: () => import('./modules/members.module').then(mod => mod.MembersModule),
-        canActivate: [AdminGuard]
       },
       {
         path: 'member/edit',
@@ -44,6 +44,7 @@ const routes: Routes = [
       {
         path: 'categories',
         component: CategoriesManagementComponent,
+        canActivate: [AdminGuard],
       },
       {
         path: 'about-us',

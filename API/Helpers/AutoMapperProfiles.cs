@@ -19,30 +19,46 @@ namespace API.Helpers
                 opt =>
                 {
                     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
-                });
-            CreateMap<Photo, PhotoDto>();
-
-            CreateMap<MemberUpdateDto, AppUser>();
-
-            CreateMap<Deal, DealDto>()
+                })
             .ForMember(
-                dest => dest.TottalPrice,
+                dest => dest.Authorization,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Products.GetTottalPrice());
+                    opt.MapFrom(d => d.Authorization == null ? "User" : d.Authorization);
+                })
+            .ForMember(
+                dest => dest.UserName,
+                opt =>
+                {
+                    opt.MapFrom(d => d.UserName == null ? "User" : d.UserName);
                 });
+            CreateMap<Photo, PhotoDto>()
+            .ForMember(
+                dest => dest.Url,
+                opt =>
+                {
+                    opt.MapFrom(d => d.Url == null ? "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" : d.Url);
+                });
+            CreateMap<PhotoDto, DealPhoto>();
+            CreateMap<MemberUpdateDto, AppUser>();
+            CreateMap<Deal, DealDto>();
             CreateMap<DealDto, Deal>();
-
             CreateMap<DealUpdateDto, Deal>();
-
-
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<Deal, CreateDealDto>();
             CreateMap<CreateDealDto, Deal>();
             CreateMap<DealUpdateDto, DealDto>();
 
-            CreateMap<DealPhoto, PhotoDto>();
+            CreateMap<DealPhoto, PhotoDto>()
+            .ForMember(
+                dest => dest.Url,
+                opt =>
+                {
+                    opt.MapFrom(d => d.Url == null ? "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" : d.Url);
+                });
+            CreateMap<PhotoDto, DealPhoto>();
+            
         }
     }
 }

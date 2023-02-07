@@ -9,12 +9,9 @@
   <div class="card-img-wrapper">
     
   </div>
-  <div *ngIf="member.appUserPhoto?.url" else hasNoImg>
+  <div *ngIf="member.appUserPhoto?.url">
     <img class="card-img-top" src="{{member.appUserPhoto.url}}" alt="{{member.knownAs}}">
   </div>
-  <ng-template #hasNoImg>
-    <img class="card-img-top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSn2IRi5cxtjkZed0OKEB0mJTN7Uvb0QVS1lqiFHVh5&s" alt="{{member.knownAs}}">
-  </ng-template>
 
 </div>
 <div class="card-body p-1">

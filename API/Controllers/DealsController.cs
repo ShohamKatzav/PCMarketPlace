@@ -62,6 +62,7 @@ namespace API.Controllers
             {
                 Created = DateTime.Now,
                 Status = "Available",
+                DealPhoto = new DealPhoto{Url="https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg"}
             };
             _mapper.Map(newDeal, deal);
             user.Deals.Add(deal);
