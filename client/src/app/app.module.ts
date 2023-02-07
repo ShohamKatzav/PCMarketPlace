@@ -19,6 +19,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { CreateDealComponent } from './deals/create-deal/create-deal.component';
 import { FooterComponent } from './footer/footer.component';
 import { AboutComponent } from './about/about.component';
+import { CategoriesManagementComponent } from './categories/categories-management/categories-management.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AboutComponent } from './about/about.component';
     CreateDealComponent,
     FooterComponent,
     AboutComponent,
+    CategoriesManagementComponent,
   ],
   imports: [
     BrowserModule,

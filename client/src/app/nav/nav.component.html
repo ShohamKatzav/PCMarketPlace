@@ -17,6 +17,9 @@
                 <li *ngIf=" member && member.authorization=='Admin'" class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
                 </li>
+                <li *ngIf=" member && member.authorization=='Admin'" class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="/categories">Categories</a>
+                </li>
             </ng-container>
             <li class="nav-item">
                 <a class="nav-link" routerLinkActive="active"  routerLink="/about-us">About</a>

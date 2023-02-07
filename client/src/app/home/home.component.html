@@ -1,10 +1,13 @@
-<div class="container mt-5">
-    <div *ngIf="!registerMode" style="text-align: center">
-      <h1>Here you can find or list to sell computers and peripherals</h1>
+
+<div
+[ngStyle]="{'background': 'url(' + 'https://bestinau.com.au/wp-content/uploads/2019/09/Best-Computer-Stores-in-Canberra-696x462.jpg' + ') no-repeat 0 0 / cover'}" 
+ class="container mt-5">
+    <div *ngIf="!registerMode" style="text-align: center" class="text-white">
+      <h1 class="text-white">Here you can find or list to sell computers and peripherals</h1>
       <p class="lead">All you need to do is a quick sign up!</p>
       <div class="text-center">
         <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">Register</button>
-        <button class="btn btn-info btn-lg mr-2">About us</button>
+        <button class="btn btn-info btn-lg mr-2" routerLink="/about-us">About us</button>
       </div>
     </div>
     <div *ngIf="registerMode" class="container">

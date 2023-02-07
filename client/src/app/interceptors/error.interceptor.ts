@@ -29,7 +29,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                             throw modelStateErrors.flat();
                         }
                         else {
-                            this.toastr.error(err.statusText === 'OK' ? 'BadRequest' : err.statusText, err.status);
+                            this.toastr.error(err.statusText === 'OK' ? 'BadRequest' : err.statusText, err);
                         }
                         break;
                     case 401:

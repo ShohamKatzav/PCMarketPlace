@@ -1,0 +1,21 @@
+<div class="container">
+    <h2 class="mt-4">Current categories:</h2>
+    <ul class="mt-3" *ngFor="let category of categories$ | async ; let i = index" [attr.data-index]="i">
+        <li>
+            <span class="m-3">{{category.name}}</span>
+            <button class="m-3" type='button' (click)="removeCategory(category.id)" class="btn btn-sm btn-danger">
+                <i class="fa fa-trash fa-2x"></i>
+            </button>
+            <input class="m-3" name="categoryToEdit" [(ngModel)]="categoryToEdit[i]">
+            <button type='button' (click)="editCategory(categoryToEdit[i],category.id)" class="btn btn-sm btn-info">
+                <i class="fa fa-pencil fa-2x"></i>
+            </button>
+        </li>
+    </ul>
+    <form (submit)="addCategory(categoryNameToAdd)">
+        <input name="categoryNameToAdd" [(ngModel)]="categoryNameToAdd">
+        <button type='submit' class="btn btn-sm btn-primary">
+            <i class="fa fa-plus fa-2x">Add category</i>
+        </button>
+     </form>
+</div>

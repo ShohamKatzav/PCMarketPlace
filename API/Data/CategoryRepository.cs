@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Entities;
 using API.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
@@ -19,19 +21,27 @@ namespace API.Data
         {
             return  _context.Categories.ToList();
         }
-        public void Add(string categoryName)
+        public void Add(Category category)
         {
-            _context.Categories.Add(new Category(){Name=categoryName});
+            _context.Categories.Add(category);
         }
         public void Remove(int categoryId)
         {
             Category categoryToRemove = _context.Categories.Where(c => c.Id == categoryId).SingleOrDefault();
             _context.Categories.Remove(categoryToRemove);
         }
-        public void GetCategories(Category category)
+        public async Task<Category> GetCategoryById(int categoryId)
         {
-            Category categoryToUpdate = _context.Categories.Where(c => c.Id == category.Id).SingleOrDefault();
-            categoryToUpdate.Name = category.Name;
+            return await _context.Categories.Where(c => c.Id == categoryId).SingleOrDefaultAsync();
+        }
+        public async Task<Category> GetCategoryByName(string categoryName)
+        {
+            return await _context.Categories.Where(c => c.Name == categoryName).SingleOrDefaultAsync();
+        }
+
+        public void Update(Category deal)
+        {
+            _context.Entry(deal).State = EntityState.Modified;
         }
 
         public async Task<bool> SaveAllAsync()
