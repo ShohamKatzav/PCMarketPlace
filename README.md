@@ -95,3 +95,30 @@ Will show and hide ngx-spinner while the user is waiting for page to load.
 ## Footer
 
 Responsive footwer which include a short introduction to our new customers and ways to contact the store's staff.
+
+## appsettings.Development.json example
+
+<code>
+{
+  "CloudinarySettings":{
+    "CloudName": "",
+    "ApiKey": "",
+    "ApiSecret": ""
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data source=pcmarketplace.db"
+  },
+  "TokenKey": "",
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Information",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}
+</code>
+
+Pass CloudinarySettings in order to use upload photo services.
+ConnectionStrings will provide our database details.
+TokenKey used for token service and should be a hard to guess string password (16-32 characters)
