@@ -18,6 +18,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>,
         next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
+            
             catchError(err => {
                 switch (err.status) {
                     case 400:
@@ -26,6 +27,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                             for (const key in err.error.errors)
                                 if (err.error.errors[key])
                                     modelStateErrors.push(err.error.errors[key])
+                            this.toastr.error(err.statusText === 'OK' ? modelStateErrors.flat() : err.statusText, err);
                             throw modelStateErrors.flat();
                         }
                         else {

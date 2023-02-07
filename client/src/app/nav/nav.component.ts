@@ -41,12 +41,6 @@ export class NavComponent implements OnInit {
     this.accountService.logout();
   }
 
-  myMatchOptions: IsActiveMatchOptions = {
-    queryParams: 'ignored',
-    matrixParams: 'exact',
-    paths: 'exact',
-    fragment: 'exact',
-  };
 }
 
 
