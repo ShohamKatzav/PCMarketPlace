@@ -32,6 +32,7 @@ export class MemberService {
 
   updateMember(member: Member) {
     return this.http.put(`${this.baseUrl}users`, member).pipe(tap(() => {
+      console.log(member)
       const index = this.members.indexOf(member);
       this.members[index] = member;
     }));

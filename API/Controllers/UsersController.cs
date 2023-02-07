@@ -44,6 +44,10 @@ namespace API.Controllers
         {
             var username = User.GetUsername();
             var user = await _userRepository.GetUserByUserNameAsync(username);
+            if(user.Authorization=="Admin")
+            {
+                user = await _userRepository.GetUserByIdAsync(memberUpdateDto.Id);
+            }
 
             _mapper.Map(memberUpdateDto, user);
 

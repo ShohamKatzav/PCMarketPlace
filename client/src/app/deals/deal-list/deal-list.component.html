@@ -1,5 +1,6 @@
 <div class="album py-5 bg-light">
   <div class="container">
+    <h1>AVAILABLE DEALS</h1>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       <div class="col" *ngFor="let deal of deals$ | async">
         <div class="card shadow-sm">
@@ -18,7 +19,7 @@
               <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
                 routerLink="{{deal.id}}">View</button>
               <span *ngIf=" member && member.authorization=='Admin'">
-                <button type="button" class="btn btn-sm btn-outline-warning" routerLink="edit/{{deal.id}}">Edit</button>
+                <button type="button" class="btn btn-sm btn-outline-warning" routerLink="my-deals/edit/{{deal.id}}">Edit</button>
                   <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteDeal(deal.id)">Delete</button>
               </span>
             </div>

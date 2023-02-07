@@ -22,6 +22,7 @@ export class MyDealsComponent implements OnInit {
         res  => 
         {
         if(res)
+          this.member = res;
           this.deals$ = this.dealService.getDealsForUser(res.id);
         });
   }

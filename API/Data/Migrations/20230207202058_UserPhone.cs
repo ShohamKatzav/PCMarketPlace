@@ -2,16 +2,16 @@
 
 namespace API.Data.Migrations
 {
-    public partial class UserPhoneAdded : Migration
+    public partial class UserPhone : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<string>(
                 name: "Phone",
                 table: "AppUsers",
-                type: "INTEGER",
+                type: "TEXT",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: "");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

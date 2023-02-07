@@ -18,8 +18,8 @@
               
               <div class="col">
                 <td>
-                  <select class="form-select mt-2" matNativeControl required formControlName="Category">
-                    <option *ngFor="let category of categories" [value]="category.name" [selected]="true">
+                  <select class="form-control form-select mt-2" required formControlName="Category">
+                    <option *ngFor="let category of categories" [value]="category.name">
                       {{category.name}}
                     </option>
                   </select>
