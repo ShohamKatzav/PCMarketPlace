@@ -122,3 +122,12 @@ Responsive footwer which include a short introduction to our new customers and w
 Pass CloudinarySettings in order to use upload photo services.
 ConnectionStrings will provide our database details.
 TokenKey used for token service and should be a hard to guess string password (16-32 characters)
+
+
+Login details for "Admin":
+User Name: Shoham
+Password: Pa$$w0rd
+
+Login details for "User":
+User Name: Caitlin
+Password: Pa$$w0rd
