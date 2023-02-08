@@ -4,7 +4,7 @@
 
     <img [src]="member?.appUserPhoto?.url" [alt]="member.appUserPhoto.url" class="img-thumbnail p-1">
     <div class="text-center">
-      <button (click)="deletePhoto(member.appUserPhoto.id)" class="btn btn-sm btn-danger"><i
+      <button (click)="deletePhoto(member.appUserPhoto.id, member.userName)" class="btn btn-sm btn-danger"><i
           class="fa fa-trash fa-3x"></i></button>
     </div>
 

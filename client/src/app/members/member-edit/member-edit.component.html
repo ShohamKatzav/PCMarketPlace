@@ -58,8 +58,14 @@
       </form>
     </tab>
 
+    <span *ngIf="!OtherUser" else UploadForOtherMember>
+      <tab heading="Photos">
+        <app-photo-change [member]="member"></app-photo-change>
+      </tab>
+    </span>
+    <ng-template #UploadForOtherMember></ng-template>
     <tab heading="Photos">
-      <app-photo-change [member]="member"></app-photo-change>
+      <app-photo-change [member]="OtherUser"></app-photo-change>
     </tab>
   </tabset>
 

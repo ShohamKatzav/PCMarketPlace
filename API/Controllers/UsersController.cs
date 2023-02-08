@@ -68,9 +68,13 @@ namespace API.Controllers
         [HttpPost("add-photo")] // api/users/add-photo
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
-            var username = User.GetUsername();
-
-            var user = await _userRepository.GetUserByUserNameAsync(username);
+            var UserNameToUpload  = User.GetUsername();
+            var UserToUpdate = await _userRepository.GetUserByUserNameAsync(UserNameToUpload);
+            if (UserToUpdate.Authorization == "Admin")
+            {
+                Request.Headers.TryGetValue("UserName", out var headerValue);
+                UserToUpdate = await _userRepository.GetUserByUserNameAsync(headerValue);
+            }
 
             var result = await _photoService.UploadPhotoAsync(file);
 
@@ -82,12 +86,11 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
 
-
-            user.AppUserPhoto = photo;
+            UserToUpdate.AppUserPhoto = photo;
 
             if (await _userRepository.SaveAllAsync())
             {
-                return CreatedAtRoute("GetUser",new {username = user.UserName}, _mapper.Map<PhotoDto>(photo));
+                return CreatedAtRoute("GetUser",new {username = UserToUpdate.UserName}, _mapper.Map<PhotoDto>(photo));
             }
             return BadRequest("Problem adding photo");
 
@@ -96,10 +99,14 @@ namespace API.Controllers
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
             var username = User.GetUsername();
+            var UserToUpdate = await _userRepository.GetUserByUserNameAsync(username);
+            if (UserToUpdate.Authorization == "Admin")
+            {
+                Request.Headers.TryGetValue("UserName", out var headerValue);
+                UserToUpdate = await _userRepository.GetUserByUserNameAsync(headerValue);
+            }
 
-            var user = await _userRepository.GetUserByUserNameAsync(username);
-
-            var photo = user.AppUserPhoto;
+            var photo = UserToUpdate.AppUserPhoto;
             
             if (photo == null) return NotFound();
 
@@ -109,7 +116,7 @@ namespace API.Controllers
                 if (result.Error != null) return BadRequest(result.Error.Message);
             }
 
-            user.AppUserPhoto = new Photo(){Url="./assets/user.png"};
+            UserToUpdate.AppUserPhoto = new Photo(){Url="./assets/user.png"};
 
             if (await _userRepository.SaveAllAsync()) return Ok();
 

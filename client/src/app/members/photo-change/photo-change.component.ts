@@ -29,8 +29,8 @@ export class PhotoChangeComponent implements OnInit {
   }
 
 
-  deletePhoto(photoId: number) {
-    this.memberService.deletePhoto(photoId).subscribe(() => {
+  deletePhoto(photoId: number, userName: string) {
+    this.memberService.deletePhoto(photoId, userName).subscribe(() => {
       this.member.appUserPhoto.url = "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png";
     });
   }
@@ -38,6 +38,7 @@ export class PhotoChangeComponent implements OnInit {
   initializeUploader() {
     this.uploader = new FileUploader({
       url: this.baseUrl + 'users/add-photo',
+      headers: [{ name: 'UserName', value: this.member.userName }],
       authToken: 'Bearer ' + this.user.token,
       isHTML5: true,
       allowedFileType: ['image'],

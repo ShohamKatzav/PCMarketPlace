@@ -37,8 +37,8 @@ export class MemberService {
       this.members[index] = member;
     }));
   }
-  deletePhoto(photoId: number) {
-    return this.http.delete(`${this.baseUrl}users/delete-photo/${photoId}`);
+  deletePhoto(photoId: number, userName: string) {
+    return this.http.delete(`${this.baseUrl}users/delete-photo/${photoId}`, {headers: {"UserName":userName.toString()}});
   }
 
   setCurrentMember(user: User) {
