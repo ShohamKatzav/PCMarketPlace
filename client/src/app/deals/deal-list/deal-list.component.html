@@ -1,15 +1,14 @@
-<div class="album py-5 bg-light">
+<div *ngIf="member" class="album py-5 bg-light">
   <div class="container">
-    <h1>AVAILABLE DEALS</h1>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div class="col" *ngFor="let deal of deals$ | async">
+    <section *ngIf="listType == 'All Deals'"><h1>AVAILABLE DEALS</h1></section>
+    <section *ngIf="listType == 'My Deals'"><h1>{{member.knownAs || member.userName}} DEALS</h1></section>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-4">
+      <div *ngIf="(deals$| async)?.length == 0"><h1>No Deals Found</h1></div>
+      <div class="col card" *ngFor="let deal of deals$ | async">
         <div class="card shadow-sm">
-          <div *ngIf="deal.dealPhoto?.url" else hasNoImg>
-            <img class="img-thumbnail" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
+          <div *ngIf="deal.dealPhoto?.url">
+            <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
           </div>
-          <ng-template #hasNoImg>
-            <img class="img-thumbnail" src="https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" alt="deal.dealPhoto.url">
-          </ng-template>
         </div>
 
         <div class="card-body">
@@ -18,7 +17,7 @@
             <div class="btn-group">
               <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
                 routerLink="{{deal.id}}">View</button>
-              <span *ngIf=" member && member.authorization=='Admin'">
+              <span *ngIf=" member && member.authorization=='Admin' || listType == 'My Deals'">
                 <button type="button" class="btn btn-sm btn-outline-warning" routerLink="my-deals/edit/{{deal.id}}">Edit</button>
                   <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteDeal(deal.id)">Delete</button>
               </span>
@@ -27,7 +26,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>

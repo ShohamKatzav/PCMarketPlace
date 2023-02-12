@@ -1,72 +1,74 @@
-<div *ngIf="member" class="row">
-  <div class="col-4">
-    <h1>{{member.knownAs}}</h1>
+<div *ngIf="member">
+  <div class="row">
+    <div class="col-4 mt-4">
+      <h1>{{member.knownAs}}</h1>
+    </div>
+    <div class="col-8">
+      <div class="alert alert-info" *ngIf="editForm.dirty">
+        <strong>Information</strong>
+        You have made changes. any unsaved changes will be lost
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card"></div>
+      <div *ngIf="member.appUserPhoto?.url">
+        <img src="{{member.appUserPhoto?.url}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
+      </div>
+
+      <div class="card-body">
+        <div>
+          <strong>Location:</strong>
+          <p>{{member.city}}, {{member.country}}</p>
+        </div>
+        <div>
+          <strong>Age:</strong>
+          <p>{{member.age}}</p>
+        </div>
+        <div>
+          <strong>Member since:</strong>
+          <p>{{member.created | date:'medium'}}</p>
+        </div>
+
+      </div>
+      <div class="card-footer">
+        <button [disabled]="editForm.pristine" form="editForm" type="submit" class="btn btn-success btn-block">Save
+          Changes</button>
+      </div>
+    </div>
   </div>
   <div class="col-8">
-    <div class="alert alert-info" *ngIf="editForm.dirty">
-      <strong>Information</strong>
-      You have made changes. any unsaved changes will be lost
-    </div>
-  </div>
-  <div class="col-4">
-    <div class="card"></div>
-    <div *ngIf="member.appUserPhoto?.url">
-      <img src="{{member.appUserPhoto?.url}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
-    </div>
+    <tabset class="member-tabset">
 
-    <div class="card-body">
-      <div>
-        <strong>Location:</strong>
-        <p>{{member.city}}, {{member.country}}</p>
-      </div>
-      <div>
-        <strong>Age:</strong>
-        <p>{{member.age}}</p>
-      </div>
-      <div>
-        <strong>Member since:</strong>
-        <p>{{member.created | date:'medium'}}</p>
-      </div>
+      <tab heading="Basic info">
+        <form #editForm="ngForm" (ngSubmit)="updateMember()" id="editForm" autocomplete="off">
+          <label for="knownAs">Known As:</label>
+          <input name="knownAs" [(ngModel)]="member.knownAs" class="form-control mx-2" type="text">
+          <h4 class="mt-2">Location Details</h4>
+          <div class="form-inline form-group">
+            <label for="city">City:</label>
+            <input name="city" [(ngModel)]="member.city" class="form-control mx-2" type="text">
+            <label for="country">Country:</label>
+            <input name="country" [(ngModel)]="member.country" class="form-control mx-2" type="text">
+          </div>
 
-    </div>
-    <div class="card-footer">
-      <button [disabled]="editForm.pristine" form="editForm" type="submit" class="btn btn-success btn-block">Save
-        Changes</button>
-    </div>
-  </div>
-</div>
-<div class="col-8">
-  <tabset class="member-tabset">
-
-    <tab heading="Basic info">
-      <form #editForm="ngForm" (ngSubmit)="updateMember()" id="editForm">
-        <h4 class="mt-2">Location Details</h4>
-        <div class="form-inline form-group">
-          <label for="city">City:</label>
-          <input name="city" [(ngModel)]="member.city" class="form-control mx-2" type="text">
-          <label for="country">Country:</label>
-          <input name="country" [(ngModel)]="member.country" class="form-control mx-2" type="text">
-        </div>
-
-
-        <div class="form-inline form-group">
-          <label for="phone">Phone:</label>
-          <input name="phone" [(ngModel)]="member.phone" class="form-control mx-2" type="text">
-          <label for="email">E-mail:</label>
-          <input name="email" [(ngModel)]="member.email" class="form-control mx-2" type="text">
-        </div>
-      </form>
-    </tab>
-
-    <span *ngIf="!OtherUser" else UploadForOtherMember>
-      <tab heading="Photos">
-        <app-photo-change [member]="member"></app-photo-change>
+          <div class="form-inline form-group">
+            <label for="phone">Phone:</label>
+            <input name="phone" [(ngModel)]="member.phone" class="form-control mx-2" type="text">
+            <label for="email">E-mail:</label>
+            <input name="email" [(ngModel)]="member.email" class="form-control mx-2" type="text">
+          </div>
+        </form>
       </tab>
-    </span>
-    <ng-template #UploadForOtherMember></ng-template>
-    <tab heading="Photos">
-      <app-photo-change [member]="OtherUser"></app-photo-change>
-    </tab>
-  </tabset>
 
+      <tab heading="Photo">
+        <span *ngIf="!OtherUser" else UploadForOtherMember>
+          <app-photo-change [member]="member"></app-photo-change>
+        </span>
+        <ng-template #UploadForOtherMember>
+          <app-photo-change [member]="OtherUser"></app-photo-change>
+        </ng-template>
+      </tab>
+    </tabset>
+
+  </div>
 </div>

@@ -45,12 +45,12 @@ const routes: Routes = [
         path: 'categories',
         component: CategoriesManagementComponent,
         canActivate: [AdminGuard],
-      },
-      {
-        path: 'about-us',
-        component: AboutComponent,
-      },
+      }
     ]
+  },
+  {
+    path: 'about-us',
+    component: AboutComponent,
   },
   {
     path: 'errors',

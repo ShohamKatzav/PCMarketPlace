@@ -33,13 +33,13 @@ export class MemberEditComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router
   ) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
     const state = this.router.getCurrentNavigation().extras.state;
     if(state)
       this.OtherUser = state['OtherUser'];
   }
 
   ngOnInit() {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
     this.loadMember();
   }
 
@@ -54,10 +54,12 @@ export class MemberEditComponent implements OnInit {
         this.member = member;
       })
     }
+    
   }
 
   updateMember() {
     this.memberService.updateMember(this.member).subscribe(() => {
+      this.memberService.setCurrentMember(this.user);
       this.toastr.success('Profile updated successfully');
       this.EForm.reset(this.member);
     })

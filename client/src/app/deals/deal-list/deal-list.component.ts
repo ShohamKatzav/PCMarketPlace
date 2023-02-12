@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
@@ -16,9 +16,17 @@ export class DealListComponent implements OnInit {
 
   deals$: Observable<Deal[]>;
   member: Member;
-  categories: Category[];
-  constructor(private memberService: MemberService, private dealService: DealService) {
-    this.memberService.currentMember$.pipe(take(1)).subscribe(
+  listType: string;
+
+  constructor(private memberService: MemberService, private dealService: DealService, private route: ActivatedRoute) {
+
+  }
+
+  ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.listType = data.listType;
+    })
+    this.memberService.currentMember$.subscribe( 
       {
         next: response => {
           this.member = response;
@@ -27,19 +35,21 @@ export class DealListComponent implements OnInit {
       }
     );
   }
-
-  ngOnInit(): void {
-    this.deals$ = this.dealService.getDeals();
-    this.categories = JSON.parse(localStorage.getItem("categories") || '{}')
-  }
+  
   loadDeals() {
-    if(this.member)
-      this.deals$ = this.dealService.getDealsForUser(this.member.id);
+    if (this.member)
+    {
+      if (this.listType == "My Deals")
+        this.deals$ = this.dealService.getDealsForUser(this.member.id);
+      else
+        if (this.listType == "All Deals")
+          this.deals$ = this.dealService.getDeals();
+    }
   }
 
   deleteDeal(dealId: number) {
     this.dealService.deleteDeal(dealId).subscribe(() => {
-      this.deals$ = this.dealService.getDealsForUser(this.member.id);
+      this.loadDeals();
     });
   }
 

@@ -28,7 +28,7 @@ export class CreateDealComponent implements OnInit {
     products: new FormArray([])
   });
   constructor(private dealService: DealService, private memberService: MemberService , private toastr: ToastrService, private router: Router) {
-    this.memberService.currentMember$.pipe(take(1)).subscribe(
+    this.memberService.currentMember$.subscribe(
       {
         next: response => {
           this.member = response;
@@ -114,7 +114,8 @@ export class CreateDealComponent implements OnInit {
   }
 
   loadDeals() {
-    this.deals$ = this.dealService.getDealsForUser(this.member.id);
+    if(this.member)
+      this.deals$ = this.dealService.getDealsForUser(this.member.id);
   }
 
 

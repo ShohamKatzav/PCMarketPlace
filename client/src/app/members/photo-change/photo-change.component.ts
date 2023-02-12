@@ -20,12 +20,16 @@ export class PhotoChangeComponent implements OnInit {
 
   @Input() member: Member;
   constructor(private accountService: AccountService, private memberService: MemberService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => 
+      {
+        this.user = user
+      });
   }
 
 
   ngOnInit() {
-    this.initializeUploader();
+    if(this.member)
+      this.initializeUploader();
   }
 
 

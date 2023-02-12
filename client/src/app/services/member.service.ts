@@ -27,12 +27,11 @@ export class MemberService {
     const member = this.members.find(x => x.userName === username);
     if (member !== undefined) return of(member);
 
-    return this.http.get<Member>(`${this.baseUrl}users/${username}`).pipe(tap(member => this.members.push(member)));
+    return this.http.get<Member>(`${this.baseUrl}users/${username.toLocaleLowerCase()}`).pipe(tap(member => this.members.push(member)));
   }
 
   updateMember(member: Member) {
     return this.http.put(`${this.baseUrl}users`, member).pipe(tap(() => {
-      console.log(member)
       const index = this.members.indexOf(member);
       this.members[index] = member;
     }));
