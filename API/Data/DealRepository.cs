@@ -24,6 +24,7 @@ namespace API.Data
         public async Task<IEnumerable<DealDto>> GetDealsAsync()
         {
             return await _context.Deals
+            .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
         }
@@ -31,12 +32,14 @@ namespace API.Data
         public async Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId)
         {
             return await _context.Deals.Where(deal => deal.AppUserId == userId)
+            .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
         }
         public async Task<DealDto> GetDealAsync(int dealid)
         {
             return await _context.Deals
+            .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
             .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
         }
@@ -44,8 +47,15 @@ namespace API.Data
         public async Task<Deal>GetDealForUpdateAsync(int dealid)
         {
             return await _context.Deals.Include(p => p.Products)
+            .ThenInclude(p => p.ProductPhoto)
             .Include(d => d.DealPhoto)
-            .Where(d=> d.Id == dealid).SingleAsync();
+            .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
+        }
+
+        public async Task<Product>GetProductForUpdateAsync(int productid)
+        {
+            return await _context.Products.Include(p => p.ProductPhoto)
+            .Where(p=> p.Id == productid).SingleOrDefaultAsync();
         }
     
         public void Insert(Deal deal)
@@ -68,5 +78,11 @@ namespace API.Data
         {
             _context.Entry(deal).State = EntityState.Modified;
         }
+        public void Update(Product product)
+        {
+            _context.Entry(product.ProductPhoto).State = EntityState.Modified;
+            _context.Entry(product).State = EntityState.Modified;
+        }
+
     }
 }

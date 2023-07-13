@@ -15,25 +15,26 @@
               <div class="col">
                 <td><input type="text" class="form-control" placeholder="Name" formControlName="Name"></td>
               </div>
-              
               <div class="col">
                 <td>
                   <select class="form-control form-select mt-2" required formControlName="Category">
-                    <option *ngFor="let category of categories" [value]="category.name">
+                    <option *ngFor="let category of categories" [value]="category.name" [selected]="category.name === item.get('Category').value">
                       {{category.name}}
                     </option>
                   </select>
                 </td>
               </div>
-
-
+              
               <div class="col">
                 <td><input type="number" min="0" class="form-control" placeholder="Price" formControlName="Price"></td>
               </div>
-              <div class="col-1">
-                <button type='button' (click)="removeItem(i)" class="btn btn-sm btn-danger">
+              <div class="col">
+                <button type="button" (click)="removeItem(i)" class="btn btn-sm btn-danger">
                   <i class="fa fa-trash fa-3x"></i>
                 </button>
+              </div>
+              <div class="col">
+                <app-photo-change [product]="products[i]"></app-photo-change>
               </div>
             </div>
           </tr>
@@ -45,12 +46,12 @@
             class="fa fa-plus fa-3x">Add Product</i></button>
       </div>
 
+
       <div class="example-button-row" style="margin-top: 5px">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Update Deal</button>
         <button type="button" (click)="clear()" class="btn btn-secondary"
           [disabled]="getProducts().length<1 && !getDescription()">Clear</button>
       </div>
     </form>
   </div>
-  <app-photo-change [deal]="deal"></app-photo-change>
 </div>

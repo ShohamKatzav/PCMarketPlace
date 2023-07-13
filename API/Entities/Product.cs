@@ -13,5 +13,6 @@ namespace API.Entities
         public double Price { get; set; }
         public Deal Deal { get; set; }
         public int DealId { get; set; }
+        public ProductPhoto ProductPhoto { get; set; }
     }
 }

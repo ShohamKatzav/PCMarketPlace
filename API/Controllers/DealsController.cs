@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -61,8 +62,7 @@ namespace API.Controllers
             var deal = new Deal
             {
                 Created = DateTime.Now,
-                Status = "Available",
-                DealPhoto = new DealPhoto{Url="https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg"}
+                Status = "Available"
             };
             _mapper.Map(newDeal, deal);
             user.Deals.Add(deal);
@@ -77,65 +77,69 @@ namespace API.Controllers
         public async Task<ActionResult> UpdateDeal(DealUpdateDto dealUpdateDto)
         {
             var deal = await _dealRepository.GetDealForUpdateAsync(dealUpdateDto.Id);
-            deal.Description = dealUpdateDto.Description;
-            List<Product> Products = _mapper.Map<List<Product>>(dealUpdateDto.Products);
             deal.LastModified = DateTime.Now;
-            deal.Products = Products;
+            _mapper.Map(dealUpdateDto, deal);
+
             _dealRepository.Update(deal);
 
-            if (await _userRepository.SaveAllAsync()) return NoContent();
-
-            return BadRequest("Failed to update deal");
+            try
+            {
+                await _dealRepository.SaveAllAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Failed to update deal.");
+            }
         }
 
         [HttpDelete("delete-deal/{dealId}")]
         public async Task<ActionResult> DeleteDeal(int dealId)
         {
 
-            var dealDto = await _dealRepository.GetDealAsync(dealId);
-            if (dealDto == null)
+            var deal = await _dealRepository.GetDealForUpdateAsync(dealId);
+            if (deal == null)
                 return NotFound();
-            var deal = _mapper.Map<Deal>(dealDto);
+
             _dealRepository.Remove(deal);
 
-            if (await _userRepository.SaveAllAsync()) return Ok();
+            if (await _dealRepository.SaveAllAsync()) return NoContent();
 
             return BadRequest("Failed to delete the deal");
         }
 
-        [HttpPost("add-photo")] // api/users/add-photo
+        [HttpPost("add-photo")] // api/deals/add-photo
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
-            Request.Headers.TryGetValue("DealId", out var headerValue);
+            Request.Headers.TryGetValue("ProductId", out var headerValue);
 
-            var dealId = headerValue;
-            var deal = await _dealRepository.GetDealForUpdateAsync(int.Parse(dealId));
+            var procuctId = headerValue;
+            var product = await _dealRepository.GetProductForUpdateAsync(int.Parse(procuctId));
             var result = await _photoService.UploadPhotoAsync(file);
 
             if (result.Error != null) return BadRequest(result.Error.Message);
 
-            var photo = new DealPhoto
+            var photo = new ProductPhoto
             {
                 Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
+                PublicId = result.PublicId,
             };
-            deal.DealPhoto = photo;
+            product.ProductPhoto = photo;
 
             if (await _dealRepository.SaveAllAsync())
             {
-                return CreatedAtRoute("GetDeal", new { dealId = deal.Id }, _mapper.Map<PhotoDto>(photo));
+                return CreatedAtRoute("GetDeal", new { dealId = product.Id }, _mapper.Map<PhotoDto>(photo));
             }
             return BadRequest("Problem adding photo");
 
         }
-        [HttpDelete("delete-photo/{dealId}")] // api/users/delete-photo/1
-        public async Task<ActionResult> DeletePhoto(int dealId)
+        [HttpDelete("delete-photo/{productId}")] // api/deals/delete-photo/1/1
+        public async Task<ActionResult> DeletePhoto(int productId)
         {
-            var deal = await _dealRepository.GetDealForUpdateAsync(dealId);
+            var product = await _dealRepository.GetProductForUpdateAsync(productId);
 
-            var photo = deal.DealPhoto;
-
-            if (photo == null) return NotFound();
+            if (product == null) return NotFound();
+            var photo = product.ProductPhoto;
 
             if (photo.PublicId != null)
             {
@@ -143,11 +147,17 @@ namespace API.Controllers
                 if (result.Error != null) return BadRequest(result.Error.Message);
             }
 
-            deal.DealPhoto = new DealPhoto() { Url = "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" };
+            product.ProductPhoto = new ProductPhoto(){Url="./assets/no-image.jpeg"};
 
-            if (await _userRepository.SaveAllAsync()) return Ok();
-
+            try{
+                if (await _dealRepository.SaveAllAsync()) return Ok();
+            }
+            catch
+            {
+                return BadRequest("Failed to delete the photo");
+            }
             return BadRequest("Failed to delete the photo");
+
         }
     }
 }

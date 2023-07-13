@@ -3,6 +3,7 @@ import { FileUploader } from 'ng2-file-upload';
 import { take } from 'rxjs/operators';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
+import { Product } from 'src/app/models/product';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
 import { DealService } from 'src/app/services/deal.service';
@@ -21,7 +22,8 @@ export class PhotoChangeComponent implements OnInit {
   user: User;
 
   member: Member;
-  @Input() deal: Deal;
+  @Input() product: Product;
+
   constructor(private accountService: AccountService, private dealService: DealService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
   }
@@ -32,7 +34,7 @@ export class PhotoChangeComponent implements OnInit {
     this.loadMember();
     this.initializeUploader();
     this.uploader.onBeforeUploadItem = (fileItem: any) => {
-      fileItem.formData.push({ DealId: this.deal.id });
+      fileItem.formData.push({ ProductId: this.product.id });
     };
   }
 
@@ -40,16 +42,16 @@ export class PhotoChangeComponent implements OnInit {
     this.member = JSON.parse(localStorage.getItem("member"));
   }
 
-  deletePhoto(dealId: number) {
-    this.dealService.deletePhoto(dealId).subscribe(() => {
-      this.deal.dealPhoto.url = "./assets/deal.jpg";
+  deletePhoto(productId: number) {
+    this.dealService.deletePhoto(productId).subscribe(() => {
+      this.product.productPhoto.url = "./assets/no-image.jpeg";
     });
   }
 
   initializeUploader() {
     this.uploader = new FileUploader({
       url: this.baseUrl + 'deals/add-photo',
-      headers: [{ name: 'DealId', value: this.deal.id.toString() }],
+      headers: [{ name: 'ProductId', value: this.product?.id.toString() }],
       authToken: 'Bearer ' + this.user.token,
       isHTML5: true,
       allowedFileType: ['image'],
@@ -66,7 +68,7 @@ export class PhotoChangeComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const photo = JSON.parse(response);
-        this.deal.dealPhoto = photo;
+        this.product.productPhoto = photo;
       }
     }
   }

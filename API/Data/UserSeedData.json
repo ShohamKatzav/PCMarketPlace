@@ -20,18 +20,21 @@
           {
             "Name": "Monitor",
             "Category": "Monitors",
-            "Price": 1500
+            "Price": 1500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
           },
           {
             "Name": "Monitor2",
             "Category": "Monitors",
-            "Price": 1500
+            "Price": 1500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
           }
         ],
-        "Status": "Available",
-        "DealPhoto":{
-          "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
-        }
+        "Status": "Available"
       }
     ]
   },
@@ -56,18 +59,13 @@
           {
             "Name": "Keyboards",
             "Category": "Keyboards",
-            "Price": 500
-          },
-          {
-            "Name": "Keyboards2",
-            "Category": "PC",
-            "Price": 700
+            "Price": 500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
           }
         ],
-        "Status": "Available",
-        "DealPhoto":{
-          "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/logickeyboard_lkb_lpbw_btpc_us_xl_print_bluetooth_black_1593447625_1571489.jpg"
-        }
+        "Status": "Available"
       }
     ]
   },
@@ -134,13 +132,13 @@
           {
             "Name": "Laptop",
             "Category": "Laptop",
-            "Price": 2500
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
           }
         ],
-        "Status": "Available",
-        "DealPhoto":{
-          "Url":"https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/latitude-notebooks/14-5430/media-gallery/laptop-latitude-14-5430-gray-gallery-3.psd?fmt=png-alpha&pscan=auto&scl=1&wid=4269&hei=3032&qlt=100,1&resMode=sharp2&size=4269,3032&chrss=full&imwidth=5000"
-        }
+        "Status": "Available"
       }
     ]
   }

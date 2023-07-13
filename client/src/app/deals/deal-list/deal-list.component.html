@@ -18,7 +18,7 @@
               <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
                 routerLink="{{deal.id}}">View</button>
               <span *ngIf=" member && member.authorization=='Admin' || listType == 'My Deals'">
-                <button type="button" class="btn btn-sm btn-outline-warning" routerLink="my-deals/edit/{{deal.id}}">Edit</button>
+                <button type="button" class="btn btn-sm btn-outline-warning" routerLink="edit/{{deal.id}}">Edit</button>
                   <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteDeal(deal.id)">Delete</button>
               </span>
             </div>

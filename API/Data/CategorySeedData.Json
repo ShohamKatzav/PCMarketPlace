@@ -1,19 +1,19 @@
 [
     {
         "Id": 1,
-        "Name": "Computer"
+        "Name": "Computers"
     },
     {
         "Id": 2,
-        "Name": "Laptop"
+        "Name": "Laptops"
     },
     {
         "Id": 3,
-        "Name": "Monitor"
+        "Name": "Monitors"
     },
     {
         "Id": 4,
-        "Name": "Keyboard"
+        "Name": "Keyboards"
     },
     {
         "Id": 5,

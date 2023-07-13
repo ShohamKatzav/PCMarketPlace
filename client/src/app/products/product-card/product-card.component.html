@@ -1,9 +1,18 @@
-<div class="col mt-1">
+<div class="col-sm">
   <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">{{product.name}}</h5>
-      <p class="card-text">Category: {{product.category}}</p>
-      <p class="card-text"><small class="text-muted">Price: {{product.price}} ₪</small></p>
+    <div class="card-img-wrapper">
+      <div class="image">
+        <img src={{product.productPhoto?.url}} />
+      </div>
+    </div>
+    <div class="card-inner">
+      <div class="header">
+        <h2>{{product.name}}</h2>
+        <h4>Category: {{product.category}}</h4>
+      </div>
+      <div class="content">
+        <p>Price: {{product.price}} ₪</p>
+      </div>
     </div>
   </div>
 </div>

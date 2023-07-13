@@ -45,26 +45,33 @@ namespace API.Helpers
                 {
                     opt.MapFrom(d => d.Url == null ? "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" : d.Url);
                 });
-            CreateMap<DealPhoto, PhotoDto>()
-            .ForMember(
-                dest => dest.Url,
-                opt =>
-                {
-                    opt.MapFrom(d => d.Url == null ? "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" : d.Url);
-                });
+            CreateMap<DealPhoto, PhotoDto>();
             CreateMap<Deal, DealDto>()
             .ForMember(
                 dest => dest.TottalPrice,
                 opt =>
                 {
                     opt.MapFrom(d => d.Products.GetTottalPrice());
+                })
+                .ForMember(
+                dest => dest.DealPhoto,
+                opt =>
+                {
+                    opt.MapFrom(d => d.Products.GetPhoto());
                 });
 
             CreateMap<PhotoDto, DealPhoto>();
-            CreateMap<PhotoDto, DealPhoto>();
+            CreateMap<PhotoDto, ProductPhoto>();
             CreateMap<MemberUpdateDto, AppUser>();
             CreateMap<DealDto, Deal>();
             CreateMap<DealUpdateDto, Deal>();
+            CreateMap<ProductPhoto, PhotoDto>()
+            .ForMember(
+                dest => dest.Url,
+                opt =>
+                {
+                    opt.MapFrom(d => d.Url == null ? "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" : d.Url);
+                });
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<Deal, CreateDealDto>();

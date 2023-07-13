@@ -13,9 +13,11 @@ namespace API.Interfaces
         Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId);
         Task<DealDto>GetDealAsync(int dealid);
         Task<Deal>GetDealForUpdateAsync(int dealid);
+        Task<Product>GetProductForUpdateAsync(int productid);
         void Insert(Deal deal);
         void Remove(Deal deal);
         Task<bool> SaveAllAsync();
         void Update(Deal deal);
+        void Update(Product product);
     }
 }

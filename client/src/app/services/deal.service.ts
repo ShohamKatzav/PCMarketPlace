@@ -39,6 +39,7 @@ export class DealService {
   }
 
   edit(model: any): Observable<any> {
+    console.log(model);
     return this.http.put<Deal>(this.baseUrl + 'deals', model).pipe(
       map((deal: Deal) => {
         return deal;
@@ -50,7 +51,7 @@ export class DealService {
     return this.http.delete(`${this.baseUrl}deals/delete-deal/${dealId}`);
   }
 
-  deletePhoto(dealId: number) {
-    return this.http.delete(`${this.baseUrl}deals/delete-photo/${dealId}`);
+  deletePhoto(productId: number) {
+    return this.http.delete(`${this.baseUrl}deals/delete-photo/${productId}`);
   }
 }

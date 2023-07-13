@@ -27,6 +27,7 @@ export class EditDealComponent implements OnInit {
   model: any = {};
   items!: FormArray;
   dealForm: FormGroup;
+
   constructor(private route: ActivatedRoute, private dealService: DealService,
     private memberService: MemberService,private fb: FormBuilder,
     private toastr: ToastrService, private router: Router) { 
@@ -65,8 +66,8 @@ export class EditDealComponent implements OnInit {
       this.toastr.warning("Sorry, maximux 10 products per deal.");
   }
   removeItem(index: any) {
-    this.items = this.getProducts();
-    this.items.removeAt(index)
+    this.items.removeAt(index);
+    this.products.splice(index);
   }
 
 
@@ -121,10 +122,21 @@ export class EditDealComponent implements OnInit {
       this.toastr.warning("Please do not forget any field");
     else {
       this.model.description = this.dealForm.get("description")?.value;
+      // attach products information exclude photos (name category and price)
       this.model.products = Array.from(this.items.value);
-      this.dealService.edit(this.model).subscribe();
-      this.toastr.success("Deal edited successfully");
-      this.router.navigateByUrl("/deals/my-deals");
+      // attach products photos information
+      for (let i = 0; i < this.products.length; i++) {
+        this.model.products[i].productPhoto = this.products[i].productPhoto;
+      }
+      // attach products id
+      for (let i = 0; i < this.products.length; i++) {
+        this.model.products[i].id = this.products[i].id;
+      }
+      this.dealService.edit(this.model).subscribe(() => {
+        this.deals$ = this.dealService.getDealsForUser(this.member.id);
+        this.router.navigateByUrl("/deals/my-deals");
+        this.toastr.success("Deal edited successfully");
+      });
     }
   }
 

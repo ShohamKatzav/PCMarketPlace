@@ -1,10 +1,9 @@
 
-    <div class="row" *ngIf="deal.dealPhoto && deal.dealPhoto.url!='./assets/deal.jpg'">
+    <div class="row" *ngIf="product?.productPhoto && product?.productPhoto.url!='./assets/deal.jpg'">
         <div class="col-2">
-
-            <img [src]="deal.dealPhoto.url" [alt]="deal.dealPhoto.url" class="img-thumbnail p-1">
+            <img [src]="product.productPhoto.url" [alt]="product.productPhoto.url" class="img-thumbnail p-1">
             <div class="text-center">
-                <button (click)="deletePhoto(member.appUserPhoto.id)" class="btn btn-sm btn-danger"><i
+                <button type="button" (click)="deletePhoto(this.product.id)" class="btn btn-sm btn-danger"><i
                         class="fa fa-trash fa-3x"></i></button>
             </div>
 
@@ -14,9 +13,9 @@
 
     <div class="row mt-3">
 
-        <div class="col-md-3">
+        <div>
 
-            <h3>Add Photo</h3>
+            <h3>Change Photo</h3>
 
             <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
                 [uploader]="uploader" class="card bg-faded p-3 text-center mb-3 my-drop-zone">

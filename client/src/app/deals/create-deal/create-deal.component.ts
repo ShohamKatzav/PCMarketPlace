@@ -3,7 +3,6 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
@@ -90,10 +89,10 @@ export class CreateDealComponent implements OnInit {
       this.model.description = this.dealForm.get("description")?.value;
       this.model.products = Array.from(this.items.value);
       this.dealService.create(this.model).subscribe(() => {
-        this.deals$ = this.dealService.getDealsForUser(this.member.id);
+        this.loadDeals();
+        this.router.navigateByUrl("/deals/my-deals");
+        this.toastr.success("Deal created");
       });
-      this.toastr.success("Deal created");
-      this.router.navigateByUrl("/deals/my-deals");
     }
   }
 
