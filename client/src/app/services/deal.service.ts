@@ -39,7 +39,6 @@ export class DealService {
   }
 
   edit(model: any): Observable<any> {
-    console.log(model);
     return this.http.put<Deal>(this.baseUrl + 'deals', model).pipe(
       map((deal: Deal) => {
         return deal;

@@ -81,7 +81,54 @@
     "Country": "Benin",
     "AppUserPhoto": {
       "Url": "https://randomuser.me/api/portraits/men/57.jpg"
-    }
+    },
+    "Deals": [
+      {
+        "Description": "CPU",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Keyboards",
+            "Category": "Keyboards",
+            "Price": 500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "GPU",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Keyboards",
+            "Category": "Keyboards",
+            "Price": 500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "RAM",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Keyboards",
+            "Category": "Keyboards",
+            "Price": 500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      }
+    ]
   },
   {
     "UserName": "Marie",
@@ -95,7 +142,24 @@
     "Country": "Nauru",
     "AppUserPhoto": {
       "Url": "https://randomuser.me/api/portraits/women/52.jpg"
-    }
+    },
+    "Deals": [
+      {
+        "Description": "Keyboards",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Keyboards",
+            "Category": "Keyboards",
+            "Price": 500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      }
+    ]
   },
   {
     "UserName": "Justine",

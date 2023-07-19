@@ -21,6 +21,7 @@ import { FooterComponent } from './footer/footer.component';
 import { AboutComponent } from './about/about.component';
 import { CategoriesManagementComponent } from './categories/categories-management/categories-management.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

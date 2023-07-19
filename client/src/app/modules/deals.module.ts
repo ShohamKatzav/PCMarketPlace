@@ -8,6 +8,7 @@ import { EditDealComponent } from '../deals/edit-deal/edit-deal.component';
 import { ProductListComponent } from '../products/product-list/product-list.component';
 import { ProductCardComponent } from '../products/product-card/product-card.component';
 import { PhotoChangeComponent } from '../deals/photo-change/photo-change.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     SharedModule,
+    NgxPaginationModule
     
   ],
   exports:[

@@ -1,10 +1,17 @@
 <div *ngIf="member" class="album py-5 bg-light">
   <div class="container">
-    <section *ngIf="listType == 'All Deals'"><h1>AVAILABLE DEALS</h1></section>
-    <section *ngIf="listType == 'My Deals'"><h1>{{member.knownAs || member.userName}} DEALS</h1></section>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-4">
-      <div *ngIf="(deals$| async)?.length == 0"><h1>No Deals Found</h1></div>
-      <div class="col card" *ngFor="let deal of deals$ | async">
+    <section *ngIf="listType == 'All Deals'">
+      <h1 class="text-center">AVAILABLE DEALS</h1>
+    </section>
+    <section *ngIf="listType == 'My Deals'">
+      <h1 class="text-center">{{member.knownAs || member.userName}} DEALS</h1>
+    </section>
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 mt-4 d-flex justify-content-around">
+      <div *ngIf="(deals$| async)?.length == 0">
+        <h1>No Deals Found</h1>
+      </div>
+
+      <div class="col card mr-1" *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: 6, currentPage: page }">
         <div class="card shadow-sm">
           <div *ngIf="deal.dealPhoto?.url">
             <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
@@ -13,13 +20,14 @@
 
         <div class="card-body">
           <p class="card-text">{{deal.description}}</p>
-          <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between">
             <div class="btn-group">
               <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
                 routerLink="{{deal.id}}">View</button>
               <span *ngIf=" member && member.authorization=='Admin' || listType == 'My Deals'">
                 <button type="button" class="btn btn-sm btn-outline-warning" routerLink="edit/{{deal.id}}">Edit</button>
-                  <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteDeal(deal.id)">Delete</button>
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                  (click)="deleteDeal(deal.id)">Delete</button>
               </span>
             </div>
             <small class="text-muted">Tottal Price: {{deal.tottalPrice}} ₪</small>
@@ -27,6 +35,8 @@
         </div>
       </div>
     </div>
+    <div class="d-flex justify-content-center mt-5">
+      <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
   </div>
 </div>
-

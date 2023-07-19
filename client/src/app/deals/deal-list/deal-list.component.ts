@@ -16,6 +16,7 @@ export class DealListComponent implements OnInit {
   deals$: Observable<Deal[]>;
   member: Member;
   listType: string;
+  page: number = 1;
 
   constructor(private memberService: MemberService, private dealService: DealService, private route: ActivatedRoute) {
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
@@ -10,7 +9,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -52,6 +50,12 @@ namespace API.Controllers
             var deal = await _dealRepository.GetDealAsync(dealId);
             return Ok(deal);
         }
+        [HttpGet("GetProduct{productId}", Name = "GetProduct")]
+        public async Task<ActionResult<ProductDto>> GetProductDto(int productId)
+        {
+            var product = await _dealRepository.GetProductForUpdateAsync(productId);
+            return Ok(product);
+        }
 
         [HttpPost("create")]
         public async Task<ActionResult<DealDto>> Create(CreateDealDto newDeal)
@@ -87,7 +91,7 @@ namespace API.Controllers
                 await _dealRepository.SaveAllAsync();
                 return NoContent();
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest("Failed to update deal.");
             }
@@ -124,11 +128,14 @@ namespace API.Controllers
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId,
             };
-            product.ProductPhoto = photo;
+            if (product != null)
+                product.ProductPhoto = photo;
+            else
+                return CreatedAtRoute("GetProduct", new { productId = -1 }, _mapper.Map<PhotoDto>(photo));
 
             if (await _dealRepository.SaveAllAsync())
             {
-                return CreatedAtRoute("GetDeal", new { dealId = product.Id }, _mapper.Map<PhotoDto>(photo));
+                return CreatedAtRoute("GetProduct", new { productId = product.Id }, _mapper.Map<PhotoDto>(photo));
             }
             return BadRequest("Problem adding photo");
 

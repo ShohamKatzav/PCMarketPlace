@@ -32,6 +32,7 @@
             "args": [
                 "watch",
                 "run",
+                "--no-launch-profile",
                 "--project",
                 "${workspaceFolder}/API.csproj"
             ],

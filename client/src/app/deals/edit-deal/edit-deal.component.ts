@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
@@ -18,9 +17,7 @@ import { MemberService } from 'src/app/services/member.service';
   styleUrls: ['./edit-deal.component.css']
 })
 export class EditDealComponent implements OnInit {
-  deals$: Observable<Deal[]>;
   member: Member;
-
   categories: Category[];
   deal: Deal;
   products: Product[];
@@ -29,13 +26,12 @@ export class EditDealComponent implements OnInit {
   dealForm: FormGroup;
 
   constructor(private route: ActivatedRoute, private dealService: DealService,
-    private memberService: MemberService,private fb: FormBuilder,
-    private toastr: ToastrService, private router: Router) { 
+    private memberService: MemberService, private fb: FormBuilder,
+    private toastr: ToastrService, private router: Router) {
     this.memberService.currentMember$.pipe(take(1)).subscribe(
       {
         next: response => {
           this.member = response;
-          this.loadDeals();
         }
       }
     );
@@ -57,13 +53,12 @@ export class EditDealComponent implements OnInit {
     return this.dealForm.get("description")?.value as string;
   }
   addNewRow() {
-    if (this.getProducts().controls.length < 10)
-    {
+    if (this.getProducts().controls.length < 10) {
       this.items = this.getProducts();
       this.items.push(this.genRow());
     }
     else
-      this.toastr.warning("Sorry, maximux 10 products per deal.");
+      this.toastr.warning("Sorry, maximum 10 products per deal.");
   }
   removeItem(index: any) {
     this.items.removeAt(index);
@@ -128,12 +123,14 @@ export class EditDealComponent implements OnInit {
       for (let i = 0; i < this.products.length; i++) {
         this.model.products[i].productPhoto = this.products[i].productPhoto;
       }
-      // attach products id
+      // attach exist products id
       for (let i = 0; i < this.products.length; i++) {
-        this.model.products[i].id = this.products[i].id;
+        // if id>0 mean the product is already exist, else we won't send the id property(the server will create one). 
+        if (this.products[i].id > 0)
+          this.model.products[i].id = this.products[i].id;
       }
+      console.log(this.model);
       this.dealService.edit(this.model).subscribe(() => {
-        this.deals$ = this.dealService.getDealsForUser(this.member.id);
         this.router.navigateByUrl("/deals/my-deals");
         this.toastr.success("Deal edited successfully");
       });
@@ -165,8 +162,5 @@ export class EditDealComponent implements OnInit {
     return 3;
   }
 
-  loadDeals() {
-    this.deals$ = this.dealService.getDealsForUser(this.member.id);
-  }
 
 }
