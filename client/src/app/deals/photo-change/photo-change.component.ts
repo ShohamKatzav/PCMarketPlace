@@ -45,6 +45,12 @@ export class PhotoChangeComponent implements OnInit {
       this.product.productPhoto.url = "./assets/no-image.jpeg";
     });
   }
+  deletePhotoProductDidntCreated() {
+    this.uploader.clearQueue();
+    this.resetFileInput();
+    if (this.product?.productPhoto?.url) 
+      this.product.productPhoto.url = "./assets/no-image.jpeg";
+  }
 
   initializeUploader() {
 

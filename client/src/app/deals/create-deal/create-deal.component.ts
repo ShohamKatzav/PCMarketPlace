@@ -58,7 +58,6 @@ export class CreateDealComponent implements OnInit {
   }
   removeItem(index: any) {
     this.items.removeAt(index)
-    this.products.splice(index);
   }
 
 

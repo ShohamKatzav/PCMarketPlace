@@ -129,7 +129,6 @@ export class EditDealComponent implements OnInit {
         if (this.products[i].id)
           this.model.products[i].id = this.products[i].id;
       }
-      console.log(this.model);
       this.dealService.edit(this.model).subscribe(() => {
         this.router.navigateByUrl("/deals/my-deals");
         this.toastr.success("Deal edited successfully");
