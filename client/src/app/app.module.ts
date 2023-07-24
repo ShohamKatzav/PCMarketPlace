@@ -16,7 +16,6 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { SharedModule } from './modules/shared.module';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
-import { CreateDealComponent } from './deals/create-deal/create-deal.component';
 import { FooterComponent } from './footer/footer.component';
 import { AboutComponent } from './about/about.component';
 import { CategoriesManagementComponent } from './categories/categories-management/categories-management.component';
@@ -31,7 +30,6 @@ import { CategoriesManagementComponent } from './categories/categories-managemen
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    CreateDealComponent,
     FooterComponent,
     AboutComponent,
     CategoriesManagementComponent,

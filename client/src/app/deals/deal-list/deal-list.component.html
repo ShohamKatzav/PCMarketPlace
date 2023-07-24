@@ -13,9 +13,7 @@
 
       <div class="col card mr-1" *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: 6, currentPage: page }">
         <div class="card shadow-sm">
-          <div *ngIf="deal.dealPhoto?.url">
-            <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
-          </div>
+          <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
         </div>
 
         <div class="card-body">

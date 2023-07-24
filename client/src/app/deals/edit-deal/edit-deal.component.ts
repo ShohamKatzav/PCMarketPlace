@@ -67,10 +67,10 @@ export class EditDealComponent implements OnInit {
 
 
   initTheFormWithDealInfo(deal: Deal) {
-    var items2: FormArray[] = [this.rowForEveryProduct()];
+    var items: FormArray[] = [this.rowForEveryProduct()];
     this.dealForm.patchValue({
       description: deal.description,
-      products: items2
+      products: items
     });
   }
 
@@ -125,8 +125,8 @@ export class EditDealComponent implements OnInit {
       }
       // attach exist products id
       for (let i = 0; i < this.products.length; i++) {
-        // if id>0 mean the product is already exist, else we won't send the id property(the server will create one). 
-        if (this.products[i].id > 0)
+        // if id mean the product is already exist, else we won't send the id property(the server will create one). 
+        if (this.products[i].id)
           this.model.products[i].id = this.products[i].id;
       }
       console.log(this.model);

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
-import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
+import { Product } from 'src/app/models/product';
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
 
@@ -16,26 +16,27 @@ import { MemberService } from 'src/app/services/member.service';
 })
 export class CreateDealComponent implements OnInit {
 
-  deals$: Observable<Deal[]>;
   member: Member;
 
   categories: Category[];
   model: any = {};
+  products: Product[] = [];
   items!: FormArray;
   dealForm = new FormGroup({
     description: new FormControl('', Validators.required),
     products: new FormArray([])
   });
-  constructor(private dealService: DealService, private memberService: MemberService , private toastr: ToastrService, private router: Router) {
-    this.memberService.currentMember$.subscribe(
+  constructor(private dealService: DealService, private memberService: MemberService,
+    private toastr: ToastrService,
+    private router: Router) {
+    this.memberService.currentMember$.pipe(take(1)).subscribe(
       {
         next: response => {
           this.member = response;
-          this.loadDeals();
         }
       }
     );
-   }
+  }
 
   ngOnInit(): void {
     this.categories = JSON.parse(localStorage.getItem("categories") || '{}')
@@ -48,8 +49,7 @@ export class CreateDealComponent implements OnInit {
     return this.dealForm.get("description")?.value as string;
   }
   addNewRow() {
-    if (this.getProducts().controls.length < 10)
-    {
+    if (this.getProducts().controls.length < 10) {
       this.items = this.getProducts();
       this.items.push(this.genRow());
     }
@@ -57,8 +57,8 @@ export class CreateDealComponent implements OnInit {
       this.toastr.warning("Sorry, maximux 10 products per deal.");
   }
   removeItem(index: any) {
-    this.items = this.getProducts();
     this.items.removeAt(index)
+    this.products.splice(index);
   }
 
 
@@ -88,8 +88,10 @@ export class CreateDealComponent implements OnInit {
     else {
       this.model.description = this.dealForm.get("description")?.value;
       this.model.products = Array.from(this.items.value);
+      for (let i = 0; i < this.products.length; i++) {
+        this.model.products[i].productPhoto = this.products[i].productPhoto;
+      }
       this.dealService.create(this.model).subscribe(() => {
-        this.loadDeals();
         this.router.navigateByUrl("/deals/my-deals");
         this.toastr.success("Deal created");
       });
@@ -111,11 +113,5 @@ export class CreateDealComponent implements OnInit {
       return 2;
     return 3;
   }
-
-  loadDeals() {
-    if(this.member)
-      this.deals$ = this.dealService.getDealsForUser(this.member.id);
-  }
-
 
 }

@@ -9,6 +9,7 @@ import { ProductListComponent } from '../products/product-list/product-list.comp
 import { ProductCardComponent } from '../products/product-card/product-card.component';
 import { PhotoChangeComponent } from '../deals/photo-change/photo-change.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { CreateDealComponent } from '../deals/create-deal/create-deal.component';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path:'', component: DealListComponent, data :{ listType: "All Deals"}, pathMatch: 'full'},
   {path:':dealid', component: DealDetailsComponent},
   {path:'my-deals/:dealid', component: DealDetailsComponent},
+  {path:'new-deal', component: CreateDealComponent},
   {path:'my-deals/edit/:dealid', component: EditDealComponent},
 
 ]
@@ -24,6 +26,7 @@ const routes: Routes = [
   declarations: [
     DealListComponent,
     DealDetailsComponent,
+    CreateDealComponent,
     EditDealComponent,
     ProductListComponent,
     ProductCardComponent,

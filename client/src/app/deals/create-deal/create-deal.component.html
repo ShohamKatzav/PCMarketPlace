@@ -25,7 +25,6 @@
               </td>
             </div>
 
-
             <div class="col">
               <td><input type="number" min="0" class="form-control mt-2" required placeholder="Price" formControlName="Price"></td>
             </div>
@@ -33,6 +32,9 @@
               <button type='button' (click)="removeItem(i)" class="btn btn-sm btn-danger">
                 <i class="fa fa-trash fa-3x"></i>
               </button>
+            </div>
+            <div class="col">
+              <app-photo-change [(product)]="products[i]"></app-photo-change>
             </div>
           </div>
         </tr>
