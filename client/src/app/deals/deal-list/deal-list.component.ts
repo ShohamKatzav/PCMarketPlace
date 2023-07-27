@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map, pluck, tap } from 'rxjs/operators';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
@@ -16,7 +17,9 @@ export class DealListComponent implements OnInit {
   deals$: Observable<Deal[]>;
   member: Member;
   listType: string;
-  page: number = 1;
+  currentPage: number = 1;
+  tableSize: number = 6;
+  totalItemsCount: number = 0;
 
   constructor(private memberService: MemberService, private dealService: DealService, private route: ActivatedRoute) {
 
@@ -26,7 +29,7 @@ export class DealListComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.listType = data.listType;
     })
-    this.memberService.currentMember$.subscribe( 
+    this.memberService.currentMember$.subscribe(
       {
         next: response => {
           this.member = response;
@@ -35,22 +38,29 @@ export class DealListComponent implements OnInit {
       }
     );
   }
-  
+
   loadDeals() {
-    if (this.member)
-    {
-      if (this.listType == "My Deals")
-        this.deals$ = this.dealService.getDealsForUser(this.member.id);
-      else
-        if (this.listType == "All Deals")
-          this.deals$ = this.dealService.getDeals();
-    }
+    if (!this.member) return;
+
+    const dealsListObservable = this.listType === "My Deals" ?
+      this.dealService.getDealsForUser(this.member.id, this.currentPage, this.tableSize) :
+      this.dealService.getDeals(this.member.id, this.currentPage, this.tableSize);
+
+    this.deals$ = dealsListObservable.pipe(
+      tap(res => this.totalItemsCount = res.totalCount),
+      pluck('deals')
+    );
   }
 
   deleteDeal(dealId: number) {
     this.dealService.deleteDeal(dealId).subscribe(() => {
       this.loadDeals();
     });
+  }
+
+  onTableDataChange(event: any) {
+    this.currentPage = event;
+    this.loadDeals();
   }
 
 }

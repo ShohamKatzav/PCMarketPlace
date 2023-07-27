@@ -21,19 +21,27 @@ namespace API.Data
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<DealDto>> GetDealsAsync()
+        public async Task<IEnumerable<DealDto>> GetAvailableDealsAsync(int userId, int currentPage, int tableSize)
         {
-            return await _context.Deals
+            int itemsToSkip = (currentPage - 1) * tableSize;
+
+            return await _context.Deals.Where(deal => deal.AppUserId != userId)
             .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
+            .Skip(itemsToSkip)
+            .Take(tableSize)
             .ToListAsync();
         }
 
-        public async Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId)
+        public async Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId, int currentPage, int tableSize)
         {
+            int itemsToSkip = (currentPage - 1) * tableSize;
+
             return await _context.Deals.Where(deal => deal.AppUserId == userId)
             .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
+            .Skip(itemsToSkip)
+            .Take(tableSize)
             .ToListAsync();
         }
         public async Task<DealDto> GetDealAsync(int dealid)
@@ -41,23 +49,29 @@ namespace API.Data
             return await _context.Deals
             .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
-            .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
+            .Where(d => d.Id == dealid).SingleOrDefaultAsync();
+        }
+        public async Task<int> GetDealTotalCountAsync(int userId, string listType)
+        {
+            return await _context.Deals
+            .Where(deal => listType == "All Deals" ? deal.AppUserId != userId : deal.AppUserId == userId)
+            .CountAsync();
         }
 
-        public async Task<Deal>GetDealForUpdateAsync(int dealid)
+        public async Task<Deal> GetDealForUpdateAsync(int dealid)
         {
             return await _context.Deals.Include(p => p.Products)
             .ThenInclude(p => p.ProductPhoto)
             .Include(d => d.DealPhoto)
-            .Where(d=> d.Id == dealid).SingleOrDefaultAsync();
+            .Where(d => d.Id == dealid).SingleOrDefaultAsync();
         }
 
-        public async Task<Product>GetProductForUpdateAsync(int productid)
+        public async Task<Product> GetProductForUpdateAsync(int productid)
         {
             return await _context.Products.Include(p => p.ProductPhoto)
-            .Where(p=> p.Id == productid).SingleOrDefaultAsync();
+            .Where(p => p.Id == productid).SingleOrDefaultAsync();
         }
-    
+
         public void Insert(Deal deal)
         {
             _context.Deals.Add(deal);

@@ -29,21 +29,29 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DealDto>>> GetDeals()
+        public async Task<ActionResult<DealsResponseDto>> GetDeals(int userId, int currentPage, int tableSize)
         {
-            var deals = await _dealRepository.GetDealsAsync();
-            return Ok(deals);
+            var deals = await _dealRepository.GetAvailableDealsAsync(userId, currentPage, tableSize);
+            var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "All Deals");
+            var dealsResponse = new DealsResponseDto{
+                Deals = deals,
+                totalCount = totalCount
+            };
+            return Ok(dealsResponse);
         }
 
         [HttpGet("GetDealsForUser/{userId}", Name = "GetDealsForUser")]
-        public async Task<ActionResult<IEnumerable<DealDto>>> GetDealsForUser(int userId)
+        public async Task<ActionResult<DealsResponseDto>> GetDealsForUser(int userId, int currentPage, int tableSize)
         {
-            var deals = await _dealRepository.GetDealsForUserAsync(userId);
-            return Ok(deals);
+            var deals = await _dealRepository.GetDealsForUserAsync(userId, currentPage, tableSize);
+            var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "My Deals");
+            var dealsResponse = new DealsResponseDto{
+                Deals = deals,
+                totalCount = totalCount
+            };
+            return Ok(dealsResponse);
         }
-
-
-
+        
         [HttpGet("GetDeal/{dealId}", Name = "GetDeal")]
         public async Task<ActionResult<DealDto>> GetDealDto(int dealId)
         {

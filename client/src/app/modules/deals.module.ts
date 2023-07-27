@@ -10,6 +10,7 @@ import { ProductCardComponent } from '../products/product-card/product-card.comp
 import { PhotoChangeComponent } from '../deals/photo-change/photo-change.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CreateDealComponent } from '../deals/create-deal/create-deal.component';
+import { DealService } from '../services/deal.service';
 
 
 const routes: Routes = [

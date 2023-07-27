@@ -11,30 +11,30 @@
         <h1 class="text-center">No Deals Found</h1>
       </div>
 
-      <div class="col card mr-1" *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: 6, currentPage: page }">
+      <div class="col card mr-1" *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
         <div class="card shadow-sm">
           <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
         </div>
 
         <div class="card-body">
-          <p class="card-text">{{deal.description}}</p>
-          <div class="d-flex justify-content-between">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
-                routerLink="{{deal.id}}">View</button>
-              <span *ngIf=" member && member.authorization=='Admin' || listType == 'My Deals'">
+          <h5 class="card-text">{{deal.description}}</h5>
+          <small class="text-muted">Total Price: {{deal.totalPrice}} ₪</small>
+          <div class="d-flex justify-content-start align-items-center">
+            <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
+              routerLink="{{deal.id}}">View</button>
+            <span *ngIf=" member && member.authorization=='Admin' || listType == 'My Deals'">
+              <div class="d-flex">
                 <button type="button" class="btn btn-sm btn-outline-warning" routerLink="edit/{{deal.id}}">Edit</button>
                 <button type="button" class="btn btn-sm btn-outline-danger"
                   (click)="deleteDeal(deal.id)">Delete</button>
-              </span>
-            </div>
-            <small class="text-muted">Tottal Price: {{deal.tottalPrice}} ₪</small>
+              </div>
+            </span>
           </div>
         </div>
       </div>
     </div>
     <div class="d-flex justify-content-center mt-5" *ngIf="(deals$| async)?.length != 0">
-      <pagination-controls (pageChange)="page = $event"></pagination-controls>
+      <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
     </div>
   </div>
 </div>

@@ -14,7 +14,7 @@ namespace API.DTOs
         public DateTime LastModified { get; set; }
         public ICollection<ProductDto> Products { get; set; }
         public string Status { get; set; }
-        public double TottalPrice { get; set; }
+        public double TotalPrice { get; set; }
         public PhotoDto DealPhoto { get; set; }
 
     }

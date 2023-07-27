@@ -7,7 +7,7 @@ export interface Deal{
     created: Date;
     lastModified: Date;
     products: Product[];
-    tottalPrice: number;
+    totalPrice: number;
     status: string;
     description: string;
     dealPhoto: Photo;

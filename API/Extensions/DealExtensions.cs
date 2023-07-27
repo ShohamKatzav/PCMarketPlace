@@ -9,7 +9,7 @@ namespace API.Extensions
 {
     public static class DealExtensions
     {
-        public static double GetTottalPrice(this ICollection<Product> products)
+        public static double GetTotalPrice(this ICollection<Product> products)
         {
             return products.Sum(p => p.Price);
         }

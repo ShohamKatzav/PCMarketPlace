@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,13 +19,28 @@ export class DealService {
     return this.http.get<Deal>(`${this.baseUrl}deals/GetDeal/${dealId}`);
   }
 
-  getDeals(): Observable<Deal[]> {
-    return this.http.get<Deal[]>(`${this.baseUrl}deals`);
+  getDeals(userId: number, currentPage: number, tableSize: number): Observable<{ deals: Deal[], totalCount: number }> {
+    const queryParams = { "userId": userId, "currentPage": currentPage, "tableSize": tableSize };
+    return this.http.get<{ deals: Deal[], totalCount: number }>(`${this.baseUrl}deals`, { params: queryParams}).pipe(
+      map(response => {
+        const deals = response.deals;
+        const totalCount = response.totalCount;;
+        return { deals, totalCount };
+      })
+    );
   }
-  
-  getDealsForUser(userId: number): Observable<Deal[]> {
-    return this.http.get<Deal[]>(`${this.baseUrl}deals/GetDealsForUser/${userId}`);
+
+  getDealsForUser(userId: number, currentPage: number, tableSize: number): Observable<{ deals: Deal[], totalCount: number }> {
+    const queryParams = { "userId": userId, "currentPage": currentPage, "tableSize": tableSize };
+    return this.http.get<{ deals: Deal[], totalCount: number }>(`${this.baseUrl}deals/GetDealsForUser/${userId}`, { params: queryParams }).pipe(
+      map(response => {
+        const deals = response.deals;
+        const totalCount = response.totalCount;;
+        return { deals, totalCount };
+      })
+    );
   }
+
   getProductsForDeal(dealId: number): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.baseUrl}deals/GetProductsForDeal/${dealId}`);
   }

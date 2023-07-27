@@ -48,10 +48,10 @@ namespace API.Helpers
             CreateMap<DealPhoto, PhotoDto>();
             CreateMap<Deal, DealDto>()
             .ForMember(
-                dest => dest.TottalPrice,
+                dest => dest.TotalPrice,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Products.GetTottalPrice());
+                    opt.MapFrom(d => d.Products.GetTotalPrice());
                 })
                 .ForMember(
                 dest => dest.DealPhoto,
