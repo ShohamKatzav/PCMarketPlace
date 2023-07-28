@@ -1,6 +1,6 @@
 # PCMarketPlace
 
-We digital is an online store for computers and computer peripheral devices.
+PCMarketPlace is an online store for computers and computer peripheral devices.
 In this store evert user can upload a deal for sell.
 A deal must include at least one product details (name,category,price) and can also include one image.
 
