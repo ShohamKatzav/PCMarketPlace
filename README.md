@@ -1,6 +1,6 @@
 # PCMarketPlace
 
-PCMarketPlace is an online store for computers and computer peripheral devices.
+PCMarketPlace is an online store for computers and peripheral devices.
 In this store evert user can upload a deal for sell.
 A deal must include at least one product details (name,category,price) and can also include one image.
 
@@ -115,6 +115,10 @@ Responsive footwer which include a short introduction to our new customers and w
       "Microsoft": "Information",
       "Microsoft.Hosting.Lifetime": "Information"
     }
+  },
+   "StripeSettings":{
+    "SecretKey": "{{Stripe_Secret_Key}}",
+    "PublishableKey": "{{Stripe_Publishable_kKey}}""
   }
 }
 </code>
