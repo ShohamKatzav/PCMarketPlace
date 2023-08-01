@@ -1,0 +1,28 @@
+/* Apply styles to the card element container */
+.card-element-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  /* Apply styles to the inner iframes of the card element */
+  .card-element-container iframe {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: none;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: box-shadow 150ms ease;
+  }
+  
+  /* Apply focus styles to the inner iframes on focus */
+  .card-element-container iframe:focus {
+    box-shadow: 0 0 0 2px #007bff;
+  }
+  
+  /* Apply error styles to the inner iframes when there's an error */
+  .card-element-container iframe.StripeElement--invalid {
+    box-shadow: 0 0 0 2px #dc3545;
+  }

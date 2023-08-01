@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
@@ -9,23 +10,31 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Stripe;
+using Stripe.Checkout; // Explicit reference to the Checkout namespace
 
 namespace API.Controllers
 {
     [Authorize]
     public class DealsController : BaseApiController
     {
+
+        private readonly string secretKey;
         private readonly IDealRepository _dealRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
+        private readonly IConfiguration _config;
 
-        public DealsController(IDealRepository dealRepository, IMapper mapper, IUserRepository userRepository, IPhotoService photoService)
+        public DealsController(IDealRepository dealRepository, IMapper mapper, IUserRepository userRepository, IPhotoService photoService, IConfiguration config)
         {
             _dealRepository = dealRepository;
             _mapper = mapper;
             _userRepository = userRepository;
             _photoService = photoService;
+            _config = config;
+            secretKey = _config["StripeSettings:SecretKey"];
         }
 
         [HttpGet]
@@ -33,7 +42,8 @@ namespace API.Controllers
         {
             var deals = await _dealRepository.GetAvailableDealsAsync(userId, currentPage, tableSize);
             var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "All Deals");
-            var dealsResponse = new DealsResponseDto{
+            var dealsResponse = new DealsResponseDto
+            {
                 Deals = deals,
                 totalCount = totalCount
             };
@@ -45,13 +55,14 @@ namespace API.Controllers
         {
             var deals = await _dealRepository.GetDealsForUserAsync(userId, currentPage, tableSize);
             var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "My Deals");
-            var dealsResponse = new DealsResponseDto{
+            var dealsResponse = new DealsResponseDto
+            {
                 Deals = deals,
                 totalCount = totalCount
             };
             return Ok(dealsResponse);
         }
-        
+
         [HttpGet("GetDeal/{dealId}", Name = "GetDeal")]
         public async Task<ActionResult<DealDto>> GetDealDto(int dealId)
         {
@@ -162,9 +173,10 @@ namespace API.Controllers
                 if (result.Error != null) return BadRequest(result.Error.Message);
             }
 
-            product.ProductPhoto = new ProductPhoto(){Url="./assets/no-image.jpeg"};
+            product.ProductPhoto = new ProductPhoto() { Url = "./assets/no-image.jpeg" };
 
-            try{
+            try
+            {
                 if (await _dealRepository.SaveAllAsync()) return Ok();
             }
             catch
@@ -173,6 +185,145 @@ namespace API.Controllers
             }
             return BadRequest("Failed to delete the photo");
 
+        }
+
+        // Used for Stripe External page
+        // [HttpPost("checkout")]
+        // public async Task<ActionResult> Checkout([FromBody] int dealId)
+        // {
+        //     var deal = await _dealRepository.GetDealForUpdateAsync(dealId);
+        //     if (deal == null)
+        //         return NotFound();
+
+        //     var lineItems = new List<SessionLineItemOptions>();
+
+        //     foreach (var product in deal.Products)
+        //     {
+        //         lineItems.Add(new SessionLineItemOptions
+        //         {
+        //             PriceData = new SessionLineItemPriceDataOptions
+        //             {
+        //                 Currency = "ils",
+        //                 ProductData = new SessionLineItemPriceDataProductDataOptions
+        //                 {
+        //                     Name = product.Name,
+        //                     Description = product.Name,
+        //                     Images = new List<string>
+        //                     {
+        //                         product.ProductPhoto.Url
+        //                     }
+        //                 },
+        //                 UnitAmount = ((long)product.Price) * 100,
+        //             },
+        //             Quantity = 1
+        //         });
+        //     }
+        //     var options = new SessionCreateOptions
+        //     {
+
+        //         PaymentMethodTypes = new List<string>
+        //         {
+        //             "card"
+        //         },
+        //         LineItems = lineItems,
+        //         Mode = "payment",
+        //         SuccessUrl = "https://localhost:4200/deals",
+        //         CancelUrl = "https://localhost:4200/deals"
+        //     };
+
+        //     var stripeClient = new StripeClient(secretKey);
+        //     var service = new SessionService(stripeClient);
+        //     var session = service.Create(options);
+
+        //     deal.Status = "Sold";
+        //     try
+        //     {
+        //         await _dealRepository.SaveAllAsync();
+        //     }
+        //     catch
+        //     {
+        //         return BadRequest("Failed to mark the deal as \"sold\"");
+        //     }
+        //     return Ok(new { id = session.Id });
+
+        // }
+
+        [HttpPut("checkout")]
+        public async Task<ActionResult> Checkout2(PaymentCheckoutDto paymentCheckout)
+        {
+            var deal = await _dealRepository.GetDealForUpdateAsync(paymentCheckout.dealId);
+            if (deal == null)
+                return NotFound();
+
+            deal.Status = "Sold";
+
+            // Save the changes to the deal (mark it as "Sold")
+            if (await _dealRepository.SaveAllAsync())
+            {
+                try
+                {
+                    // Create a PaymentIntent object using the provided paymentIntentId
+                    var paymentIntentService = new PaymentIntentService();
+                    var paymentIntentResponse = paymentIntentService.Get(paymentCheckout.paymentIntentId, null);
+
+                    // Attach the payment method to the PaymentIntent
+                    var paymentMethodService = new PaymentMethodService();
+                    var paymentMethod = paymentMethodService.Get(paymentCheckout.paymentMethodId, null);
+
+                    // Confirm the PaymentIntent to complete the payment
+                    var confirmOptions = new PaymentIntentConfirmOptions
+                    {
+                        PaymentMethod = paymentCheckout.paymentMethodId,
+                        ReturnUrl = "https://example.com/return",
+                    };
+                    paymentIntentService.Confirm(paymentCheckout.paymentIntentId, confirmOptions);
+
+                    // Payment confirmed successfully
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("Payment failed: " + ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Failed to mark the deal as \"sold\"");
+            }
+        }
+
+        [HttpPost("secret-key")]
+        public async Task<ActionResult> SecretKey([FromBody] int dealId)
+        {
+            StripeConfiguration.ApiKey = secretKey;
+            var deal = await _dealRepository.GetDealForUpdateAsync(dealId);
+            if (deal == null)
+                return NotFound("Deal not found");
+
+            var paymentIntent = await CreatePaymentIntentAsync(deal);
+            return Ok(new { paymentIntent = paymentIntent });
+        }
+        private async Task<PaymentIntent> CreatePaymentIntentAsync(Deal deal)
+        {
+            var paymentIntentService = new PaymentIntentService();
+            var paymentIntent = await paymentIntentService.CreateAsync(new PaymentIntentCreateOptions
+            {
+                Amount = (long)(deal.Products.Sum(product => product.Price) * 100),
+                Currency = "ils",
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                {
+                    Enabled = true,
+                },
+            });
+
+            return paymentIntent;
+        }
+
+        [HttpGet("publishable-key")]
+        public IActionResult PublishableKey()
+        {
+            var publishableKey = _config["StripeSettings:PublishableKey"];
+            return Ok(new { publishableKey = publishableKey });
         }
     }
 }

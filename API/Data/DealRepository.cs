@@ -25,7 +25,7 @@ namespace API.Data
         {
             int itemsToSkip = (currentPage - 1) * tableSize;
 
-            return await _context.Deals.Where(deal => deal.AppUserId != userId)
+            return await _context.Deals.Where(deal => deal.AppUserId != userId && deal.Status == "Available")
             .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
             .Skip(itemsToSkip)
@@ -54,7 +54,7 @@ namespace API.Data
         public async Task<int> GetDealTotalCountAsync(int userId, string listType)
         {
             return await _context.Deals
-            .Where(deal => listType == "All Deals" ? deal.AppUserId != userId : deal.AppUserId == userId)
+            .Where(deal => listType == "All Deals" ? (deal.AppUserId != userId && deal.Status == "Available") : deal.AppUserId == userId)
             .CountAsync();
         }
 

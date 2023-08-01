@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, pluck, tap } from 'rxjs/operators';
+import { pluck, tap } from 'rxjs/operators';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-deal-list',
@@ -21,7 +22,8 @@ export class DealListComponent implements OnInit {
   tableSize: number = 6;
   totalItemsCount: number = 0;
 
-  constructor(private memberService: MemberService, private dealService: DealService, private route: ActivatedRoute) {
+  constructor(private memberService: MemberService, private dealService: DealService,
+    private route: ActivatedRoute, private router: Router) {
 
   }
 
@@ -61,6 +63,12 @@ export class DealListComponent implements OnInit {
   onTableDataChange(event: any) {
     this.currentPage = event;
     this.loadDeals();
+  }
+
+
+  buyNow(deal: Deal) {
+    this.dealService.setSavedDeal(deal);
+    this.router.navigate(['deals/transaction']);
   }
 
 }

@@ -11,7 +11,8 @@
         <h1 class="text-center">No Deals Found</h1>
       </div>
 
-      <div class="col card mr-1" *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
+      <div class="col card mr-1"
+        *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
         <div class="card shadow-sm">
           <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
         </div>
@@ -19,10 +20,12 @@
         <div class="card-body">
           <h5 class="card-text">{{deal.description}}</h5>
           <small class="text-muted">Total Price: {{deal.totalPrice}} ₪</small>
-          <div class="d-flex justify-content-start align-items-center">
+          <div class="d-inline-flex justify-content-start align-items-center">
             <button type="button" class="btn btn-sm btn-outline-info" routerLinkActive="active"
               routerLink="{{deal.id}}">View</button>
-            <span *ngIf=" member && member.authorization=='Admin' || listType == 'My Deals'">
+            <button *ngIf="listType != 'My Deals'" type="button" class="btn btn-sm btn-outline-success text-truncate"
+              (click)="buyNow(deal)">Buy Now</button>
+            <span *ngIf="member?.authorization =='Admin' || listType == 'My Deals'">
               <div class="d-flex">
                 <button type="button" class="btn btn-sm btn-outline-warning" routerLink="edit/{{deal.id}}">Edit</button>
                 <button type="button" class="btn btn-sm btn-outline-danger"

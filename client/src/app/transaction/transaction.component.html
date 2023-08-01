@@ -1,0 +1,25 @@
+<div class="container border rounded p-4" style="max-width: 40%;">
+    <form (ngSubmit)="handleSubmit()" class="mx-auto text-center">
+        <p class="mb-4">{{ deal?.description }}</p>
+        <div class="container mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ deal?.dealPhoto?.url }}" class="img-fluid" alt="Small Image">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="text">Email</label>
+            <input type="text" [(ngModel)]="email" name="email" required class="form-control">
+        </div>
+        <div class="form-group">
+            <div class="card-element-container">
+                <div #cardElement></div>
+            </div>
+            <p class="text-danger">{{ cardErrors }}</p>
+        </div>
+        <button type="submit" [disabled]="!stripe" class="btn btn-primary btn-md">
+            Buy Now For {{ deal.totalPrice }} ₪
+        </button>
+    </form>
+</div>

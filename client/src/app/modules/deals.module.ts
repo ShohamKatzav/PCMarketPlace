@@ -10,15 +10,16 @@ import { ProductCardComponent } from '../products/product-card/product-card.comp
 import { PhotoChangeComponent } from '../deals/photo-change/photo-change.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CreateDealComponent } from '../deals/create-deal/create-deal.component';
-import { DealService } from '../services/deal.service';
+import { TransactionComponent } from '../transaction/transaction.component';
 
 
 const routes: Routes = [
   {path:'my-deals', component: DealListComponent, data :{ listType: "My Deals"}, pathMatch: 'full',},
   {path:'', component: DealListComponent, data :{ listType: "All Deals"}, pathMatch: 'full'},
+  {path:'new-deal', component: CreateDealComponent, pathMatch: 'full'},
+  {path:'transaction', component: TransactionComponent, pathMatch: 'full'},
   {path:':dealid', component: DealDetailsComponent},
   {path:'my-deals/:dealid', component: DealDetailsComponent},
-  {path:'new-deal', component: CreateDealComponent},
   {path:'my-deals/edit/:dealid', component: EditDealComponent},
 
 ]

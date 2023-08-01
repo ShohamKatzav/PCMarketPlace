@@ -3,27 +3,29 @@
         <a class="navbar-brand" routerLink="/">PC Marketplace</a>
         <ul class="navbar-nav mr-auto">
             <ng-container *ngIf="currentUser$ | async">
-                <li class="nav-item" >
-                    <a class="nav-link" routerLinkActive="active" 
-                    [routerLinkActiveOptions]="{exact: true}"  routerLink="/deals/my-deals">My Deals</a>
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        routerLink="/deals/my-deals">My Deals</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active"
-                    [routerLinkActiveOptions]="{exact: true}" routerLink="/deals">Available Deals</a>
+                    <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+                        routerLink="/deals">Available Deals</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLinkActive="active" routerLink="/new-deal">List a new deal</a>
+                    <a class="nav-link" routerLinkActive="active" routerLink="/deals/new-deal">List a new deal</a>
                 </li>
-                <li *ngIf="currentMember && currentMember.authorization=='Admin'" class="nav-item">
-                    <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
-                </li>
-                <li *ngIf="currentMember && currentMember.authorization=='Admin'" class="nav-item">
-                    <a class="nav-link" routerLinkActive="active" routerLink="/categories">Categories</a>
-                </li>
+                <ng-container *ngIf="currentMember && currentMember.authorization=='Admin'">
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" routerLink="/categories">Categories</a>
+                    </li>
+                </ng-container>
             </ng-container>
             <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active"  routerLink="/about-us">About</a>
-              </li>
+                <a class="nav-link" routerLinkActive="active" routerLink="/about-us">About</a>
+            </li>
         </ul>
 
         <div class="dropdown" *ngIf="currentUser$ | async as user" dropdown>

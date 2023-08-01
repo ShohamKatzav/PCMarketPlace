@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,19 @@ export class DealService {
 
   baseUrl = environment.apiUrl;
 
+  private readonly dealKey = 'deal_data';
+
   constructor(private http: HttpClient) { }
+
+
+  setSavedDeal(deal: Deal) {
+    sessionStorage.setItem(this.dealKey, JSON.stringify(deal));
+  }
+
+  getSavedDeal(): Deal | null {
+    const dealData = sessionStorage.getItem(this.dealKey);
+    return dealData ? JSON.parse(dealData) : null;
+  }
 
   getDeal(dealId: number): Observable<Deal> {
     return this.http.get<Deal>(`${this.baseUrl}deals/GetDeal/${dealId}`);
@@ -68,4 +80,23 @@ export class DealService {
   deletePhoto(productId: number) {
     return this.http.delete(`${this.baseUrl}deals/delete-photo/${productId}`);
   }
+
+  // Used for Stripe External page
+  // checkoutDeal(dealId: number): Observable<any>{
+  //   return this.http.post(`${this.baseUrl}deals/checkout`, dealId);
+  // }
+
+  checkoutDeal(dealId: number, paymentIntentId: string ,paymentMethodId: string): Observable<any>{
+    const body = { dealId,paymentIntentId,paymentMethodId };
+    return this.http.put(`${this.baseUrl}deals/checkout`, body);
+  }
+
+  getPublisableKey(): Observable<any>{
+    return this.http.get(`${this.baseUrl}deals/publishable-key`);
+  }
+
+  getSecretKey(dealId: number): Observable<any>{
+    return this.http.post(`${this.baseUrl}deals/secret-key`, dealId);
+  }
+  
 }
