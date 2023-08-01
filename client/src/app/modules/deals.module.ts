@@ -20,8 +20,7 @@ const routes: Routes = [
   {path:'transaction', component: TransactionComponent, pathMatch: 'full'},
   {path:':dealid', component: DealDetailsComponent},
   {path:'my-deals/:dealid', component: DealDetailsComponent},
-  {path:'my-deals/edit/:dealid', component: EditDealComponent},
-
+  {path:'edit/:dealid', component: EditDealComponent},
 ]
 
 @NgModule({

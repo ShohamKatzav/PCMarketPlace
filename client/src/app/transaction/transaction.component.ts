@@ -45,18 +45,6 @@ export class TransactionComponent implements OnInit {
       });
     });
   }
-
-  // Used for Stripe External page
-  // onCheckout() {
-  //   this.dealService.checkoutDeal(this.deal.id).subscribe(async (res) => {
-  //     let stripe = await loadStripe(environment.stripe.publicKey);
-  //     stripe?.redirectToCheckout({
-  //       sessionId: res.id
-  //     })
-  //   });
-  // }
-
-
   async handleSubmit() {
 
     // Things could work fine without this check but I got code 400 from https://api.stripe.com/v1/payment_methods

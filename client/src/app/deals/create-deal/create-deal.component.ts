@@ -79,11 +79,15 @@ export class CreateDealComponent implements OnInit {
   }
 
   create() {
-    if (this.checkValidation() == 1)
+    const validationResult = this.checkValidation();
+
+    if (validationResult == 1)
       this.toastr.error("Please Enter description (8 characters) and at least 1 product");
 
-    else if (this.checkValidation() == 2)
+    else if (validationResult == 2)
       this.toastr.warning("Please do not forget any field");
+    else if (validationResult == 3)
+      this.toastr.warning("Deal price has to be 5 ILS and above");
     else {
       this.model.description = this.dealForm.get("description")?.value;
       this.model.products = Array.from(this.items.value);
@@ -108,9 +112,14 @@ export class CreateDealComponent implements OnInit {
       this.model.description.length < 8 || this.model.products.length < 1) {
       return 1;
     }
-    if (this.items.invalid)
+    if (this.items.invalid) {
       return 2;
-    return 3;
+    }
+    const prices = this.model.products.map((item) => item.Price);
+    const sumPrices = prices.reduce((total, price) => total + price, 0);
+    if (sumPrices < 5)
+      return 3;
+    return 4;
   }
 
 }

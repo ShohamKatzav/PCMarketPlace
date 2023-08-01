@@ -187,67 +187,6 @@ namespace API.Controllers
 
         }
 
-        // Used for Stripe External page
-        // [HttpPost("checkout")]
-        // public async Task<ActionResult> Checkout([FromBody] int dealId)
-        // {
-        //     var deal = await _dealRepository.GetDealForUpdateAsync(dealId);
-        //     if (deal == null)
-        //         return NotFound();
-
-        //     var lineItems = new List<SessionLineItemOptions>();
-
-        //     foreach (var product in deal.Products)
-        //     {
-        //         lineItems.Add(new SessionLineItemOptions
-        //         {
-        //             PriceData = new SessionLineItemPriceDataOptions
-        //             {
-        //                 Currency = "ils",
-        //                 ProductData = new SessionLineItemPriceDataProductDataOptions
-        //                 {
-        //                     Name = product.Name,
-        //                     Description = product.Name,
-        //                     Images = new List<string>
-        //                     {
-        //                         product.ProductPhoto.Url
-        //                     }
-        //                 },
-        //                 UnitAmount = ((long)product.Price) * 100,
-        //             },
-        //             Quantity = 1
-        //         });
-        //     }
-        //     var options = new SessionCreateOptions
-        //     {
-
-        //         PaymentMethodTypes = new List<string>
-        //         {
-        //             "card"
-        //         },
-        //         LineItems = lineItems,
-        //         Mode = "payment",
-        //         SuccessUrl = "https://localhost:4200/deals",
-        //         CancelUrl = "https://localhost:4200/deals"
-        //     };
-
-        //     var stripeClient = new StripeClient(secretKey);
-        //     var service = new SessionService(stripeClient);
-        //     var session = service.Create(options);
-
-        //     deal.Status = "Sold";
-        //     try
-        //     {
-        //         await _dealRepository.SaveAllAsync();
-        //     }
-        //     catch
-        //     {
-        //         return BadRequest("Failed to mark the deal as \"sold\"");
-        //     }
-        //     return Ok(new { id = session.Id });
-
-        // }
-
         [HttpPut("checkout")]
         public async Task<ActionResult> Checkout2(PaymentCheckoutDto paymentCheckout)
         {

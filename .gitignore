@@ -457,3 +457,4 @@ $RECYCLE.BIN/
 **/obj
 **/packages
 appsettings.json
+appsettings.Development.json

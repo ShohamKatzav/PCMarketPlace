@@ -81,11 +81,6 @@ export class DealService {
     return this.http.delete(`${this.baseUrl}deals/delete-photo/${productId}`);
   }
 
-  // Used for Stripe External page
-  // checkoutDeal(dealId: number): Observable<any>{
-  //   return this.http.post(`${this.baseUrl}deals/checkout`, dealId);
-  // }
-
   checkoutDeal(dealId: number, paymentIntentId: string ,paymentMethodId: string): Observable<any>{
     const body = { dealId,paymentIntentId,paymentMethodId };
     return this.http.put(`${this.baseUrl}deals/checkout`, body);

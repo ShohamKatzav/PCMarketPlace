@@ -109,12 +109,14 @@ export class EditDealComponent implements OnInit {
 
   edit() {
     this.model.id = this.deal.id;
+    const validationResult = this.checkValidation();
 
-    if (this.checkValidation() == 1)
+    if (validationResult == 1)
       this.toastr.error("Please Enter description (8 characters) and at least 1 product");
-
-    else if (this.checkValidation() == 2)
+    else if (validationResult == 2)
       this.toastr.warning("Please do not forget any field");
+    else if (validationResult == 3)
+      this.toastr.warning("Deal price has to be 5 ILS and above");
     else {
       this.model.description = this.dealForm.get("description")?.value;
       // attach products information exclude photos (name category and price)
@@ -158,7 +160,11 @@ export class EditDealComponent implements OnInit {
     }
     if (this.items.invalid)
       return 2;
-    return 3;
+    const prices = this.model.products.map((item) => item.Price);
+    const sumPrices = prices.reduce((total, price) => total + price, 0);
+    if (sumPrices < 5)
+      return 3;
+    return 4;
   }
 
 

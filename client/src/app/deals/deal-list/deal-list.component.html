@@ -27,7 +27,7 @@
               (click)="buyNow(deal)">Buy Now</button>
             <span *ngIf="member?.authorization =='Admin' || listType == 'My Deals'">
               <div class="d-flex">
-                <button type="button" class="btn btn-sm btn-outline-warning" routerLink="edit/{{deal.id}}">Edit</button>
+                <button type="button" class="btn btn-sm btn-outline-warning" routerLink="/deals/edit/{{deal.id}}">Edit</button>
                 <button type="button" class="btn btn-sm btn-outline-danger"
                   (click)="deleteDeal(deal.id)">Delete</button>
               </div>
