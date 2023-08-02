@@ -2,7 +2,103 @@
 
 PCMarketPlace is an online store for computers and peripheral devices.
 In this store evert user can upload a deal for sell.
-A deal must include at least one product details (name,category,price) and can also include one image.
+Every deal include a description (8 chars) and at least one product details (Name, Category, Price and can also include one image).
+Total deal price must be above 5 ILS due to strip billing restrictions.
+
+## Getting Started 
+
+### Prerequisites  
+- Node.js (https://nodejs.org) 
+- Angular CLI (https://angular.io/cli) 
+- .NET SDK (https://dotnet.microsoft.com/download) 
+
+### Clone the Repository  
+
+```bash 
+git clone https://github.com/ShohamKatzav/PCMarketPlace.git cd PCMarketPlace
+```
+### Install Dependencies
+#### Install Angular dependencies
+```bash 
+cd client
+npm install
+```
+
+#### Install .NET dependencies (From root directory - New terminal)
+```bash 
+cd api
+dotnet restore
+```
+
+### appsettings.Development.json
+
+#### Set Up Cloudinary
+
+1.  Sign up for a Cloudinary account ([https://cloudinary.com](https://cloudinary.com/)).
+    
+2.  Get your Cloudinary API credentials: CloudName, ApiKey, and ApiSecret.
+    
+3.  Open `appsettings.Development.json` and add your Cloudinary API credentials:
+
+<code>
+{  
+	"CloudinarySettings":  
+	{ 
+		"CloudName":  "your-cloud-name",
+		 "ApiKey":  "your-api-key", 
+		 "ApiSecret":  "your-api-secret"  
+	 } 
+}
+</code>
+
+#### Set Up JWT
+
+1.  Generate a unique JWT token (you can use online tools or libraries).
+    
+2.  Open `appsettings.Development.json` and add your JWT token.
+
+#### Set Up Stripe
+
+1.  Sign up for a Stripe account ([https://stripe.com](https://stripe.com/)).
+    
+2.  Get your Stripe API keys: Secret Key and Publishable Key.
+    
+3.  Open `appsettings.Development.json` and add your Stripe API keys.
+
+An example for `appsettings.Development.json` file (Should be place in ```api``` directory):
+
+<code>
+{
+  "CloudinarySettings":{
+    "CloudName": "",
+    "ApiKey": "",
+    "ApiSecret": ""
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data source=pcmarketplace.db"
+  },
+  "TokenKey": "secret unguessable key [16-32 chars unguessable text]",
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Information",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+   "StripeSettings":{
+    "SecretKey": "sk_test_....",
+    "PublishableKey": "pk_test_....""
+  }
+}
+</code>
+
+Login details for "Admin":
+User Name: Shoham
+Password: Pa$$w0rd
+
+Login details for "User":
+User Name: Caitlin
+Password: Pa$$w0rd
 
 ## Data
 
@@ -33,14 +129,14 @@ In this page the user can also register to the site.
 
 ### My Deals
 
-The user can view the deals he upload.
-Another options are editing (description, products, photo) or deleting the deal.
-The request of editing a deal will have to pass validation (At least one product and a short description)
+The user can view the deals he uploaded.
+Other options are editing (description, products) or deleting the deal.
+The request for editing a deal will have to pass validation (At least one product and a short description)
 
 ### Available Deals
 
-Will show every deal available upload by every user.
-Deal can only be displayed in this page.
+Will display all deals uploaded by other users (excluding the current user).
+From this page the user can view the deal or start the transaction process.
 
 ### List a new deal
 
@@ -96,42 +192,3 @@ Will show and hide ngx-spinner while the user is waiting for page to load.
 
 Responsive footwer which include a short introduction to our new customers and ways to contact the store's staff.
 
-## appsettings.Development.json example
-
-<code>
-{
-  "CloudinarySettings":{
-    "CloudName": "",
-    "ApiKey": "",
-    "ApiSecret": ""
-  },
-  "ConnectionStrings": {
-    "DefaultConnection": "Data source=pcmarketplace.db"
-  },
-  "TokenKey": "",
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Information",
-      "Microsoft.Hosting.Lifetime": "Information"
-    }
-  },
-   "StripeSettings":{
-    "SecretKey": "{{Stripe_Secret_Key}}",
-    "PublishableKey": "{{Stripe_Publishable_kKey}}""
-  }
-}
-</code>
-
-Pass CloudinarySettings in order to use upload photo services.
-ConnectionStrings will provide our database details.
-TokenKey used for token service and should be a hard to guess string password (16-32 characters)
-
-
-Login details for "Admin":
-User Name: Shoham
-Password: Pa$$w0rd
-
-Login details for "User":
-User Name: Caitlin
-Password: Pa$$w0rd

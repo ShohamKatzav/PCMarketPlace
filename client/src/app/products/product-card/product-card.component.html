@@ -1,5 +1,5 @@
 <div class="col-sm">
-  <div class="card">
+  <div class="card p-3 w-75">
     <div class="card-img-wrapper">
       <div class="image">
         <img [src]="product.productPhoto?.url!= null ? product.productPhoto?.url : './assets/no-image.jpeg'" />
@@ -8,7 +8,7 @@
     <div class="card-inner">
       <div class="header">
         <h2>{{product.name}}</h2>
-        <h4>Category: {{product.category}}</h4>
+        <h5>Category: {{product.category}}</h5>
       </div>
       <div class="content">
         <p>Price: {{product.price}} ₪</p>

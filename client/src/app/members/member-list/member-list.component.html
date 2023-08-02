@@ -1,6 +1,6 @@
-<div class="row .conteiner mt-3">
-      <h1>Members list</h1>
-      <div class="col-2" *ngFor="let member of members$ | async">
+<div class="row conteiner mt-3">
+      <h1 class="text-center">Members list</h1>
+      <div class="col-2 mt-5" *ngFor="let member of members$ | async">
         <app-member-card [member]="member"></app-member-card>
     </div>
   </div>
