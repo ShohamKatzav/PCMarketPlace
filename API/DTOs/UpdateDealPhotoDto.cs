@@ -6,9 +6,5 @@ using Microsoft.AspNetCore.Http;
 
 namespace API.DTOs
 {
-    public class UpdateDealPhotoDto
-    {
-        public int DealId { get; set; }
-        public IFormFile File { get; set; }
-    }
+    public record UpdateDealPhotoDto(int DealId, IFormFile File);
 }

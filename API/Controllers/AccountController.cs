@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using API.Entities;
 using API.DTOs;
 using System.Security.Cryptography;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
-using API.Services;
 using API.Interfaces;
 
 namespace API.Controllers
@@ -37,22 +31,19 @@ namespace API.Controllers
                 UserName = registerAccount.Username.ToLower(),
                 PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerAccount.Password)),
                 PasswordSalt = hmac.Key,
-                AppUserPhoto = new Photo()
+                AppUserPhoto = new Photo { Url = "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" }
             };
             _context.AppUsers.Add(user);
             await _context.SaveChangesAsync();
-            
-            return new UserDto(){
-                Username = registerAccount.Username,
-                Token = _tokenService.CreateToken(user)
-            };
-            
+
+            return new UserDto(registerAccount.Username, _tokenService.CreateToken(user));
+
         }
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginAccountDto loginAccount)
         {
-            
-            var user = 
+
+            var user =
                 await this._context.AppUsers
                 .Include(p => p.AppUserPhoto)
                 .SingleOrDefaultAsync(x => x.UserName == loginAccount.Username.ToLower());
@@ -61,15 +52,12 @@ namespace API.Controllers
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(loginAccount.Password));
 
-            for(int i = 0; i< computedHash.Length; i++)
+            for (int i = 0; i < computedHash.Length; i++)
             {
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid username or password");
             }
 
-            return new UserDto(){
-                Username = loginAccount.Username,
-                Token = _tokenService.CreateToken(user)
-            };
+            return new UserDto(loginAccount.Username, _tokenService.CreateToken(user));
 
         }
 

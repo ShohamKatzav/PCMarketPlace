@@ -5,9 +5,5 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class PhotoDto
-    {
-        public int Id { get; set; }
-        public string Url { get; set; }
-    }
+    public record PhotoDto(string Url, int Id=0);
 }

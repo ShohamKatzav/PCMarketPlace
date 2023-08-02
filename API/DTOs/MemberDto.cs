@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class MemberDto
+    public record MemberDto
     {
-        public int Id { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Authorization { get; set; }
-        public string Phone { get; set; }
-        public int Age { get; set; }
-        public string KnownAs { get; set; }
-        public DateTime Created { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
+        public int Id { get; init; }
+        public string UserName { get; init; }
+        public string Email { get; init; }
+        public string Authorization { get; init; }
+        public string Phone { get; init; }
+        public int Age { get; init; }
+        public string KnownAs { get; init; }
+        public DateTime Created { get; init; }
+        public string City { get; init; }
+        public string Country { get; init; }
 
-        public PhotoDto AppUserPhoto { get; set; }
-        public ICollection<DealDto> Deals { get; set; }
+        public PhotoDto AppUserPhoto { get; init; }
+        public ICollection<DealDto> Deals { get; init; }
     }
 }

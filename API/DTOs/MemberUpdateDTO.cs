@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class MemberUpdateDto
+    public record MemberUpdateDto
     {
-        public int Id { get; set; } 
-        public string City { get; set; }
-        public string Country { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string KnownAs { get; set; }
+        public int Id { get; init; } 
+        public string City { get; init; }
+        public string Country { get; init; }
+        public string Email { get; init; }
+        public string Phone { get; init; }
+        public string KnownAs { get; init; }
     }
 }

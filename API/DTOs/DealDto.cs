@@ -6,16 +6,15 @@ using API.Entities;
 
 namespace API.DTOs
 {
-    public class DealDto
+    public record DealDto
     {
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime LastModified { get; set; }
-        public ICollection<ProductDto> Products { get; set; }
-        public string Status { get; set; }
-        public double TotalPrice { get; set; }
-        public PhotoDto DealPhoto { get; set; }
-
+        public int Id { get; init; }
+        public string Description { get; init; }
+        public DateTime Created { get; init; }
+        public DateTime LastModified { get; init; }
+        public ICollection<ProductDto> Products { get; init; }
+        public string Status { get; init; }
+        public double TotalPrice { get; init; }
+        public PhotoDto DealPhoto { get; init; }
     }
 }

@@ -13,31 +13,34 @@ export class CategoriesManagementComponent implements OnInit {
 
   categories$: Observable<Category[]>;
   categoryNameToAdd: string;
-  categoryToEdit:string[] = [];
+  categoryToEdit: string[] = [];
 
-  constructor(private categoryService: CategoryService) { 
-    this.categoryToEdit = [];
+  constructor(private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
     this.categories$ = this.categoryService.getCategories();
   }
 
-  addCategory(categoryToAdd: string) {
-    this.categoryService.addCategory(categoryToAdd).subscribe(res =>
-      this.categories$ = this.categoryService.getCategories()
-    )
+  async addCategory(categoryToAdd: string) {
+    await this.categoryService.addCategory(categoryToAdd).toPromise();
+    this.categories$ = this.categoryService.getCategories();
+    this.updateLocalStorage();
   }
-  removeCategory(caregoryId: number) {
-    this.categoryService.removeCategory(caregoryId).subscribe(res =>
-      this.categories$ = this.categoryService.getCategories()
-    );
+  async removeCategory(categoryId: number) {
+    await this.categoryService.removeCategory(categoryId).toPromise();
+    this.categories$ = this.categoryService.getCategories();
+    this.updateLocalStorage();
   }
-  editCategory(categoryToEdit: string,caregoryId: number) {
-    var addId: Category ={"id":caregoryId,name:categoryToEdit}
-    this.categoryService.editCategory(addId).subscribe(res =>
-      this.categories$ = this.categoryService.getCategories()
-    )
+  async editCategory(categoryToEdit: string, caregoryId: number) {
+    var addId: Category = { "id": caregoryId, "name": categoryToEdit }
+    await this.categoryService.editCategory(addId).toPromise();
+    this.categories$ = this.categoryService.getCategories();
+    this.updateLocalStorage();
+  }
+  async updateLocalStorage() {
+    const categories = await this.categories$.toPromise();
+    localStorage.setItem("categories", JSON.stringify(categories));
   }
 
 }

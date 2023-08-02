@@ -28,4 +28,5 @@ export class CategoryService {
   editCategory(category: any): Observable<any> {
     return this.http.put<Category>(this.baseUrl + 'category', category);
   }
+
 }

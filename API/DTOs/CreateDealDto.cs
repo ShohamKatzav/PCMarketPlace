@@ -5,9 +5,5 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class CreateDealDto
-    {
-        public string Description { get; set; }
-        public ICollection<ProductDto> Products { get; set; }
-    }
+    public record CreateDealDto(string Description, ICollection<ProductDto> Products);
 }

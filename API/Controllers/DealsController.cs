@@ -42,11 +42,7 @@ namespace API.Controllers
         {
             var deals = await _dealRepository.GetAvailableDealsAsync(userId, currentPage, tableSize);
             var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "All Deals");
-            var dealsResponse = new DealsResponseDto
-            {
-                Deals = deals,
-                totalCount = totalCount
-            };
+            var dealsResponse = new DealsResponseDto(deals, totalCount);
             return Ok(dealsResponse);
         }
 
@@ -55,11 +51,7 @@ namespace API.Controllers
         {
             var deals = await _dealRepository.GetDealsForUserAsync(userId, currentPage, tableSize);
             var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "My Deals");
-            var dealsResponse = new DealsResponseDto
-            {
-                Deals = deals,
-                totalCount = totalCount
-            };
+            var dealsResponse = new DealsResponseDto(deals, totalCount);
             return Ok(dealsResponse);
         }
 

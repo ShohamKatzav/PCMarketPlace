@@ -5,9 +5,5 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class CaregoryDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+    public record CaregoryDto(int Id, string Name);
 }

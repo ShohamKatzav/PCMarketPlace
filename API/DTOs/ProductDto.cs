@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public class ProductDto
+    public record ProductDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Category { get; set; }
-        public double Price { get; set; }
-        public PhotoDto ProductPhoto { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public string Category { get; init; }
+        public double Price { get; init; }
+        public PhotoDto ProductPhoto { get; init; }
     }
 }
