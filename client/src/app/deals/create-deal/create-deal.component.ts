@@ -92,7 +92,7 @@ export class CreateDealComponent implements OnInit {
       this.model.description = this.dealForm.get("description")?.value;
       this.model.products = Array.from(this.items.value);
       for (let i = 0; i < this.products.length; i++) {
-        this.model.products[i].productPhoto = this.products[i].productPhoto;
+        this.model.products[i].productPhoto = this.products[i]?.productPhoto;
       }
       this.dealService.create(this.model).subscribe(() => {
         this.router.navigateByUrl("/deals/my-deals");

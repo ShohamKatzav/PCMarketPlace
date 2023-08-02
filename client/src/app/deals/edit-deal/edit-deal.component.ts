@@ -123,7 +123,7 @@ export class EditDealComponent implements OnInit {
       this.model.products = Array.from(this.items.value);
       // attach products photos information
       for (let i = 0; i < this.products.length; i++) {
-        this.model.products[i].productPhoto = this.products[i].productPhoto;
+        this.model.products[i].productPhoto = this.products[i]?.productPhoto;
       }
       // attach exist products id
       for (let i = 0; i < this.products.length; i++) {
