@@ -25,16 +25,14 @@ git clone https://github.com/ShohamKatzav/PCMarketPlace.git cd PCMarketPlace
 1.  Sign up for a Cloudinary account ([https://cloudinary.com](https://cloudinary.com/)).
 2.  Get your Cloudinary API credentials: CloudName, ApiKey, and ApiSecret.
 3.  Open `appsettings.Development.json` and add your Cloudinary API credentials:
+<pre><code>{  
+    "CloudinarySettings":  { 
+        "CloudName":  "your-cloud-name",
+        "ApiKey":  "your-api-key", 
+        "ApiSecret":  "your-api-secret"  
+    }, 
+}</code></pre>
 
-
-<code>{  
-	"CloudinarySettings":  
-	{ 
-		"CloudName":  "your-cloud-name",
-		 "ApiKey":  "your-api-key", 
-		 "ApiSecret":  "your-api-secret"  
-	 } 
-}</code>
 
 #### Set Up JWT
 
@@ -49,28 +47,28 @@ git clone https://github.com/ShohamKatzav/PCMarketPlace.git cd PCMarketPlace
 
 An example for `appsettings.Development.json` file (Should be place in ```api``` directory):
 
-<code>{
-  "CloudinarySettings":{
-    "CloudName": "",
-    "ApiKey": "",
-    "ApiSecret": ""
-  },
-  "ConnectionStrings": {
-    "DefaultConnection": "Data source=pcmarketplace.db"
-  },
-  "TokenKey": "secret unguessable key [16-32 chars unguessable text]",
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Information",
-      "Microsoft.Hosting.Lifetime": "Information"
+<pre><code>{
+    "CloudinarySettings":  {
+        "CloudName":  "your-cloud-name",
+        "ApiKey":  "your-api-key", 
+        "ApiSecret":  "your-api-secret" 
+    },
+    "ConnectionStrings":  {
+        "DefaultConnection": "Data source=pcmarketplace.db"
+    },
+    "TokenKey": "secret unguessable key [16-32 chars unguessable text]",
+    "Logging":  {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft": "Information",
+            "Microsoft.Hosting.Lifetime": "Information"
+        }
+    },
+   "StripeSettings":  {
+        "SecretKey": "sk_test_....",
+        "PublishableKey": "pk_test_...."
     }
-  },
-   "StripeSettings":{
-    "SecretKey": "sk_test_....",
-    "PublishableKey": "pk_test_....""
-  }
-}</code>
+}</code></pre>
 
 ### Install Dependencies
 #### Install Angular dependencies and run
