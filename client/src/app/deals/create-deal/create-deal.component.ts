@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
-import { Member } from 'src/app/models/member';
 import { Product } from 'src/app/models/product';
+import { CategoryService } from 'src/app/services/category.service';
 import { DealService } from 'src/app/services/deal.service';
-import { MemberService } from 'src/app/services/member.service';
 
 @Component({
   selector: 'app-create-deal',
@@ -16,9 +15,10 @@ import { MemberService } from 'src/app/services/member.service';
 })
 export class CreateDealComponent implements OnInit {
 
-  member: Member;
+  @ViewChild('editForm') EForm: NgForm;
+  formSubmitted = false;
 
-  categories: Category[];
+  categories$: Observable<Category[]>;
   model: any = {};
   products: Product[] = [];
   items!: FormArray;
@@ -26,20 +26,14 @@ export class CreateDealComponent implements OnInit {
     description: new FormControl('', Validators.required),
     products: new FormArray([])
   });
-  constructor(private dealService: DealService, private memberService: MemberService,
+  constructor(private dealService: DealService,
     private toastr: ToastrService,
-    private router: Router) {
-    this.memberService.currentMember$.pipe(take(1)).subscribe(
-      {
-        next: response => {
-          this.member = response;
-        }
-      }
-    );
+    private router: Router,
+    private categoryService: CategoryService) {
   }
 
-  ngOnInit(): void {
-    this.categories = JSON.parse(localStorage.getItem("categories") || '{}')
+  ngOnInit() {
+    this.categories$ = this.categoryService.getCategories();
   }
 
   getProducts() {
@@ -95,6 +89,7 @@ export class CreateDealComponent implements OnInit {
         this.model.products[i].productPhoto = this.products[i]?.productPhoto;
       }
       this.dealService.create(this.model).subscribe(() => {
+        this.formSubmitted = true;
         this.router.navigateByUrl("/deals/my-deals");
         this.toastr.success("Deal created");
       });

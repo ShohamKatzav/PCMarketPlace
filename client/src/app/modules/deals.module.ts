@@ -16,11 +16,9 @@ import { TransactionComponent } from '../transaction/transaction.component';
 const routes: Routes = [
   {path:'my-deals', component: DealListComponent, data :{ listType: "My Deals"}, pathMatch: 'full',},
   {path:'', component: DealListComponent, data :{ listType: "All Deals"}, pathMatch: 'full'},
-  {path:'new-deal', component: CreateDealComponent, pathMatch: 'full'},
   {path:'transaction', component: TransactionComponent, pathMatch: 'full'},
   {path:':dealid', component: DealDetailsComponent},
   {path:'my-deals/:dealid', component: DealDetailsComponent},
-  {path:'edit/:dealid', component: EditDealComponent},
 ]
 
 @NgModule({

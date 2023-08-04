@@ -1,14 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
-import { Member } from 'src/app/models/member';
-import { Product } from 'src/app/models/product';
+import { CategoryService } from 'src/app/services/category.service';
 import { DealService } from 'src/app/services/deal.service';
-import { MemberService } from 'src/app/services/member.service';
 
 
 @Component({
@@ -17,40 +15,39 @@ import { MemberService } from 'src/app/services/member.service';
   styleUrls: ['./edit-deal.component.css']
 })
 export class EditDealComponent implements OnInit {
-  member: Member;
-  categories: Category[];
+  @ViewChild('editForm') EForm: NgForm;
+  formSubmitted = false;
+
+  categories$: Observable<Category[]>;
+  deal$: Observable<Deal>;
   deal: Deal;
-  products: Product[];
   model: any = {};
   items!: FormArray;
   dealForm: FormGroup;
 
   constructor(private route: ActivatedRoute, private dealService: DealService,
-    private memberService: MemberService, private fb: FormBuilder,
-    private toastr: ToastrService, private router: Router) {
-    this.memberService.currentMember$.pipe(take(1)).subscribe(
-      {
-        next: response => {
-          this.member = response;
-        }
-      }
-    );
+    private fb: FormBuilder,
+    private toastr: ToastrService, private router: Router,
+    private categoryService: CategoryService) {
   }
 
-  ngOnInit(): void {
-    this.loadDeal();
+  async ngOnInit() {
     this.dealForm = new FormGroup({
       description: new FormControl('', Validators.required),
       products: new FormArray([]),
     });
-    this.categories = JSON.parse(localStorage.getItem("categories") || '{}')
+    const dealid = this.route.snapshot.paramMap.get('dealid') as unknown;
+    this.deal$ = this.dealService.getDeal(dealid as number);
+    this.deal = await this.deal$.toPromise();
+    this.loadDeal();
+    this.categories$ = this.categoryService.getCategories();
   }
 
   getProducts() {
-    return this.dealForm.get("products") as FormArray;
+    return this.dealForm?.get("products") as FormArray;
   }
   getDescription() {
-    return this.dealForm.get("description")?.value as string;
+    return this.dealForm?.get("description")?.value as string;
   }
   addNewRow() {
     if (this.getProducts().controls.length < 10) {
@@ -62,14 +59,14 @@ export class EditDealComponent implements OnInit {
   }
   removeItem(index: any) {
     this.items.removeAt(index);
-    this.products.splice(index);
+    this.deal.products.splice(index);
   }
 
 
-  initTheFormWithDealInfo(deal: Deal) {
-    var items: FormArray[] = [this.rowForEveryProduct()];
-    this.dealForm.patchValue({
-      description: deal.description,
+  initTheFormWithDealInfo() {
+    const items: FormArray[] = [this.rowForEveryProduct()];
+    this.dealForm?.patchValue({
+      description: this.deal.description,
       products: items
     });
   }
@@ -77,7 +74,7 @@ export class EditDealComponent implements OnInit {
   rowForEveryProduct(): FormArray {
     this.items = this.getProducts();
     for (let i = 0; i < this.deal.products.length; i++) {
-      this.items.push(
+      this.items?.push(
         this.fb.group(
           {
             Name: this.fb.control(this.deal.products[i].name, Validators.required),
@@ -122,29 +119,24 @@ export class EditDealComponent implements OnInit {
       // attach products information exclude photos (name category and price)
       this.model.products = Array.from(this.items.value);
       // attach products photos information
-      for (let i = 0; i < this.products.length; i++) {
-        this.model.products[i].productPhoto = this.products[i]?.productPhoto;
+      for (let i = 0; i < this.deal.products.length; i++) {
+        this.model.products[i].productPhoto = this.deal.products[i]?.productPhoto;
       }
       // attach exist products id
-      for (let i = 0; i < this.products.length; i++) {
+      for (let i = 0; i < this.deal.products.length; i++) {
         // if id mean the product is already exist, else we won't send the id property(the server will create one). 
-        if (this.products[i].id)
-          this.model.products[i].id = this.products[i].id;
+        if (this.deal.products[i].id)
+          this.model.products[i].id = this.deal.products[i].id;
       }
       this.dealService.edit(this.model).subscribe(() => {
-        this.router.navigateByUrl("/deals/my-deals");
+        this.formSubmitted = true;
         this.toastr.success("Deal edited successfully");
       });
     }
   }
 
   loadDeal() {
-    const dealid = this.route.snapshot.paramMap.get('dealid') as unknown;
-    this.dealService.getDeal(dealid as number).subscribe(deal => {
-      this.deal = deal;
-      this.products = this.deal.products;
-      this.initTheFormWithDealInfo(this.deal);
-    });
+    this.initTheFormWithDealInfo();
   }
 
   checkValidation(): number {

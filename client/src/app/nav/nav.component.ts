@@ -15,7 +15,7 @@ import { MemberService } from '../services/member.service';
 export class NavComponent implements OnInit {
   model: any = {};
   currentUser$?: Observable<User>;
-  currentMember: Member;
+  currentMember$: Observable<Member>;
   
 
   constructor(private accountService: AccountService, private memberService: MemberService,
@@ -24,8 +24,8 @@ export class NavComponent implements OnInit {
     this.currentUser$ = this.accountService.currentUser$;
   }
 
-  ngOnInit(): void {
-    this.memberService.currentMember$.subscribe( res => this.currentMember = res);
+  async ngOnInit() {
+    this.currentMember$ = await this.memberService.currentMember$;
   }
 
   login() {

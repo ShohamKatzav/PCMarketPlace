@@ -17,58 +17,39 @@ Total deal price must be above 5 ILS due to strip billing restrictions.
 ```bash 
 git clone https://github.com/ShohamKatzav/PCMarketPlace.git cd PCMarketPlace
 ```
-### Install Dependencies
-#### Install Angular dependencies
-```bash 
-cd client
-npm install
-```
-
-#### Install .NET dependencies (From root directory - New terminal)
-```bash 
-cd api
-dotnet restore
-```
 
 ### appsettings.Development.json
 
 #### Set Up Cloudinary
 
 1.  Sign up for a Cloudinary account ([https://cloudinary.com](https://cloudinary.com/)).
-    
 2.  Get your Cloudinary API credentials: CloudName, ApiKey, and ApiSecret.
-    
 3.  Open `appsettings.Development.json` and add your Cloudinary API credentials:
 
-<code>
-{  
+
+<code>{  
 	"CloudinarySettings":  
 	{ 
 		"CloudName":  "your-cloud-name",
 		 "ApiKey":  "your-api-key", 
 		 "ApiSecret":  "your-api-secret"  
 	 } 
-}
-</code>
+}</code>
 
 #### Set Up JWT
 
 1.  Generate a unique JWT token (you can use online tools or libraries).
-    
 2.  Open `appsettings.Development.json` and add your JWT token.
 
 #### Set Up Stripe
 
 1.  Sign up for a Stripe account ([https://stripe.com](https://stripe.com/)).
-    
 2.  Get your Stripe API keys: Secret Key and Publishable Key.
-    
 3.  Open `appsettings.Development.json` and add your Stripe API keys.
 
 An example for `appsettings.Development.json` file (Should be place in ```api``` directory):
 
-<code>
-{
+<code>{
   "CloudinarySettings":{
     "CloudName": "",
     "ApiKey": "",
@@ -89,8 +70,22 @@ An example for `appsettings.Development.json` file (Should be place in ```api```
     "SecretKey": "sk_test_....",
     "PublishableKey": "pk_test_....""
   }
-}
-</code>
+}</code>
+
+### Install Dependencies
+#### Install Angular dependencies and run
+```bash 
+cd client
+npm install
+ng serve
+```
+
+#### Install .NET dependencies and run (From projects root directory - New terminal)
+```bash 
+dotnet run
+```
+
+### Login Details
 
 Login details for "Admin":
 User Name: Shoham

@@ -10,6 +10,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 import { HomeComponent } from './home/home.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { CreateDealComponent } from './deals/create-deal/create-deal.component';
+import { EditDealComponent } from './deals/edit-deal/edit-deal.component';
 
 const routes: Routes = [
   {
@@ -33,8 +35,19 @@ const routes: Routes = [
         canDeactivate: [PreventUnsavedChangesGuard]
       },
       {
+        path: 'deals/new-deal',
+        component: CreateDealComponent,
+        canDeactivate: [PreventUnsavedChangesGuard],
+        pathMatch: 'full'
+      },
+      {
         path: 'deals',
-        loadChildren: () => import('./modules/deals.module').then(mod => mod.DealsModule) 
+        loadChildren: () => import('./modules/deals.module').then(mod => mod.DealsModule)
+      },
+      { 
+        path: 'deals/edit/:dealid',
+        component: EditDealComponent,
+        canDeactivate: [PreventUnsavedChangesGuard]
       },
       {
         path: 'categories',
@@ -51,8 +64,8 @@ const routes: Routes = [
     path: 'errors',
     component: TestErrorsComponent
   },
-  {path: 'not-found', component: NotFoundComponent},
-  {path: 'server-error', component: ServerErrorComponent},
+  { path: 'not-found', component: NotFoundComponent },
+  { path: 'server-error', component: ServerErrorComponent },
   {
     path: '**', // catch undefined address
     component: HomeComponent,

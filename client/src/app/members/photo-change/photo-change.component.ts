@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
@@ -16,14 +17,11 @@ export class PhotoChangeComponent implements OnInit {
   uploader:FileUploader;
   hasBaseDropZoneOver:boolean;
   baseUrl = environment.apiUrl;
-  user: User;
+  user$: Observable<User>;
 
   @Input() member: Member;
   constructor(private accountService: AccountService, private memberService: MemberService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe(user => 
-      {
-        this.user = user
-      });
+    this.user$ = this.accountService.currentUser$.pipe(first());
   }
 
 
@@ -33,17 +31,19 @@ export class PhotoChangeComponent implements OnInit {
   }
 
 
-  deletePhoto(photoId: number, userName: string) {
-    this.memberService.deletePhoto(photoId, userName).subscribe(() => {
+  deletePhoto(userName: string) {
+    this.memberService.deletePhoto(userName).subscribe(() => {
       this.member.appUserPhoto.url = "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png";
     });
   }
 
-  initializeUploader() {
+  async initializeUploader() {
+    const user = await this.user$.toPromise();
+    
     this.uploader = new FileUploader({
       url: this.baseUrl + 'users/add-photo',
       headers: [{ name: 'UserName', value: this.member.userName }],
-      authToken: 'Bearer ' + this.user.token,
+      authToken: 'Bearer ' + user.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,

@@ -28,6 +28,10 @@ namespace API.Data
                 user.PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes("Pa$$w0rd"));
                 user.PasswordSalt = hmac.Key;
 
+                if (user.Deals != null)
+                    foreach (var deal in user?.Deals)
+                        deal.LastModified = deal.Created;
+                        
                 context.AppUsers.Add(user);
             }
 

@@ -95,8 +95,8 @@ namespace API.Controllers
             return BadRequest("Problem adding photo");
 
         }
-        [HttpDelete("delete-photo/{photoId}")] // api/users/delete-photo/1
-        public async Task<ActionResult> DeletePhoto(int photoId)
+        [HttpDelete("delete-photo")] // api/users/delete-photo/1
+        public async Task<ActionResult> DeletePhoto()
         {
             var username = User.GetUsername();
             var UserToUpdate = await _userRepository.GetUserByUserNameAsync(username);

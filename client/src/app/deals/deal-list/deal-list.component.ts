@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { pluck, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
 import { Router } from '@angular/router';
+import { pluck, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-deal-list',
@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 export class DealListComponent implements OnInit {
 
   deals$: Observable<Deal[]>;
-  member: Member;
+  member$: Observable<Member> = this.memberService.currentMember$;
   listType: string;
   currentPage: number = 1;
   tableSize: number = 6;
@@ -24,45 +24,48 @@ export class DealListComponent implements OnInit {
 
   constructor(private memberService: MemberService, private dealService: DealService,
     private route: ActivatedRoute, private router: Router) {
-
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.member$ = this.memberService.currentMember$;
     this.route.data.subscribe(data => {
       this.listType = data.listType;
     })
-    this.memberService.currentMember$.subscribe(
-      {
-        next: response => {
-          this.member = response;
-          this.loadDeals();
-        }
-      }
+    this.deals$ = await this.loadDeals();
+  }
+
+
+  async loadDeals() {
+    return this.member$.pipe(
+      // complete previous inner observable, emit values
+      switchMap(member => {
+        if (!member) return of([]);
+        const dealsListObservable = this.listType === "My Deals" ?
+          this.dealService.getDealsForUser(member.id, this.currentPage, this.tableSize) :
+          this.dealService.getDeals(member.id, this.currentPage, this.tableSize);
+
+        return dealsListObservable.pipe(
+          tap(res => {
+            this.totalItemsCount = res.totalCount;
+          }),
+          pluck('deals')
+        );
+      })
     );
   }
 
-  loadDeals() {
-    if (!this.member) return;
-
-    const dealsListObservable = this.listType === "My Deals" ?
-      this.dealService.getDealsForUser(this.member.id, this.currentPage, this.tableSize) :
-      this.dealService.getDeals(this.member.id, this.currentPage, this.tableSize);
-
-    this.deals$ = dealsListObservable.pipe(
-      tap(res => this.totalItemsCount = res.totalCount),
-      pluck('deals')
-    );
+  async deleteDeal(dealId: number) {
+    await this.dealService.deleteDeal(dealId).toPromise();
+    const totalPages = Math.ceil(--this.totalItemsCount / this.tableSize);
+    if (this.currentPage > totalPages) {
+      this.currentPage = totalPages;
+    }
+    this.deals$ = await this.loadDeals();
   }
 
-  deleteDeal(dealId: number) {
-    this.dealService.deleteDeal(dealId).subscribe(() => {
-      this.loadDeals();
-    });
-  }
-
-  onTableDataChange(event: any) {
+  async onTableDataChange(event: any) {
     this.currentPage = event;
-    this.loadDeals();
+    this.deals$ = await this.loadDeals();
   }
 
 

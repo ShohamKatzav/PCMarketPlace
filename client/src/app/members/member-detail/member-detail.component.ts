@@ -18,11 +18,10 @@ export class MemberDetailComponent implements OnInit {
     this.loadMember();
   }
 
-  loadMember() {
+  async loadMember() {
     const username = this.route.snapshot.paramMap.get('username') as string;
-    this.memberService.getMember(username).subscribe(member => {
-      this.member = member;
-    });
+    const member$ = this.memberService.getMember(username);
+    this.member = await member$.toPromise();
   }
 
 

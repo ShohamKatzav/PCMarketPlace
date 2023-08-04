@@ -37,8 +37,8 @@ export class TransactionComponent implements OnInit {
         this.paymentIntentId = await res.paymentIntent.id;
         const element = this.stripe.elements({ clientSecret: this.clientSecret });
 
-        this.card = element.create('card');
-        this.card.mount(this.cardElement.nativeElement);
+        this.card = await element.create('card');
+        this.card.mount(this.cardElement?.nativeElement);
         this.card?.on('change', (event) => {
           this.cardErrors = event.error ? event.error.message : '';
         });

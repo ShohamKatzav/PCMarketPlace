@@ -14,13 +14,15 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLinkActive="active" routerLink="/deals/new-deal">List a new deal</a>
                 </li>
-                <ng-container *ngIf="currentMember && currentMember.authorization=='Admin'">
-                    <li class="nav-item">
-                        <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLinkActive="active" routerLink="/categories">Categories</a>
-                    </li>
+                <ng-container *ngIf="currentMember$ | async as member">
+                    <ng-container *ngIf="member.authorization === 'Admin'">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLinkActive="active" routerLink="/categories">Categories</a>
+                        </li>
+                    </ng-container>
                 </ng-container>
             </ng-container>
             <li class="nav-item">

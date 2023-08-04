@@ -37,14 +37,14 @@ namespace API.Controllers
         public async Task<ActionResult<Category>> Create(CaregoryDto categoryToAdd)
         {
 
-            if(_categoryRepository.GetCategories().Any(c => c.Name == categoryToAdd.Name))
+            if (_categoryRepository.GetCategories().Any(c => c.Name == categoryToAdd.Name))
                 return BadRequest("Category already exist");
 
-            var category = new Category{Name=categoryToAdd.Name};
+            var category = new Category { Name = categoryToAdd.Name };
             _categoryRepository.Add(category);
 
             if (await _categoryRepository.SaveAllAsync())
-                return CreatedAtRoute("GetCategory", new { categoryId = category.Id },category);
+                return CreatedAtRoute("GetCategory", new { categoryId = category.Id }, category);
 
             return BadRequest("Problem adding category");
         }
@@ -72,7 +72,7 @@ namespace API.Controllers
 
             _categoryRepository.Remove(deal.Id);
 
-            if (await _categoryRepository.SaveAllAsync()) return Ok();
+            if (await _categoryRepository.SaveAllAsync()) return NoContent();
 
             return BadRequest("Failed to delete the category");
         }

@@ -6,6 +6,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FileUploadModule } from "ng2-file-upload";
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   imports: [
@@ -13,8 +14,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     TabsModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSpinnerModule,
-
-    
+    NgxPaginationModule
   ],
   declarations: [],
   exports: [
@@ -25,6 +25,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     FileUploadModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxPaginationModule
 
   ]
 })

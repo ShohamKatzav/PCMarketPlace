@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, ReplaySubject, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Category } from '../models/category';
 
@@ -14,12 +14,21 @@ export class CategoryService {
   constructor(private http: HttpClient) { }
 
   getCategories(): Observable<any> {
-    return this.http.get<Category[]>(this.baseUrl + 'category');
+    const categories = JSON.parse(localStorage.getItem("categories"));
+    if(categories)
+      return of(categories);
+    else
+    {
+      const categories$ = this.http.get<Category[]>(this.baseUrl + 'category').pipe(
+        tap(categories => {
+          localStorage.setItem("categories", JSON.stringify(categories));
+        })
+      );
+      return categories$;
+    }
   }
   addCategory(categoryToAdd: string): Observable<any> {
-    return this.http.post<Category>(this.baseUrl + 'category/create', {"name":categoryToAdd}).pipe(
-      map((response: any) => {
-      }))
+    return this.http.post<Category>(this.baseUrl + 'category/create', {"name":categoryToAdd});
   }
   removeCategory(categoryId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}category/${categoryId}`);

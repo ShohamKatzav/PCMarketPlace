@@ -61,7 +61,7 @@
       </tab>
 
       <tab heading="Photo">
-        <span *ngIf="!OtherUser" else UploadForOtherMember>
+        <span *ngIf="!OtherUser else UploadForOtherMember;">
           <app-photo-change [member]="member"></app-photo-change>
         </span>
         <ng-template #UploadForOtherMember>

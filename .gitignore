@@ -458,3 +458,4 @@ $RECYCLE.BIN/
 **/packages
 appsettings.json
 appsettings.Development.json
+pcmarketplace.db

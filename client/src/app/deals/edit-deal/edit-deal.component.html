@@ -1,6 +1,7 @@
-<div *ngIf="deal">
+<div *ngIf="deal$ | async">
+  <h1 class="mt-3">Update deal information</h1>
   <div class="mt-5">
-    <form [formGroup]="dealForm" (ngSubmit)="edit()" autocomplete="off">
+    <form #editForm="ngForm" [formGroup]="dealForm" (ngSubmit)="edit()" autocomplete="off">
       <div class="row mb-3">
         <div class="col-lg-6">
           <label for="description">Describe your deal:</label>
@@ -21,7 +22,7 @@
               </td>
               <td class="col-lg-3">
                 <select class="form-select" required formControlName="Category" value="Others">
-                  <option *ngFor="let category of categories" [value]="category.name">
+                  <option *ngFor="let category of categories$ | async" [value]="category.name">
                     {{category.name}}
                   </option>
                 </select>
@@ -35,7 +36,7 @@
                 </button>
               </td>
               <td class="col-lg-2">
-                <app-photo-change [(product)]="products[i]"></app-photo-change>
+                <app-photo-change [(product)]="deal.products[i]"></app-photo-change>
               </td>
             </tr>
           </ng-container>

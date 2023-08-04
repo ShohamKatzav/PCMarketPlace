@@ -2,7 +2,7 @@ import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs/operators';
+import { first, take } from 'rxjs/operators';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
@@ -38,23 +38,20 @@ export class MemberEditComponent implements OnInit {
       this.OtherUser = state['OtherUser'];
   }
 
-  ngOnInit() {
-    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
+  async ngOnInit() {
+    const user$ = this.accountService.currentUser$.pipe(first());
+    this.user = await user$.toPromise();
     this.loadMember();
   }
 
-  loadMember() {
+  async loadMember() {
     if (this.OtherUser)
-    {
       this.member = this.OtherUser;
-    }
     else
     {
-      this.memberService.getMember(this.user.username).subscribe(member => {
-        this.member = member;
-      })
-    }
-    
+      const member$ = this.memberService.getMember(this.user.username);
+      this.member = await member$.toPromise();
+    }  
   }
 
   updateMember() {

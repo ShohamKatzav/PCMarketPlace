@@ -31,7 +31,8 @@ namespace API.Controllers
                 UserName = registerAccount.Username.ToLower(),
                 PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerAccount.Password)),
                 PasswordSalt = hmac.Key,
-                AppUserPhoto = new Photo { Url = "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" }
+                AppUserPhoto = new Photo { Url = "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" },
+                KnownAs = registerAccount.Username.ToLower()
             };
             _context.AppUsers.Add(user);
             await _context.SaveChangesAsync();

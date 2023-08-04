@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { Product } from 'src/app/models/product';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
@@ -17,7 +18,7 @@ export class PhotoChangeComponent implements OnInit {
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   baseUrl = environment.apiUrl;
-  user: User;
+  user$: Observable<User>;
 
   @Input() product: Product;
   @Output() productChange = new EventEmitter<Product>();
@@ -25,12 +26,12 @@ export class PhotoChangeComponent implements OnInit {
   @ViewChild('photoInput') photoInputRef: ElementRef<HTMLInputElement>;
 
   constructor(private accountService: AccountService, private dealService: DealService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
+    this.user$ = this.accountService.currentUser$.pipe(first());
   }
 
 
-  ngOnInit() {
-    this.initializeUploader();
+  async ngOnInit() {
+    await this.initializeUploader();
     this.uploader.onBeforeUploadItem = (fileItem: any) => {
       const productId = this.product ? this.product.id : -1;
       fileItem.formData.push({ ProductId: productId });
@@ -52,14 +53,14 @@ export class PhotoChangeComponent implements OnInit {
       this.product.productPhoto.url = "./assets/no-image.jpeg";
   }
 
-  initializeUploader() {
-
+  async initializeUploader() {
+    const user = await this.user$.toPromise();
     const headers = this.product ? [{ name: 'ProductId', value: this.product.id.toString() }] : [{ name: 'ProductId', value: "-1" }];
 
     this.uploader = new FileUploader({
       url: this.baseUrl + 'deals/add-photo',
       headers,
-      authToken: 'Bearer ' + this.user.token,
+      authToken: 'Bearer ' + user.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
