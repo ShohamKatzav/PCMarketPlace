@@ -51,14 +51,13 @@ namespace API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<ExceptionMiddleware>();
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -69,7 +68,6 @@ namespace API
             .AllowAnyMethod() // allow any method(HTTP Verb) (like GET, POST, PUT, DELETE)
             .WithOrigins("https://localhost:4200") // our frontend
             );
-
             app.UseAuthentication();
             app.UseAuthorization();
 

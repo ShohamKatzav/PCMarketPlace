@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public record ProductDto
+    public class ProductDto
     {
-        public int Id { get; init; }
-        public string Name { get; init; }
-        public string Category { get; init; }
-        public double Price { get; init; }
-        public PhotoDto ProductPhoto { get; init; }
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Name must be included.")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "Category must be included.")]
+        public string Category { get; set; }
+        [Required(ErrorMessage = "Price must be included.")]
+        public double? Price { get; set; }
+        public PhotoDto ProductPhoto { get; set; }
     }
 }

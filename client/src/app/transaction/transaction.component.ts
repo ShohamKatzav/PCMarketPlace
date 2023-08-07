@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DealService } from '../services/deal.service';
 import { loadStripe, StripeCardElement, Stripe } from '@stripe/stripe-js';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-transaction',
@@ -24,6 +25,7 @@ export class TransactionComponent implements OnInit {
   paymentIntentId: string;
 
   constructor(private dealService: DealService,
+    private toastr: ToastrService,
     private router: Router) { }
 
   async ngOnInit() {
@@ -33,8 +35,8 @@ export class TransactionComponent implements OnInit {
       this.publishableKey = res.publishableKey;
       this.stripe = await loadStripe(this.publishableKey);
       this.dealService.getSecretKey(this.deal.id).subscribe(async (res) => {
-        this.clientSecret = await res.paymentIntent.clientSecret;
-        this.paymentIntentId = await res.paymentIntent.id;
+        this.clientSecret = await res.paymentIntent.value.clientSecret;
+        this.paymentIntentId = await res.paymentIntent.value.id;
         const element = this.stripe.elements({ clientSecret: this.clientSecret });
 
         this.card = await element.create('card');
@@ -68,6 +70,7 @@ export class TransactionComponent implements OnInit {
       return;
     } else {
         this.dealService.checkoutDeal(this.deal.id, this.paymentIntentId, paymentMethod.id).subscribe( ()=>{
+          this.toastr.success("Transaction completed successfuly");
           this.router.navigate(['deals']);
         });
     }

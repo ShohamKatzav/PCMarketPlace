@@ -20,7 +20,7 @@
           {
             "Name": "Monitor",
             "Category": "Monitors",
-            "Price": 1500,
+            "Price": 500,
             "ProductPhoto": {
               "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
             }
@@ -88,8 +88,8 @@
         "Created": "2020-03-18",
         "Products": [
           {
-            "Name": "Keyboards",
-            "Category": "Keyboards",
+            "Name": "CPU",
+            "Category": "CPU",
             "Price": 500,
             "ProductPhoto": {
               "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
@@ -103,8 +103,8 @@
         "Created": "2020-03-18",
         "Products": [
           {
-            "Name": "Keyboards",
-            "Category": "Keyboards",
+            "Name": "GPU",
+            "Category": "GPU",
             "Price": 500,
             "ProductPhoto": {
               "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
@@ -118,8 +118,8 @@
         "Created": "2020-03-18",
         "Products": [
           {
-            "Name": "Keyboards",
-            "Category": "Keyboards",
+            "Name": "RAM",
+            "Category": "RAM",
             "Price": 500,
             "ProductPhoto": {
               "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
@@ -134,7 +134,7 @@
         "Products": [
           {
             "Name": "Mouse pad",
-            "Category": "Others",
+            "Category": "Other",
             "Price": 500,
             "ProductPhoto": {
               "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
@@ -210,7 +210,7 @@
         "Products": [
           {
             "Name": "Laptop",
-            "Category": "Laptop",
+            "Category": "Laptops",
             "Price": 2500,
             "ProductPhoto": {
               "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"

@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
-using API.Helpers;
+using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public record CreateDealDto(
+    public record UpdateDealDto(
+        [Required] int Id,
         [Required]
         [MinLength(8, ErrorMessage = "Description must be at least 8 characters.")]
         string Description,

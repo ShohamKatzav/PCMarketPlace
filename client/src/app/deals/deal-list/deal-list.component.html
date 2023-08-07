@@ -1,41 +1,45 @@
 <div *ngIf="(member$ | async) as member;" class="album py-5 bg-light">
   <div class="container">
-    <section *ngIf="listType == 'All Deals'">
-      <h1 class="text-center">AVAILABLE DEALS</h1>
-    </section>
-    <section *ngIf="listType == 'My Deals'">
-      <h1 class="text-center">{{member.knownAs || member.userName}} DEALS</h1>
-    </section>
-    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 mt-4 d-flex justify-content-around">
-      <div *ngIf="(deals$| async)?.length == 0">
-        <h1 class="text-center">No Deals Found</h1>
-      </div>
-
-      <div class="col card mr-1 mb-2"
-        *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
-        <div class="card shadow-sm">
-          <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
+    <div class="row">
+      <section *ngIf="listType == 'All Deals'">
+        <h1 class="text-center">AVAILABLE DEALS</h1>
+      </section>
+      <section *ngIf="listType == 'My Deals'">
+        <h1 class="text-center">{{member.knownAs || member.userName}} DEALS</h1>
+      </section>
+      <app-filters (categoryChange)="categotyChange($event)"></app-filters>
+      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 mt-4 d-flex justify-content-around">
+        <div *ngIf="(deals$| async)?.length == 0">
+          <h1 class="text-center">No Deals Found</h1>
         </div>
 
-        <div class="card-body">
-          <h5 class="card-text">{{deal.description}}</h5>
-          <small class="text-muted">Total Price: {{deal.totalPrice}} ₪</small>
-          <div class="d-flex-inline flex-wrap mt-2">
-            <button type="button" class="btn btn-sm btn-outline-info btn-custom" routerLinkActive="active"
-              routerLink="{{deal.id}}">View</button>
-            <button *ngIf="listType != 'My Deals'" type="button" class="btn btn-sm btn-outline-success btn-custom"
-              (click)="buyNow(deal)">Buy Now</button>
-            <span *ngIf="member?.authorization =='Admin' || listType == 'My Deals'">
-              <button type="button" class="btn btn-sm btn-outline-warning btn-custom"
-                routerLink="/deals/edit/{{deal.id}}">Edit</button>
-              <button type="button" class="btn btn-sm btn-outline-danger btn-custom" (click)="deleteDeal(deal.id)">Delete</button>
-            </span>
+        <div class="col card mr-1 mb-2"
+          *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
+          <div class="card shadow-sm">
+            <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
+          </div>
+
+          <div class="card-body">
+            <h5 class="card-text">{{deal.description}}</h5>
+            <small class="text-muted">Total Price: {{deal.totalPrice}} ₪</small>
+            <div class="d-flex-inline flex-wrap mt-2">
+              <button type="button" class="btn btn-sm btn-outline-info btn-custom"
+                (click)="viewDeal(deal)">View</button>
+              <button *ngIf="listType != 'My Deals'" type="button" class="btn btn-sm btn-outline-success btn-custom"
+                (click)="buyNow(deal)">Buy Now</button>
+              <span *ngIf="member?.authorization =='Admin' || listType == 'My Deals'">
+                <button type="button" class="btn btn-sm btn-outline-warning btn-custom"
+                  (click)="editDeal(deal)">Edit</button>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-custom"
+                  (click)="deleteDeal(deal.id)">Delete</button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex justify-content-center mt-5" *ngIf="(deals$| async)?.length != 0">
-      <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
+      <div class="d-flex justify-content-center mt-5" *ngIf="totalItemsCount > 0">
+        <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
+      </div>
     </div>
   </div>
 </div>

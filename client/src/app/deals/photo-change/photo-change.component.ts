@@ -55,7 +55,7 @@ export class PhotoChangeComponent implements OnInit {
 
   async initializeUploader() {
     const user = await this.user$.toPromise();
-    const headers = this.product ? [{ name: 'ProductId', value: this.product.id.toString() }] : [{ name: 'ProductId', value: "-1" }];
+    const headers = this.product ? [{ name: 'ProductId', value: this.product?.id?.toString() }] : [{ name: 'ProductId', value: "-1" }];
 
     this.uploader = new FileUploader({
       url: this.baseUrl + 'deals/add-photo',

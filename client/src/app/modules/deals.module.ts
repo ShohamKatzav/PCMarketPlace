@@ -11,14 +11,14 @@ import { PhotoChangeComponent } from '../deals/photo-change/photo-change.compone
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CreateDealComponent } from '../deals/create-deal/create-deal.component';
 import { TransactionComponent } from '../transaction/transaction.component';
+import { FiltersComponent } from '../filters/filters.component';
 
 
 const routes: Routes = [
   {path:'my-deals', component: DealListComponent, data :{ listType: "My Deals"}, pathMatch: 'full',},
   {path:'', component: DealListComponent, data :{ listType: "All Deals"}, pathMatch: 'full'},
   {path:'transaction', component: TransactionComponent, pathMatch: 'full'},
-  {path:':dealid', component: DealDetailsComponent},
-  {path:'my-deals/:dealid', component: DealDetailsComponent},
+  {path:'view-deal', component: DealDetailsComponent},
 ]
 
 @NgModule({
@@ -29,7 +29,8 @@ const routes: Routes = [
     EditDealComponent,
     ProductListComponent,
     ProductCardComponent,
-    PhotoChangeComponent
+    PhotoChangeComponent,
+    FiltersComponent
 
   ],
   imports: [

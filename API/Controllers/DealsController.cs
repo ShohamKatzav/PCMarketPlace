@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
@@ -10,7 +13,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout; // Explicit reference to the Checkout namespace
 
@@ -38,19 +43,19 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<DealsResponseDto>> GetDeals(int userId, int currentPage, int tableSize)
+        public async Task<ActionResult<DealsResponseDto>> GetDeals(int userId, int currentPage, int tableSize, string category)
         {
-            var deals = await _dealRepository.GetAvailableDealsAsync(userId, currentPage, tableSize);
-            var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "All Deals");
+            var deals = await _dealRepository.GetAvailableDealsAsync(userId, currentPage, tableSize, category);
+            var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "All Deals", category);
             var dealsResponse = new DealsResponseDto(deals, totalCount);
             return Ok(dealsResponse);
         }
 
-        [HttpGet("GetDealsForUser/{userId}", Name = "GetDealsForUser")]
-        public async Task<ActionResult<DealsResponseDto>> GetDealsForUser(int userId, int currentPage, int tableSize)
+        [HttpGet("GetDealsForUser", Name = "GetDealsForUser")]
+        public async Task<ActionResult<DealsResponseDto>> GetDealsForUser(int userId, int currentPage, int tableSize, string category)
         {
-            var deals = await _dealRepository.GetDealsForUserAsync(userId, currentPage, tableSize);
-            var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "My Deals");
+            var deals = await _dealRepository.GetDealsForUserAsync(userId, currentPage, tableSize, category);
+            var totalCount = await _dealRepository.GetDealTotalCountAsync(userId, "My Deals", category);
             var dealsResponse = new DealsResponseDto(deals, totalCount);
             return Ok(dealsResponse);
         }
@@ -69,9 +74,11 @@ namespace API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<DealDto>> Create(CreateDealDto newDeal)
+        public async Task<ActionResult<DealDto>> Create([FromBody] CreateDealDto newDeal)
         {
-
+            long totalPrice = (long)newDeal.Products.Sum(product => product.Price);
+            if (totalPrice < 5)
+                return BadRequest("Deal price has to be 5 ILS and above");
             var username = User.GetUsername();
             var user = await _userRepository.GetUserByUserNameAsync(username);
             var deal = new Deal
@@ -89,7 +96,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateDeal(DealUpdateDto dealUpdateDto)
+        public async Task<ActionResult> UpdateDeal(UpdateDealDto dealUpdateDto)
         {
             var deal = await _dealRepository.GetDealForUpdateAsync(dealUpdateDto.Id);
             deal.LastModified = DateTime.Now;
@@ -180,48 +187,46 @@ namespace API.Controllers
         }
 
         [HttpPut("checkout")]
-        public async Task<ActionResult> Checkout2(PaymentCheckoutDto paymentCheckout)
+        public async Task<ActionResult> Checkout(PaymentCheckoutDto paymentCheckout)
         {
-            var deal = await _dealRepository.GetDealForUpdateAsync(paymentCheckout.dealId);
+            var deal = await _dealRepository.GetDealForUpdateAsync(paymentCheckout.DealId);
             if (deal == null)
                 return NotFound();
-
-            deal.Status = "Sold";
-
-            // Save the changes to the deal (mark it as "Sold")
-            if (await _dealRepository.SaveAllAsync())
+            try
             {
-                try
+                // Create a PaymentIntent object using the provided paymentIntentId
+                var paymentIntentService = new PaymentIntentService();
+                var paymentIntentResponse = paymentIntentService.Get(paymentCheckout.PaymentIntentId, null);
+
+                // Attach the payment method to the PaymentIntent
+                var paymentMethodService = new PaymentMethodService();
+                var paymentMethod = paymentMethodService.Get(paymentCheckout.PaymentMethodId, null);
+
+                // Confirm the PaymentIntent to complete the payment
+                var confirmOptions = new PaymentIntentConfirmOptions
                 {
-                    // Create a PaymentIntent object using the provided paymentIntentId
-                    var paymentIntentService = new PaymentIntentService();
-                    var paymentIntentResponse = paymentIntentService.Get(paymentCheckout.paymentIntentId, null);
+                    PaymentMethod = paymentCheckout.PaymentMethodId,
+                    ReturnUrl = "https://example.com/return",
+                };
+                paymentIntentService.Confirm(paymentCheckout.PaymentIntentId, confirmOptions);
 
-                    // Attach the payment method to the PaymentIntent
-                    var paymentMethodService = new PaymentMethodService();
-                    var paymentMethod = paymentMethodService.Get(paymentCheckout.paymentMethodId, null);
-
-                    // Confirm the PaymentIntent to complete the payment
-                    var confirmOptions = new PaymentIntentConfirmOptions
-                    {
-                        PaymentMethod = paymentCheckout.paymentMethodId,
-                        ReturnUrl = "https://example.com/return",
-                    };
-                    paymentIntentService.Confirm(paymentCheckout.paymentIntentId, confirmOptions);
-
-                    // Payment confirmed successfully
+                deal.Status = "Sold";
+                if (await _dealRepository.SaveAllAsync())
+                    // Payment confirmed successfully + deal marked as "Sold"
                     return NoContent();
-                }
-                catch (Exception ex)
+
+                else
                 {
-                    return BadRequest("Payment failed: " + ex.Message);
+                    return BadRequest("Failed to mark the deal as \"sold\"");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Failed to mark the deal as \"sold\"");
+                return BadRequest("Payment failed: " + ex.Message);
             }
+
         }
+
 
         [HttpPost("secret-key")]
         public async Task<ActionResult> SecretKey([FromBody] int dealId)
@@ -232,21 +237,20 @@ namespace API.Controllers
                 return NotFound("Deal not found");
 
             var paymentIntent = await CreatePaymentIntentAsync(deal);
-            return Ok(new { paymentIntent = paymentIntent });
+            return Ok(new { paymentIntent });
         }
-        private async Task<PaymentIntent> CreatePaymentIntentAsync(Deal deal)
+        private async Task<ActionResult<PaymentIntent>> CreatePaymentIntentAsync(Deal deal)
         {
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = await paymentIntentService.CreateAsync(new PaymentIntentCreateOptions
             {
-                Amount = (long)(deal.Products.Sum(product => product.Price) * 100),
+                Amount = (long)deal.Products.Sum(product => product.Price) * 100,
                 Currency = "ils",
                 AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
                 {
                     Enabled = true,
                 },
             });
-
             return paymentIntent;
         }
 
@@ -254,7 +258,8 @@ namespace API.Controllers
         public IActionResult PublishableKey()
         {
             var publishableKey = _config["StripeSettings:PublishableKey"];
-            return Ok(new { publishableKey = publishableKey });
+            return Ok(new { publishableKey });
         }
+
     }
 }

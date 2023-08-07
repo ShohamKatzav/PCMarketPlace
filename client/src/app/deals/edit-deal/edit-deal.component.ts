@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
@@ -19,28 +19,30 @@ export class EditDealComponent implements OnInit {
   formSubmitted = false;
 
   categories$: Observable<Category[]>;
-  deal$: Observable<Deal>;
   deal: Deal;
   model: any = {};
   items!: FormArray;
   dealForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private dealService: DealService,
+  currentPage: number = 1;
+  totalItemsCount: number = 0;
+
+  constructor(private router: Router,
+    private dealService: DealService,
     private fb: FormBuilder,
-    private toastr: ToastrService, private router: Router,
+    private toastr: ToastrService,
     private categoryService: CategoryService) {
   }
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.deal = this.dealService.getSavedDeal();
     this.dealForm = new FormGroup({
       description: new FormControl('', Validators.required),
       products: new FormArray([]),
     });
-    const dealid = this.route.snapshot.paramMap.get('dealid') as unknown;
-    this.deal$ = this.dealService.getDeal(dealid as number);
-    this.deal = await this.deal$.toPromise();
-    this.loadDeal();
     this.categories$ = this.categoryService.getCategories();
+    this.loadDeal();
+    this.totalItemsCount = this.deal.products.length;
   }
 
   getProducts() {
@@ -53,13 +55,16 @@ export class EditDealComponent implements OnInit {
     if (this.getProducts().controls.length < 10) {
       this.items = this.getProducts();
       this.items.push(this.genRow());
+      this.items.length > 0 ? this.currentPage = ++this.totalItemsCount : this.currentPage = 1;
     }
     else
       this.toastr.warning("Sorry, maximum 10 products per deal.");
   }
   removeItem(index: any) {
     this.items.removeAt(index);
-    this.deal.products.splice(index);
+    this.deal.products.splice(index, 1);
+    this.totalItemsCount -= 1;
+    this.items.length > 0 && this.currentPage - 1 > 1 ? this.currentPage -= 1 : this.currentPage = 1;
   }
 
 
@@ -89,9 +94,9 @@ export class EditDealComponent implements OnInit {
 
   genRow(): FormGroup {
     return new FormGroup({
-      Name: new FormControl('', Validators.required),
-      Category: new FormControl('', Validators.required),
-      Price: new FormControl('', Validators.required),
+      Name: new FormControl(null, Validators.required),
+      Category: new FormControl(null, Validators.required),
+      Price: new FormControl(null, Validators.required),
     });
   }
 
@@ -128,9 +133,12 @@ export class EditDealComponent implements OnInit {
         if (this.deal.products[i].id)
           this.model.products[i].id = this.deal.products[i].id;
       }
-      this.dealService.edit(this.model).subscribe(() => {
+      this.dealService.edit(this.model).subscribe(async () => {
         this.formSubmitted = true;
         this.toastr.success("Deal edited successfully");
+        const deal = this.dealService.getDeal(this.deal.id);
+        this.dealService.setSavedDeal(await deal.toPromise());
+        this.router.navigate(['deals/view-deal']);
       });
     }
   }
@@ -159,5 +167,7 @@ export class EditDealComponent implements OnInit {
     return 4;
   }
 
-
+  onTableDataChange(event: any) {
+    this.currentPage = event;
+  }
 }

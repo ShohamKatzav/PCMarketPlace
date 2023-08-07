@@ -41,40 +41,44 @@ export class CategoriesManagementComponent implements OnInit {
         this.currentPage = totalPages;
       }
       this.toastr.success('Category added successfully');
+      this.updateLocalStorage(categories);
     } else {
       this.toastr.error('Failed to add the category');
     }
-    this.updateLocalStorage(categories);
   }
   async removeCategory(categoryId: number) {
     const categories = await this.categories$.toPromise()
-    const isSuccess = await this.categoryService.removeCategory(categoryId).toPromise();
     const indexCatToRemove = categories.findIndex(category => category.id == categoryId);
-    if (!isSuccess) {
+    const error = await this.categoryService.removeCategory(categoryId).toPromise();
+    if (!error) {
       categories.splice(indexCatToRemove, 1);
       const totalPages = Math.ceil(--this.totalItemsCount / this.pageSize);
       if (this.currentPage > totalPages) {
         this.currentPage = totalPages;
       }
       this.toastr.success('Category delete successfully');
+      this.updateLocalStorage(categories);
     } else {
       this.toastr.error('Failed to delete the category');
     }
-    this.updateLocalStorage(categories);
   }
-  async editCategory(categoryToEdit: string, caregoryId: number) {
+  async editCategory(caregoryId: number, categoryToEdit: string) {
     const categories = await this.categories$.toPromise()
     const indexToReplace = categories.findIndex(category => category.id == caregoryId);
-    const editedCategory: Category = { "id": caregoryId, "name": categoryToEdit }
-    const isSuccess = this.categoryService.editCategory(editedCategory).toPromise();
-    if (isSuccess) {
+    const editedCategory: Category = { id: caregoryId, name: categoryToEdit }
+    if (!this.validateCategoryName(editedCategory.name, categories)) {
+      return;
+    }
+    const error = await this.categoryService.editCategory(editedCategory).toPromise();
+    if (!error) {
       this.toastr.success('Category edited successfully');
       categories.splice(indexToReplace, 1, editedCategory);
+      this.updateLocalStorage(categories);
     }
     else {
+      console.log(error);
       this.toastr.error('Failed to edit the category');
     }
-    this.updateLocalStorage(categories);
   }
   async updateLocalStorage(categories) {
     localStorage.setItem("categories", JSON.stringify(categories));
@@ -84,17 +88,14 @@ export class CategoriesManagementComponent implements OnInit {
     this.currentPage = event;
   }
   validateCategoryName(categoryName, categories) {
-    if (!categoryName?.trim())
-    {
+    if (!categoryName?.trim()) {
       this.toastr.error("Please specify a category name");
       return false
-    } 
-    if (categories.some(category=> category.name == categoryName))
-    {
+    }
+    if (categories.some(category => category.name == categoryName)) {
       this.toastr.error("Category name already exist");
       return false
     }
     return true;
   }
-
 }

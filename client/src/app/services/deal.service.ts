@@ -31,9 +31,9 @@ export class DealService {
     return this.http.get<Deal>(`${this.baseUrl}deals/GetDeal/${dealId}`);
   }
 
-  getDeals(userId: number, currentPage: number, tableSize: number): Observable<{ deals: Deal[], totalCount: number }> {
-    const queryParams = { "userId": userId, "currentPage": currentPage, "tableSize": tableSize };
-    return this.http.get<{ deals: Deal[], totalCount: number }>(`${this.baseUrl}deals`, { params: queryParams}).pipe(
+  getAvailableDeals(userId: number, currentPage: number, tableSize: number, category: string): Observable<{ deals: Deal[], totalCount: number }> {
+    const queryParams = { "userId": userId, "currentPage": currentPage, "tableSize": tableSize, "category": category };
+    return this.http.get<{ deals: Deal[], totalCount: number }>(`${this.baseUrl}deals`, { params: queryParams }).pipe(
       map(response => {
         const deals = response.deals;
         const totalCount = response.totalCount;;
@@ -42,9 +42,9 @@ export class DealService {
     );
   }
 
-  getDealsForUser(userId: number, currentPage: number, tableSize: number): Observable<{ deals: Deal[], totalCount: number }> {
-    const queryParams = { "userId": userId, "currentPage": currentPage, "tableSize": tableSize };
-    return this.http.get<{ deals: Deal[], totalCount: number }>(`${this.baseUrl}deals/GetDealsForUser/${userId}`, { params: queryParams }).pipe(
+  getDealsForUser(userId: number, currentPage: number, tableSize: number, category: string): Observable<{ deals: Deal[], totalCount: number }> {
+    const queryParams = { "userId": userId, "currentPage": currentPage, "tableSize": tableSize, "category": category };
+    return this.http.get<{ deals: Deal[], totalCount: number }>(`${this.baseUrl}deals/GetDealsForUser`, { params: queryParams }).pipe(
       map(response => {
         const deals = response.deals;
         const totalCount = response.totalCount;;
@@ -81,17 +81,17 @@ export class DealService {
     return this.http.delete(`${this.baseUrl}deals/delete-photo/${productId}`);
   }
 
-  checkoutDeal(dealId: number, paymentIntentId: string ,paymentMethodId: string): Observable<any>{
-    const body = { dealId,paymentIntentId,paymentMethodId };
+  checkoutDeal(dealId: number, paymentIntentId: string, paymentMethodId: string): Observable<any> {
+    const body = { dealId, paymentIntentId, paymentMethodId };
     return this.http.put(`${this.baseUrl}deals/checkout`, body);
   }
 
-  getPublisableKey(): Observable<any>{
+  getPublisableKey(): Observable<any> {
     return this.http.get(`${this.baseUrl}deals/publishable-key`);
   }
 
-  getSecretKey(dealId: number): Observable<any>{
+  getSecretKey(dealId: number): Observable<any> {
     return this.http.post(`${this.baseUrl}deals/secret-key`, dealId);
   }
-  
+
 }

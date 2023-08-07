@@ -20,6 +20,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             
             catchError(err => {
+                console.log(err);
                 switch (err.status) {
                     case 400:
                         if (err.error.errors) {
@@ -27,11 +28,11 @@ export class ErrorInterceptor implements HttpInterceptor {
                             for (const key in err.error.errors)
                                 if (err.error.errors[key])
                                     modelStateErrors.push(err.error.errors[key])
-                            this.toastr.error(err.statusText === 'OK' ? modelStateErrors.flat() : err.statusText, err);
+                            this.toastr.error(err.statusText === 'OK' ? modelStateErrors.flat() : err.statusText, "BadRequest");
                             throw modelStateErrors.flat();
                         }
                         else {
-                            this.toastr.error(err.statusText === 'OK' ? 'BadRequest' : err.statusText, err.error);
+                            this.toastr.error(err.error, err.statusText === 'OK' ? 'BadRequest' : err.statusText);
                         }
                         break;
                     case 401:
@@ -48,7 +49,6 @@ export class ErrorInterceptor implements HttpInterceptor {
                         this.toastr.error('Something unexpected went wrong');
                         break;
                 }
-                console.log(err);
                 throw throwError(err);
             })
         )

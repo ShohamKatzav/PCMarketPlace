@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public record PaymentCheckoutDto(int dealId, string paymentIntentId, string paymentMethodId);
+    public record PaymentCheckoutDto(int DealId, string PaymentIntentId, string PaymentMethodId);
 }

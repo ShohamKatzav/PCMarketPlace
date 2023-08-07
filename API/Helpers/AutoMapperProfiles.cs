@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using AutoMapper;
@@ -24,26 +20,26 @@ namespace API.Helpers
                 dest => dest.Authorization,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Authorization == null ? "User" : d.Authorization);
+                    opt.MapFrom(d => d.Authorization  ?? "User");
                 })
             .ForMember(
                 dest => dest.UserName,
                 opt =>
                 {
-                    opt.MapFrom(d => d.UserName == null ? "User" : d.UserName);
+                    opt.MapFrom(d => d.UserName ?? "User");
                 })
                 .ForMember(
                 dest => dest.KnownAs,
                 opt =>
                 {
-                    opt.MapFrom(d => d.KnownAs == null ? "User" : d.KnownAs);
+                    opt.MapFrom(d => d.KnownAs ?? "User");
                 });
             CreateMap<Photo, PhotoDto>()
             .ForMember(
                 dest => dest.Url,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Url == null ? "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" : d.Url);
+                    opt.MapFrom(d => d.Url ?? "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png");
                 });
             CreateMap<DealPhoto, PhotoDto>();
             CreateMap<Deal, DealDto>()
@@ -64,19 +60,19 @@ namespace API.Helpers
             CreateMap<PhotoDto, ProductPhoto>();
             CreateMap<MemberUpdateDto, AppUser>();
             CreateMap<DealDto, Deal>();
-            CreateMap<DealUpdateDto, Deal>();
+            CreateMap<UpdateDealDto, Deal>();
             CreateMap<ProductPhoto, PhotoDto>()
             .ForMember(
                 dest => dest.Url,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Url == null ? "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg" : d.Url);
+                    opt.MapFrom(d => d.Url ?? "https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg");
                 });
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<Deal, CreateDealDto>();
             CreateMap<CreateDealDto, Deal>();
-            CreateMap<DealUpdateDto, DealDto>();
+            CreateMap<UpdateDealDto, DealDto>();
 
         }
     }

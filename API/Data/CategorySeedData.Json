@@ -1,7 +1,7 @@
 [
     {
         "Id": 1,
-        "Name": "Computers"
+        "Name": "Desktops"
     },
     {
         "Id": 2,
@@ -25,6 +25,18 @@
     },
     {
         "Id": 7,
+        "Name": "RAM"
+    },
+    {
+        "Id": 8,
+        "Name": "CPU"
+    },
+    {
+        "Id": 9,
+        "Name": "GPU"
+    },
+    {
+        "Id": 10,
         "Name": "Other"
     }
 ]

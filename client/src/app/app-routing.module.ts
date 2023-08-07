@@ -45,7 +45,7 @@ const routes: Routes = [
         loadChildren: () => import('./modules/deals.module').then(mod => mod.DealsModule)
       },
       { 
-        path: 'deals/edit/:dealid',
+        path: 'deals/edit',
         component: EditDealComponent,
         canDeactivate: [PreventUnsavedChangesGuard]
       },

@@ -1,7 +1,6 @@
 <div class="container">
     <h2 class="m-5">Current categories:</h2>
-    <ul *ngFor="let category of categories$ | async | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItemsCount }; let i = index"
-        [attr.data-index]="i">
+    <ul *ngFor="let category of categories$ | async | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItemsCount }; let i = index">
         <li>
             <div class="input-group">
                 <div class="row col-sm-2">
@@ -16,7 +15,7 @@
                     <input class="form-control" name="categoryToEdit" [(ngModel)]="categoryToEdit[i]">
                 </div>
                 <div class="col-sm-1 ml-3">
-                    <button type='button' (click)="editCategory(categoryToEdit[i],category.id)"
+                    <button type='button' (click)="editCategory(category.id, categoryToEdit[i])"
                         class="btn btn-sm btn-info btn-square">
                         <i class="fa fa-pencil fa-2x"></i>
                     </button>

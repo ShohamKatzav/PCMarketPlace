@@ -1,64 +1,76 @@
-<div class="row" *ngIf="product?.productPhoto && product?.productPhoto.url!='./assets/no-image.jpeg'">
-    <div class="col-2">
-        <img [src]="product.productPhoto.url" [alt]="product.productPhoto.url" class="img-thumbnail p-1">
-        <div class="text-center">
-            <button type="button"
-                (click)="this.product.id!=null ? deletePhoto(this.product.id) : deletePhotoProductDidntCreated()"
-                class="btn btn-sm btn-danger"><i class="fa fa-trash fa-3x"></i></button>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-3">
-    <div class="col-md-6">
-        <h3>Change Photo</h3>
-
-        <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
-            [uploader]="uploader" class="card bg-faded p-3 text-center mb-3 my-drop-zone">
-            <i class="fa fa-upload fa-3x"></i>
-            Drop photos here
-        </div>
-
-        <input #photoInput type="file" ng2FileSelect [uploader]="uploader" />
-
-        <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th width="50%">Name</th>
-                    <th>Size</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of uploader?.queue">
-                    <td><strong>{{ item?.file?.name }}</strong></td>
-                    <td *ngIf="uploader?.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-md-6" style="margin-bottom: 40px" *ngIf="uploader?.queue.length">
-        <div>
+<div class="row">
+    <div class="col-md-6 col-12 text-center">
+        <h4>Current Photo</h4>
+        <div class="row" *ngIf="product?.productPhoto && product?.productPhoto.url!='./assets/no-image.jpeg' else noPhoto;">
             <div>
-                Queue progress:
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+                <img [src]="product.productPhoto.url" [alt]="product.productPhoto.url" class="img-thumbnail p-2 w-75">
+                <div>
+                    <button class="btn btn-sm btn-danger" type="button"
+                        (click)="this.product.id!=null ? deletePhoto(this.product.id) : deletePhotoProductDidntCreated()">
+                        <i class="fa fa-trash fa-3x"></i></button>
                 </div>
             </div>
         </div>
-        <div>
-            <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
-                [disabled]="!uploader.getNotUploadedItems().length">
-                <span class="fa fa-upload"></span> Upload
-            </button>
-            <button type="button" class="btn btn-warning btn-s" (click)="uploader.cancelAll()"
-                [disabled]="!uploader.isUploading">
-                <span class="fa fa-ban"></span> Cancel
-            </button>
-            <button type="button" class="btn btn-danger btn-s" (click)="deletePhotoProductDidntCreated()"
-                [disabled]="!uploader.queue.length">
-                <span class="fa fa-trash"></span> Remove
-            </button>
+        <ng-template #noPhoto>
+            <h4 class="mt-5">No photo</h4>
+        </ng-template>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="row">
+            <div class="col-md-6 container-fluid">
+                <h4>Choose Photo</h4>
+
+                <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
+                    [uploader]="uploader" class="card bg-faded p-3 text-center mb-3 my-drop-zone">
+                    <i class="fa fa-upload fa-3x"></i>
+                    Drop photos here
+                </div>
+
+                <input #photoInput type="file" ng2FileSelect [uploader]="uploader" />
+
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th width="50%">Name</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of uploader?.queue">
+                            <td><strong>{{ item?.file?.name }}</strong></td>
+                            <td *ngIf="uploader?.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6" *ngIf="uploader?.queue.length">
+                <div>
+                    <div>
+                        Queue progress:
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar"
+                                [ngStyle]="{ 'width': uploader.progress + '%' }">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
+                        [disabled]="!uploader.getNotUploadedItems().length">
+                        <span class="fa fa-upload"></span> Upload
+                    </button>
+                    <button type="button" class="btn btn-warning btn-s" (click)="uploader.cancelAll()"
+                        [disabled]="!uploader.isUploading">
+                        <span class="fa fa-ban"></span> Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger btn-s" (click)="deletePhotoProductDidntCreated()"
+                        [disabled]="!uploader.queue.length">
+                        <span class="fa fa-trash"></span> Remove
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

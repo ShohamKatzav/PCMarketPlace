@@ -11,16 +11,10 @@ import { DealService } from 'src/app/services/deal.service';
 export class DealDetailsComponent implements OnInit {
 
   deal: Deal;
-  constructor(private route: ActivatedRoute, private dealService: DealService) { }
+  constructor(private dealService: DealService) { }
 
 
   ngOnInit(): void {
-    this.loadDeal();
-  }
-
-  async loadDeal() {
-    const dealid = this.route.snapshot.paramMap.get('dealid') as unknown;
-    const deal$ = await this.dealService.getDeal(dealid as number);
-    this.deal = await deal$.toPromise();
+    this.deal = this.dealService.getSavedDeal();
   }
 }

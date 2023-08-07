@@ -14,9 +14,11 @@ namespace API.Controllers
     public class CategoryController : BaseApiController
     {
         private readonly ICategoryRepository _categoryRepository;
-        public CategoryController(ICategoryRepository categoryRepository)
+        private readonly IDealRepository _dealRepository;
+        public CategoryController(ICategoryRepository categoryRepository, IDealRepository dealRepository)
         {
-            this._categoryRepository = categoryRepository;
+            _categoryRepository = categoryRepository;
+            _dealRepository = dealRepository;
         }
 
         [HttpGet]
@@ -38,7 +40,7 @@ namespace API.Controllers
         {
 
             if (_categoryRepository.GetCategories().Any(c => c.Name == categoryToAdd.Name))
-                return BadRequest("Category already exist");
+                return BadRequest("Caegory with the mentioned name is already exist");
 
             var category = new Category { Name = categoryToAdd.Name };
             _categoryRepository.Add(category);
@@ -52,12 +54,23 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateCategory(CaregoryDto categoryToUpdate)
         {
-            if (await _categoryRepository.GetCategoryByName(categoryToUpdate.Name) != null)
+            if (_categoryRepository.GetCategories().Any(c => c.Name == categoryToUpdate.Name))
                 return BadRequest("Caegory with the mentioned name is already exist");
             var category = await _categoryRepository.GetCategoryById(categoryToUpdate.Id);
+            var oldCategoryName = category.Name;
             category.Name = categoryToUpdate.Name;
-            _categoryRepository.Update(category);
 
+            if (await _dealRepository.ApplyCategoryChangesForProducts(oldCategoryName, category.Name))
+            {
+                try {
+                    await _dealRepository.SaveAllAsync();
+                }
+                catch(Exception){
+                    return BadRequest("Failed to update products");
+                }      
+            }
+
+            _categoryRepository.Update(category);
             if (await _categoryRepository.SaveAllAsync()) return NoContent();
 
             return BadRequest("Failed to update category");
@@ -66,12 +79,21 @@ namespace API.Controllers
         [HttpDelete("{categoryId}")]
         public async Task<ActionResult> DeleteCategory(int categoryId)
         {
-            var deal = await _categoryRepository.GetCategoryById(categoryId);
+            var category = await _categoryRepository.GetCategoryById(categoryId);
 
-            if (deal == null) return NotFound();
+            if (category == null) return NotFound();
 
-            _categoryRepository.Remove(deal.Id);
+            if (await _dealRepository.ApplyCategoryChangesForProducts(category.Name))
+            {
+                try {
+                    await _dealRepository.SaveAllAsync();
+                }
+                catch(Exception){
+                    return BadRequest("Failed to update products");
+                }      
+            }
 
+            _categoryRepository.Remove(category.Id);
             if (await _categoryRepository.SaveAllAsync()) return NoContent();
 
             return BadRequest("Failed to delete the category");

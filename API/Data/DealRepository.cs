@@ -21,41 +21,71 @@ namespace API.Data
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<DealDto>> GetAvailableDealsAsync(int userId, int currentPage, int tableSize)
+        public async Task<IEnumerable<DealDto>> GetAvailableDealsAsync(int userId, int currentPage, int tableSize, string category = null)
         {
             int itemsToSkip = (currentPage - 1) * tableSize;
 
-            return await _context.Deals.Where(deal => deal.AppUserId != userId && deal.Status == "Available")
-            .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
-            .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
-            .Skip(itemsToSkip)
-            .Take(tableSize)
-            .ToListAsync();
+            var query = _context.Deals
+                .Where(deal => deal.AppUserId != userId)
+                .Where(deal => deal.Status == "Available")
+                .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
+                .AsNoTracking();
+
+            if (category != null && category != "Any")
+            {
+                query = query.Where(deal => deal.Products.Any(product => product.Category == category));
+            }
+
+            return await query
+                .Skip(itemsToSkip)
+                .Take(tableSize)
+                .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
         }
-
-        public async Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId, int currentPage, int tableSize)
+        public async Task<IEnumerable<DealDto>> GetDealsForUserAsync(int userId, int currentPage, int tableSize, string category = null)
         {
             int itemsToSkip = (currentPage - 1) * tableSize;
 
-            return await _context.Deals.Where(deal => deal.AppUserId == userId)
-            .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
-            .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
-            .Skip(itemsToSkip)
-            .Take(tableSize)
-            .ToListAsync();
+            var query = _context.Deals
+                .Where(deal => deal.AppUserId == userId)
+                .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
+                .AsNoTracking();
+
+            if (category != null && category != "Any")
+            {
+                query = query.Where(deal => deal.Products.Any(product => product.Category == category));
+            }
+
+            return await query
+                .Skip(itemsToSkip)
+                .Take(tableSize)
+                .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
         }
         public async Task<DealDto> GetDealAsync(int dealid)
         {
             return await _context.Deals
             .Include(d => d.Products).ThenInclude(p => p.ProductPhoto)
+            .AsNoTracking()
             .ProjectTo<DealDto>(_mapper.ConfigurationProvider)
             .Where(d => d.Id == dealid).SingleOrDefaultAsync();
         }
-        public async Task<int> GetDealTotalCountAsync(int userId, string listType)
+        public async Task<int> GetDealTotalCountAsync(int userId, string listType, string category = null)
         {
-            return await _context.Deals
-            .Where(deal => listType == "All Deals" ? (deal.AppUserId != userId && deal.Status == "Available") : deal.AppUserId == userId)
-            .CountAsync();
+            IQueryable<Deal> dealsQuery = _context.Deals;
+
+            if (listType == "All Deals")
+                dealsQuery = dealsQuery.Where(deal => deal.AppUserId != userId && deal.Status == "Available");
+            else
+                dealsQuery = dealsQuery.Where(deal => deal.AppUserId == userId);
+
+            if (category != null && category != "Any")
+                dealsQuery = dealsQuery.Where(deal => deal.Products.Any(product => product.Category == category));
+
+            int totalCount = await dealsQuery.CountAsync();
+            return totalCount;
         }
 
         public async Task<Deal> GetDealForUpdateAsync(int dealid)
@@ -72,6 +102,19 @@ namespace API.Data
             .Where(p => p.Id == productid).SingleOrDefaultAsync();
         }
 
+        public async Task<bool> ApplyCategoryChangesForProducts(string oldCategory, string NewCategory = "Other")
+        {
+            var productsToUpdate = await _context.Products.Where(p => p.Category == oldCategory).ToListAsync();
+            if (productsToUpdate.Count > 0)
+            {
+                foreach (var product in productsToUpdate)
+                    product.Category = NewCategory;
+                return true;
+            }
+            return false;
+
+        }
+
         public void Insert(Deal deal)
         {
             _context.Deals.Add(deal);
@@ -86,7 +129,6 @@ namespace API.Data
         {
             return await _context.SaveChangesAsync() > 0;
         }
-
 
         public void Update(Deal deal)
         {

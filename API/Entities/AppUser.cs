@@ -19,7 +19,7 @@ namespace API.Entities
         [Display(Name = "Home Phone")]
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
-        public string Phone { get; set; } = "";
+        public string Phone { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string KnownAs { get; set; } = "";
         public DateTime Created { get; set; } = DateTime.Now;

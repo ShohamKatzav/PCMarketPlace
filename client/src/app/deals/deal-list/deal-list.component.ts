@@ -22,6 +22,8 @@ export class DealListComponent implements OnInit {
   tableSize: number = 6;
   totalItemsCount: number = 0;
 
+  filterByCaregory: string;
+
   constructor(private memberService: MemberService, private dealService: DealService,
     private route: ActivatedRoute, private router: Router) {
   }
@@ -31,6 +33,7 @@ export class DealListComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.listType = data.listType;
     })
+    this.filterByCaregory = "Any";
     this.deals$ = await this.loadDeals();
   }
 
@@ -41,9 +44,8 @@ export class DealListComponent implements OnInit {
       switchMap(member => {
         if (!member) return of([]);
         const dealsListObservable = this.listType === "My Deals" ?
-          this.dealService.getDealsForUser(member.id, this.currentPage, this.tableSize) :
-          this.dealService.getDeals(member.id, this.currentPage, this.tableSize);
-
+          this.dealService.getDealsForUser(member.id, this.currentPage, this.tableSize, this.filterByCaregory) :
+          this.dealService.getAvailableDeals(member.id, this.currentPage, this.tableSize, this.filterByCaregory);
         return dealsListObservable.pipe(
           tap(res => {
             this.totalItemsCount = res.totalCount;
@@ -68,10 +70,23 @@ export class DealListComponent implements OnInit {
     this.deals$ = await this.loadDeals();
   }
 
-
+  viewDeal(deal: Deal) {
+    this.dealService.setSavedDeal(deal);
+    this.router.navigate(['deals/view-deal']);
+  }
+  editDeal(deal: Deal) {
+    this.dealService.setSavedDeal(deal);
+    this.router.navigate(['deals/edit']);
+  }
   buyNow(deal: Deal) {
     this.dealService.setSavedDeal(deal);
     this.router.navigate(['deals/transaction']);
+  }
+
+  async categotyChange(category)
+  {
+    this.filterByCaregory = category
+    this.deals$ = await this.loadDeals();
   }
 
 }

@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace API.DTOs
 {
-    public record DealsResponseDto(IEnumerable<DealDto> Deals, int totalCount);
+    public record DealsResponseDto(IEnumerable<DealDto> Deals, int TotalCount);
 }

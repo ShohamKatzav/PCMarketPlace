@@ -1,4 +1,4 @@
-<div *ngIf="deal$ | async">
+<div *ngIf="deal">
   <h1 class="mt-3">Update deal information</h1>
   <div class="mt-5">
     <form #editForm="ngForm" [formGroup]="dealForm" (ngSubmit)="edit()" autocomplete="off">
@@ -8,15 +8,16 @@
           <input type="text" class="form-control" placeholder="Description" formControlName="description">
         </div>
       </div>
-      <table class="table" formArrayName="products">
-        <tbody>
-          <ng-container *ngFor="let item of getProducts().controls;let i=index">
+      <ng-container
+        *ngFor="let item of getProducts().controls | paginate: { itemsPerPage: 1, currentPage: currentPage, totalItems:  totalItemsCount}">
+        <table class="table" formArrayName="products">
+          <tbody>
             <tr>
               <td colspan="5">
-                <label for="product">Product number {{i+1}} details:</label>
+                <label for="product">Product number {{currentPage}} details:</label>
               </td>
             </tr>
-            <tr [formGroupName]="i">
+            <tr [formGroupName]="currentPage-1">
               <td class="col-lg-3">
                 <input type="text" class="form-control" required placeholder="Name" formControlName="Name">
               </td>
@@ -31,17 +32,21 @@
                 <input type="number" min="0" class="form-control" required placeholder="Price" formControlName="Price">
               </td>
               <td class="col-lg-2">
-                <button type='button' (click)="removeItem(i)" class="btn btn-sm btn-danger">
+                <button type='button' (click)="removeItem(currentPage-1)" class="btn btn-sm btn-danger">
                   <i class="fa fa-trash fa-2x"></i>
                 </button>
               </td>
-              <td class="col-lg-2">
-                <app-photo-change [(product)]="deal.products[i]"></app-photo-change>
-              </td>
+
             </tr>
-          </ng-container>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+        <div class="col-lg-6">
+          <app-photo-change [(product)]="deal.products[currentPage-1]"></app-photo-change>
+        </div>
+      </ng-container>
+      <div class="d-flex justify-content-center mt-5" *ngIf="(getProducts())?.length != 0">
+        <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
+      </div>
 
       <button type='button' class="btn btn-sm btn-success" (click)="addNewRow()">
         <i class="fa fa-plus-square fa-2x"></i>

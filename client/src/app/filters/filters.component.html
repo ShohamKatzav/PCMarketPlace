@@ -1,0 +1,13 @@
+<div class="row justify-content-center">
+    <div class="col-md-6 my-auto py-3">
+        <label>Category</label>
+        <select (change)="onSelectCategory($event)" class="form-select">
+            <option value="Any">
+                Any
+            </option>>
+            <option *ngFor="let category of categories$ | async" [value]="category.name">
+                {{category.name}}
+            </option>
+        </select>
+    </div>
+</div>

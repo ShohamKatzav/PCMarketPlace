@@ -33,7 +33,7 @@ import { TransactionComponent } from './transaction/transaction.component';
     FooterComponent,
     AboutComponent,
     CategoriesManagementComponent,
-    TransactionComponent
+    TransactionComponent,
   ],
   imports: [
     BrowserModule,
