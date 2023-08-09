@@ -15,8 +15,8 @@ namespace API.Controllers
         private readonly ITokenService _tokenService;
         public AccountController(DataContext context, ITokenService tokenService)
         {
-            this._context = context;
-            this._tokenService = tokenService;
+            _context = context;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]

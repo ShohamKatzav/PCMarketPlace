@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
@@ -14,8 +14,8 @@ import { pluck, switchMap, tap } from 'rxjs/operators';
   styleUrls: ['./deal-list.component.css']
 })
 export class DealListComponent implements OnInit {
-
   deals$: Observable<Deal[]>;
+  deleteDealSubscription: Subscription;
   member$: Observable<Member> = this.memberService.currentMember$;
   listType: string;
   currentPage: number = 1;
@@ -38,7 +38,7 @@ export class DealListComponent implements OnInit {
   }
 
 
-  async loadDeals() {
+  loadDeals() {
     return this.member$.pipe(
       // complete previous inner observable, emit values
       switchMap(member => {
@@ -56,18 +56,19 @@ export class DealListComponent implements OnInit {
     );
   }
 
-  async deleteDeal(dealId: number) {
-    await this.dealService.deleteDeal(dealId).toPromise();
-    const totalPages = Math.ceil(--this.totalItemsCount / this.tableSize);
-    if (this.currentPage > totalPages) {
-      this.currentPage = totalPages;
-    }
-    this.deals$ = await this.loadDeals();
+  deleteDeal(dealId: number) {
+    this.deleteDealSubscription = this.dealService.deleteDeal(dealId).subscribe(() => {
+      const totalPages = Math.ceil(--this.totalItemsCount / this.tableSize);
+      if (this.currentPage > totalPages) {
+        this.currentPage = totalPages;
+      }
+      this.deals$ = this.loadDeals();
+    });
   }
 
   async onTableDataChange(event: any) {
     this.currentPage = event;
-    this.deals$ = await this.loadDeals();
+    this.deals$ = this.loadDeals();
   }
 
   viewDeal(deal: Deal) {
@@ -83,10 +84,15 @@ export class DealListComponent implements OnInit {
     this.router.navigate(['deals/transaction']);
   }
 
-  async categotyChange(category)
-  {
+  async categotyChange(category) {
     this.filterByCaregory = category
-    this.deals$ = await this.loadDeals();
+    this.deals$ =  this.loadDeals();
+  }
+
+  ngOnDestroy() {
+    if (this.deleteDealSubscription) {
+      this.deleteDealSubscription.unsubscribe();
+    }
   }
 
 }

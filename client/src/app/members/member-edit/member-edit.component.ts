@@ -1,8 +1,9 @@
-import { Component, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { first, take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
@@ -18,6 +19,7 @@ export class MemberEditComponent implements OnInit {
   user: User;
 
   OtherUser: Member;
+  subscription: Subscription;
 
   @ViewChild('editForm') EForm: NgForm;
 
@@ -33,25 +35,25 @@ export class MemberEditComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router
   ) {
+    this.subscription = new Subscription();
     const state = this.router.getCurrentNavigation().extras.state;
-    if(state)
+    if (state)
       this.OtherUser = state['OtherUser'];
   }
 
   async ngOnInit() {
-    const user$ = this.accountService.currentUser$.pipe(first());
-    this.user = await user$.toPromise();
-    this.loadMember();
+    this.subscription.add(this.accountService.currentUser$.subscribe(user => {
+      this.user = user
+      this.loadMember();
+    }));
   }
 
   async loadMember() {
     if (this.OtherUser)
       this.member = this.OtherUser;
-    else
-    {
-      const member$ = this.memberService.getMember(this.user.username);
-      this.member = await member$.toPromise();
-    }  
+    else {
+      this.subscription.add(this.memberService.getMember(this.user.username).subscribe( member => this.member = member));
+    }
   }
 
   updateMember() {
@@ -60,5 +62,11 @@ export class MemberEditComponent implements OnInit {
       this.toastr.success('Profile updated successfully');
       this.EForm.reset(this.member);
     })
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

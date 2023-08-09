@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, of, pipe, } from 'rxjs';
+import { Observable, Subscription, of, pipe, } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 
@@ -12,6 +13,8 @@ import { CategoryService } from 'src/app/services/category.service';
 export class CategoriesManagementComponent implements OnInit {
 
   categories$: Observable<Category[]>;
+  categoriesSubscription: Subscription;
+  categories: Category[];
   categoryNameToAdd: string;
   categoryToEdit: string[] = [];
 
@@ -20,65 +23,75 @@ export class CategoriesManagementComponent implements OnInit {
   totalItemsCount: number;
 
   constructor(private categoryService: CategoryService, private toastr: ToastrService) {
+    this.categoriesSubscription = new Subscription();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.categories$ = this.categoryService.getCategories();
-    const categories = await this.categories$.toPromise();
-    this.totalItemsCount = categories.length;
+    this.categoriesSubscription.add(this.categories$.pipe(take(1)).subscribe(categories => this.categories = categories));
+    this.totalItemsCount = this.categories.length;
   }
 
   async addCategory(categoryToAdd: string) {
-    const categories = await this.categories$.toPromise();
-    if (!this.validateCategoryName(categoryToAdd, categories)) {
+    if (!this.validateCategoryName(categoryToAdd, this.categories)) {
       return;
     }
-    const newCategory = await this.categoryService.addCategory(categoryToAdd).toPromise();
-    if (newCategory) {
-      categories.push(newCategory);
-      const totalPages = Math.ceil(++this.totalItemsCount / this.pageSize);
-      if (this.currentPage < totalPages) {
-        this.currentPage = totalPages;
-      }
-      this.toastr.success('Category added successfully');
-      this.updateLocalStorage(categories);
-    } else {
-      this.toastr.error('Failed to add the category');
-    }
+    var newCategory;
+    this.categoriesSubscription.add(this.categoryService.addCategory(categoryToAdd).pipe(take(1))
+      .subscribe(category => {
+        newCategory = category;
+        if (newCategory) {
+          this.categories.push(newCategory);
+          const totalPages = Math.ceil(++this.totalItemsCount / this.pageSize);
+          if (this.currentPage < totalPages) {
+            this.currentPage = totalPages;
+          }
+          this.toastr.success('Category added successfully');
+          this.updateLocalStorage(this.categories);
+        } else {
+          this.toastr.error('Failed to add the category');
+        }
+      }));
   }
   async removeCategory(categoryId: number) {
-    const categories = await this.categories$.toPromise()
-    const indexCatToRemove = categories.findIndex(category => category.id == categoryId);
-    const error = await this.categoryService.removeCategory(categoryId).toPromise();
-    if (!error) {
-      categories.splice(indexCatToRemove, 1);
-      const totalPages = Math.ceil(--this.totalItemsCount / this.pageSize);
-      if (this.currentPage > totalPages) {
-        this.currentPage = totalPages;
-      }
-      this.toastr.success('Category delete successfully');
-      this.updateLocalStorage(categories);
-    } else {
-      this.toastr.error('Failed to delete the category');
-    }
+    const indexCatToRemove = this.categories.findIndex(category => category.id == categoryId);
+    var error;
+    this.categoriesSubscription.add(this.categoryService.removeCategory(categoryId).pipe(take(1))
+      .subscribe(res => {
+        error = res;
+        if (!error) {
+          this.categories.splice(indexCatToRemove, 1);
+          const totalPages = Math.ceil(--this.totalItemsCount / this.pageSize);
+          if (this.currentPage > totalPages) {
+            this.currentPage = totalPages;
+          }
+          this.toastr.success('Category delete successfully');
+          this.updateLocalStorage(this.categories);
+        } else {
+          this.toastr.error('Failed to delete the category');
+        }
+      }));
   }
   async editCategory(caregoryId: number, categoryToEdit: string) {
-    const categories = await this.categories$.toPromise()
-    const indexToReplace = categories.findIndex(category => category.id == caregoryId);
+    const indexToReplace = this.categories.findIndex(category => category.id == caregoryId);
     const editedCategory: Category = { id: caregoryId, name: categoryToEdit }
-    if (!this.validateCategoryName(editedCategory.name, categories)) {
+    if (!this.validateCategoryName(editedCategory.name, this.categories)) {
       return;
     }
-    const error = await this.categoryService.editCategory(editedCategory).toPromise();
-    if (!error) {
-      this.toastr.success('Category edited successfully');
-      categories.splice(indexToReplace, 1, editedCategory);
-      this.updateLocalStorage(categories);
-    }
-    else {
-      console.log(error);
-      this.toastr.error('Failed to edit the category');
-    }
+    var error;
+    this.categoriesSubscription.add(this.categoryService.editCategory(editedCategory).pipe(take(1))
+      .subscribe(res => {
+        error = res;
+        if (!error) {
+          this.toastr.success('Category edited successfully');
+          this.categories.splice(indexToReplace, 1, editedCategory);
+          this.updateLocalStorage(this.categories);
+        }
+        else {
+          console.log(error);
+          this.toastr.error('Failed to edit the category');
+        }
+      }));
   }
   async updateLocalStorage(categories) {
     localStorage.setItem("categories", JSON.stringify(categories));
@@ -97,5 +110,10 @@ export class CategoriesManagementComponent implements OnInit {
       return false
     }
     return true;
+  }
+  ngOnDestroy() {
+    if (this.categoriesSubscription) {
+      this.categoriesSubscription.unsubscribe();
+    }
   }
 }

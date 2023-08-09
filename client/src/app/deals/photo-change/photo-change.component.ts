@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { Product } from 'src/app/models/product';
 import { User } from 'src/app/models/user';
@@ -18,7 +18,8 @@ export class PhotoChangeComponent implements OnInit {
   uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   baseUrl = environment.apiUrl;
-  user$: Observable<User>;
+  user: User;
+  userSubscription: Subscription;
 
   @Input() product: Product;
   @Output() productChange = new EventEmitter<Product>();
@@ -26,7 +27,7 @@ export class PhotoChangeComponent implements OnInit {
   @ViewChild('photoInput') photoInputRef: ElementRef<HTMLInputElement>;
 
   constructor(private accountService: AccountService, private dealService: DealService) {
-    this.user$ = this.accountService.currentUser$.pipe(first());
+    this.userSubscription = this.accountService.currentUser$.subscribe(user => this.user = user);
   }
 
 
@@ -54,13 +55,13 @@ export class PhotoChangeComponent implements OnInit {
   }
 
   async initializeUploader() {
-    const user = await this.user$.toPromise();
+    this.userSubscription = this.accountService.currentUser$.subscribe(user => this.user = user);
     const headers = this.product ? [{ name: 'ProductId', value: this.product?.id?.toString() }] : [{ name: 'ProductId', value: "-1" }];
 
     this.uploader = new FileUploader({
       url: this.baseUrl + 'deals/add-photo',
       headers,
-      authToken: 'Bearer ' + user.token,
+      authToken: 'Bearer ' + this.user.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
@@ -107,6 +108,12 @@ export class PhotoChangeComponent implements OnInit {
   resetFileInput() {
     if (this.photoInputRef) {
       this.photoInputRef.nativeElement.value = '';
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 

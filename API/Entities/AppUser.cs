@@ -15,7 +15,6 @@ namespace API.Entities
         public byte[] PasswordSalt { get; set; }
         public string Email { get; set; } = "";
         public string Authorization { get; set; } = "User";
-        [Required(ErrorMessage = "You must provide a phone number")]
         [Display(Name = "Home Phone")]
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]

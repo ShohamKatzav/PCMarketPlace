@@ -10,7 +10,7 @@ namespace API.Data.Migrations
                 name: "Phone",
                 table: "AppUsers",
                 type: "TEXT",
-                nullable: false,
+                nullable: true,
                 defaultValue: "");
         }
 

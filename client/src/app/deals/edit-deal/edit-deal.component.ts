@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, pipe } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
 import { CategoryService } from 'src/app/services/category.service';
@@ -20,6 +20,7 @@ export class EditDealComponent implements OnInit {
 
   categories$: Observable<Category[]>;
   deal: Deal;
+  dealSubscription: Subscription;
   model: any = {};
   items!: FormArray;
   dealForm: FormGroup;
@@ -32,6 +33,7 @@ export class EditDealComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private categoryService: CategoryService) {
+      this.dealSubscription = new Subscription();
   }
 
   ngOnInit() {
@@ -133,13 +135,15 @@ export class EditDealComponent implements OnInit {
         if (this.deal.products[i].id)
           this.model.products[i].id = this.deal.products[i].id;
       }
-      this.dealService.edit(this.model).subscribe(async () => {
+      this.dealSubscription.add(this.dealService.edit(this.model).subscribe(pipe(() => {
         this.formSubmitted = true;
         this.toastr.success("Deal edited successfully");
-        const deal = this.dealService.getDeal(this.deal.id);
-        this.dealService.setSavedDeal(await deal.toPromise());
-        this.router.navigate(['deals/view-deal']);
-      });
+        this.dealService.getDeal(this.deal.id).subscribe(deal => {
+          this.deal = deal
+          this.dealService.setSavedDeal(this.deal);
+          this.router.navigate(['deals/view-deal']);
+        });
+      })));
     }
   }
 
@@ -169,5 +173,11 @@ export class EditDealComponent implements OnInit {
 
   onTableDataChange(event: any) {
     this.currentPage = event;
+  }
+
+  ngOnDestroy() {
+    if (this.dealSubscription) {
+      this.dealSubscription.unsubscribe();
+    }
   }
 }

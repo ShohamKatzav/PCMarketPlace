@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
@@ -17,11 +16,12 @@ export class PhotoChangeComponent implements OnInit {
   uploader:FileUploader;
   hasBaseDropZoneOver:boolean;
   baseUrl = environment.apiUrl;
-  user$: Observable<User>;
+  user: User;
+  userSubscription : Subscription;
 
   @Input() member: Member;
   constructor(private accountService: AccountService, private memberService: MemberService) {
-    this.user$ = this.accountService.currentUser$.pipe(first());
+    this.userSubscription = this.accountService.currentUser$.subscribe(user => this.user = user);
   }
 
 
@@ -38,12 +38,10 @@ export class PhotoChangeComponent implements OnInit {
   }
 
   async initializeUploader() {
-    const user = await this.user$.toPromise();
-    
     this.uploader = new FileUploader({
       url: this.baseUrl + 'users/add-photo',
       headers: [{ name: 'UserName', value: this.member.userName }],
-      authToken: 'Bearer ' + user.token,
+      authToken: 'Bearer ' + this.user.token,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
@@ -66,6 +64,12 @@ export class PhotoChangeComponent implements OnInit {
 
   fileOverBase(e:any):void {
     this.hasBaseDropZoneOver = e;
+  }
+
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
 }

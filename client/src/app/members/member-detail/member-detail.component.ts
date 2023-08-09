@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Member } from 'src/app/models/member';
 import { MemberService } from 'src/app/services/member.service';
 
@@ -11,6 +12,7 @@ import { MemberService } from 'src/app/services/member.service';
 export class MemberDetailComponent implements OnInit {
 
   member: Member;
+  memberSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private memberService: MemberService) {}
 
@@ -20,8 +22,13 @@ export class MemberDetailComponent implements OnInit {
 
   async loadMember() {
     const username = this.route.snapshot.paramMap.get('username') as string;
-    const member$ = this.memberService.getMember(username);
-    this.member = await member$.toPromise();
+    this.memberSubscription = this.memberService.getMember(username).subscribe(member => this.member = member);
+  }
+
+  ngOnDestroy() {
+    if (this.memberSubscription) {
+      this.memberSubscription.unsubscribe();
+    }
   }
 
 
