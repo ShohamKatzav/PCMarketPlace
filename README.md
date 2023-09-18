@@ -185,3 +185,12 @@ Will show and hide ngx-spinner while the user is waiting for page to load.
 
 Responsive footwer which include a short introduction to our new customers and ways to contact the store's staff.
 
+
+## Things to Improve:
+
+1. Optimize Deal Storage: Currently, deals are cached, but there may be more efficient ways to manage and store deal data, especially as the application scales. Exploring alternative storage strategies or data structures could lead to better performance.
+
+2. Limit Cached Pages: Consider implementing a mechanism to limit the number of cached pages. This can help control memory usage and ensure that only the most relevant data is cached, which may be particularly important as the application grows.
+
+3. Real-Time Updates with WebSockets: Implement real-time updates using WebSocket technology to keep users informed of changes made by other users.
+
