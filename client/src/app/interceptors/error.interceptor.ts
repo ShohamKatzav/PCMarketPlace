@@ -20,7 +20,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             
             catchError(err => {
-                console.log(err);
                 switch (err.status) {
                     case 400:
                         if (err.error.errors) {

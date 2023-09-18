@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription, pipe } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
+import { Photo } from 'src/app/models/photo';
 import { CategoryService } from 'src/app/services/category.service';
 import { DealService } from 'src/app/services/deal.service';
 
@@ -15,11 +16,13 @@ import { DealService } from 'src/app/services/deal.service';
   styleUrls: ['./edit-deal.component.css']
 })
 export class EditDealComponent implements OnInit {
+
   @ViewChild('editForm') EForm: NgForm;
   formSubmitted = false;
 
   categories$: Observable<Category[]>;
   deal: Deal;
+  listType: string;
   dealSubscription: Subscription;
   model: any = {};
   items!: FormArray;
@@ -28,16 +31,20 @@ export class EditDealComponent implements OnInit {
   currentPage: number = 1;
   totalItemsCount: number = 0;
 
+  pageCategory: string;
+
   constructor(private router: Router,
     private dealService: DealService,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private categoryService: CategoryService) {
-      this.dealSubscription = new Subscription();
+    this.dealSubscription = new Subscription();
   }
 
   ngOnInit() {
     this.deal = this.dealService.getSavedDeal();
+    this.pageCategory = this.dealService.getSavedPageCategory();
+    this.listType = this.dealService.getSavedListType();
     this.dealForm = new FormGroup({
       description: new FormControl('', Validators.required),
       products: new FormArray([]),
@@ -58,13 +65,21 @@ export class EditDealComponent implements OnInit {
       this.items = this.getProducts();
       this.items.push(this.genRow());
       this.items.length > 0 ? this.currentPage = ++this.totalItemsCount : this.currentPage = 1;
+
+      const updatedDeal = { ...this.deal };
+      updatedDeal.products.push();
+      this.deal = updatedDeal;
     }
     else
       this.toastr.warning("Sorry, maximum 10 products per deal.");
   }
   removeItem(index: any) {
     this.items.removeAt(index);
-    this.deal.products.splice(index, 1);
+
+    const updatedDeal = { ...this.deal };
+    updatedDeal.products.splice(index, 1);
+    this.deal = updatedDeal;
+
     this.totalItemsCount -= 1;
     this.items.length > 0 && this.currentPage - 1 > 1 ? this.currentPage -= 1 : this.currentPage = 1;
   }
@@ -84,9 +99,9 @@ export class EditDealComponent implements OnInit {
       this.items?.push(
         this.fb.group(
           {
-            Name: this.fb.control(this.deal.products[i].name, Validators.required),
-            Category: new FormControl(this.deal.products[i].category, Validators.required),
-            Price: new FormControl(this.deal.products[i].price, Validators.required),
+            name: this.fb.control(this.deal.products[i].name, Validators.required),
+            category: new FormControl(this.deal.products[i].category, Validators.required),
+            price: new FormControl(this.deal.products[i].price, Validators.required),
           }));
     }
     return this.items;
@@ -96,9 +111,9 @@ export class EditDealComponent implements OnInit {
 
   genRow(): FormGroup {
     return new FormGroup({
-      Name: new FormControl(null, Validators.required),
-      Category: new FormControl(null, Validators.required),
-      Price: new FormControl(null, Validators.required),
+      name: new FormControl(null, Validators.required),
+      category: new FormControl(null, Validators.required),
+      price: new FormControl(null, Validators.required),
     });
   }
 
@@ -127,14 +142,18 @@ export class EditDealComponent implements OnInit {
       this.model.products = Array.from(this.items.value);
       // attach products photos information
       for (let i = 0; i < this.deal.products.length; i++) {
-        this.model.products[i].productPhoto = this.deal.products[i]?.productPhoto;
+        const newPhoto: any = {
+          url: this.deal.products[i]?.productPhoto?.url ?? './assets/no-image.jpeg'
+        }
+        this.model.products[i].productPhoto = newPhoto;
       }
       // attach exist products id
       for (let i = 0; i < this.deal.products.length; i++) {
-        // if id mean the product is already exist, else we won't send the id property(the server will create one). 
+        // if (this.deal.products[i].id) mean the product is already exist, else we won't send the id property(the server will create one). 
         if (this.deal.products[i].id)
           this.model.products[i].id = this.deal.products[i].id;
       }
+
       this.dealSubscription.add(this.dealService.edit(this.model).subscribe(pipe(() => {
         this.formSubmitted = true;
         this.toastr.success("Deal edited successfully");
@@ -144,6 +163,7 @@ export class EditDealComponent implements OnInit {
           this.router.navigate(['deals/view-deal']);
         });
       })));
+
     }
   }
 
@@ -173,6 +193,16 @@ export class EditDealComponent implements OnInit {
 
   onTableDataChange(event: any) {
     this.currentPage = event;
+  }
+
+
+  updateCacheAfterImageChange() {
+    const dealClone = JSON.parse(JSON.stringify(this.deal));
+    const { dealPhoto, ...dealToSend } = dealClone;
+    for (const product of dealToSend.products) {
+      product.productPhoto = { url: product.productPhoto?.url ?? './assets/no-image.jpeg' } as Photo;
+    }
+    this.dealService.edit(dealToSend).subscribe();
   }
 
   ngOnDestroy() {

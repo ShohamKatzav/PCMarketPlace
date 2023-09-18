@@ -84,7 +84,7 @@
     },
     "Deals": [
       {
-        "Description": "CPU",
+        "Description": "CPU-8-character",
         "Created": "2020-03-18",
         "Products": [
           {
@@ -99,7 +99,7 @@
         "Status": "Available"
       },
       {
-        "Description": "GPU",
+        "Description": "GPU-8-character",
         "Created": "2020-03-18",
         "Products": [
           {
@@ -114,7 +114,7 @@
         "Status": "Available"
       },
       {
-        "Description": "RAM",
+        "Description": "RAM-8-character",
         "Created": "2020-03-18",
         "Products": [
           {
@@ -129,7 +129,7 @@
         "Status": "Available"
       },
       {
-        "Description": "Mouse pad",
+        "Description": "Mouse-pad",
         "Created": "2020-03-18",
         "Products": [
           {
@@ -205,7 +205,97 @@
     },
     "Deals": [
       {
-        "Description": "Laptop",
+        "Description": "Laptop11",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Laptop",
+            "Category": "Laptops",
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "Laptop22",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Laptop",
+            "Category": "Laptops",
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "Laptop33",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Laptop",
+            "Category": "Laptops",
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "Laptop44",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Laptop",
+            "Category": "Laptops",
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "Laptop55",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Laptop",
+            "Category": "Laptops",
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "Laptop66",
+        "Created": "2020-03-18",
+        "Products": [
+          {
+            "Name": "Laptop",
+            "Category": "Laptops",
+            "Price": 2500,
+            "ProductPhoto": {
+              "Url":"https://www.bhphotovideo.com/cdn-cgi/image/format=auto,fit=scale-down,width=500,quality=95/https://www.bhphotovideo.com/images/images500x500/philips_273v7qjab_27_ips_1920x1080_5ms_1633609234_1650090.jpg"
+            }
+          }
+        ],
+        "Status": "Available"
+      },
+      {
+        "Description": "Laptop77",
         "Created": "2020-03-18",
         "Products": [
           {

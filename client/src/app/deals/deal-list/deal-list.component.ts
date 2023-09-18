@@ -6,7 +6,8 @@ import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
 import { Router } from '@angular/router';
-import { pluck, switchMap, tap } from 'rxjs/operators';
+import { pluck, switchMap, take, tap } from 'rxjs/operators';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-deal-list',
@@ -24,17 +25,20 @@ export class DealListComponent implements OnInit {
 
   filterByCaregory: string;
 
+  noSpinnerHeader = new HttpHeaders().set('Skip-Spinner', 'true');
+
   constructor(private memberService: MemberService, private dealService: DealService,
     private route: ActivatedRoute, private router: Router) {
+    this.member$ = this.memberService.currentMember$;
   }
 
-  async ngOnInit() {
-    this.member$ = this.memberService.currentMember$;
+  ngOnInit() {
+    this.filterByCaregory = "Any";
     this.route.data.subscribe(data => {
       this.listType = data.listType;
+      this.dealService.setSavedListType(data.listType);
     })
-    this.filterByCaregory = "Any";
-    this.deals$ = await this.loadDeals();
+    this.deals$ = this.loadDeals();
   }
 
 
@@ -43,9 +47,7 @@ export class DealListComponent implements OnInit {
       // complete previous inner observable, emit values
       switchMap(member => {
         if (!member) return of([]);
-        const dealsListObservable = this.listType === "My Deals" ?
-          this.dealService.getDealsForUser(member.id, this.currentPage, this.tableSize, this.filterByCaregory) :
-          this.dealService.getAvailableDeals(member.id, this.currentPage, this.tableSize, this.filterByCaregory);
+        const dealsListObservable = this.dealService.getDealsPage(member.id, this.currentPage, this.tableSize, this.filterByCaregory);
         return dealsListObservable.pipe(
           tap(res => {
             this.totalItemsCount = res.totalCount;
@@ -56,17 +58,25 @@ export class DealListComponent implements OnInit {
     );
   }
 
-  deleteDeal(dealId: number) {
+  deleteDeal(dealId: number, pageCategory: string) {
     this.deleteDealSubscription = this.dealService.deleteDeal(dealId).subscribe(() => {
-      const totalPages = Math.ceil(--this.totalItemsCount / this.tableSize);
-      if (this.currentPage > totalPages) {
+
+      this.dealService.getTotalCountForCategory(this.filterByCaregory).subscribe(count => this.totalItemsCount = count);
+      const totalPages = Math.ceil(this.totalItemsCount / this.tableSize);
+      
+      if (this.currentPage > totalPages && totalPages > 0) {
         this.currentPage = totalPages;
       }
       this.deals$ = this.loadDeals();
-    });
-  }
 
-  async onTableDataChange(event: any) {
+      if (totalPages > this.currentPage) {
+        this.dealService.updateCacheAfterRemoving(pageCategory, totalPages);
+      }
+    });
+  };
+
+
+  onTableDataChange(event: any) {
     this.currentPage = event;
     this.deals$ = this.loadDeals();
   }
@@ -77,16 +87,19 @@ export class DealListComponent implements OnInit {
   }
   editDeal(deal: Deal) {
     this.dealService.setSavedDeal(deal);
+    this.dealService.setSavedPageCategory(`${this.currentPage}-${this.filterByCaregory}`);
     this.router.navigate(['deals/edit']);
   }
   buyNow(deal: Deal) {
     this.dealService.setSavedDeal(deal);
+    this.dealService.setSavedPageCategory(`${this.currentPage}-${this.filterByCaregory}`);
     this.router.navigate(['deals/transaction']);
   }
 
-  async categotyChange(category) {
+  categotyChange(category) {
+    this.currentPage = 1;
     this.filterByCaregory = category
-    this.deals$ =  this.loadDeals();
+    this.deals$ = this.loadDeals();
   }
 
   ngOnDestroy() {

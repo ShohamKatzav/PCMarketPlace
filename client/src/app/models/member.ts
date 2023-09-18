@@ -1,4 +1,4 @@
-import { Photo } from "./Photo";
+import { Photo } from "./photo";
 import { Deal } from "./deal";
 
 

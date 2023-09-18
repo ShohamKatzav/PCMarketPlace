@@ -20,7 +20,7 @@ namespace API.Helpers
                 dest => dest.Authorization,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Authorization  ?? "User");
+                    opt.MapFrom(d => d.Authorization ?? "User");
                 })
             .ForMember(
                 dest => dest.UserName,

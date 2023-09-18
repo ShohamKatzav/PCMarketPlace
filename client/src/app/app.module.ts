@@ -20,6 +20,15 @@ import { AboutComponent } from './about/about.component';
 import { CategoriesManagementComponent } from './categories/categories-management/categories-management.component';
 import { TransactionComponent } from './transaction/transaction.component';
 
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { categoryReducer } from './state/categories/category.reducer';
+import { CategoryEffects } from './state/categories/category.effects';
+import { environment } from '../environments/environment';
+import { dealReducer } from './state/deals/deal.reducer';
+import { DealEffects } from './state/deals/deal.effects';
+
 
 @NgModule({
   declarations: [
@@ -42,6 +51,13 @@ import { TransactionComponent } from './transaction/transaction.component';
     BrowserAnimationsModule,
     CoreModule,
     SharedModule,
+    StoreModule.forRoot({categories: categoryReducer, deals: dealReducer}),
+    EffectsModule.forRoot([CategoryEffects, DealEffects]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+    }),
   ],
   providers: [
     {

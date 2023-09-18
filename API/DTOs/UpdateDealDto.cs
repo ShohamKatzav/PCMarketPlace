@@ -13,6 +13,6 @@ namespace API.DTOs
         string Description,
         [Required]
         [MinLength(1, ErrorMessage = "At least one product must be included.")]
-        ICollection<ProductDto> Products 
+        ICollection<ProductDto> Products
     );
 }

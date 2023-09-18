@@ -19,6 +19,7 @@ export class CreateDealComponent implements OnInit {
   formSubmitted = false;
 
   categories$: Observable<Category[]>;
+  categories: Category[] = [];
   model: any = {};
   products: Product[] = [];
   items!: FormArray;
@@ -57,7 +58,11 @@ export class CreateDealComponent implements OnInit {
   }
   removeItem(index: any) {
     this.items.removeAt(index);
-    this.products.splice(index, 1);
+
+    const updatedProducts = [ ...this.products ];
+    updatedProducts.splice(index, 1);
+    this.products = updatedProducts;
+
     this.totalItemsCount -= 1;
     this.items.length > 0 && this.currentPage - 1 > 1 ? this.currentPage -= 1 : this.currentPage = 1;
   }
@@ -78,6 +83,7 @@ export class CreateDealComponent implements OnInit {
     if (this.items)
       while (this.items.length > 0)
         this.removeItem(0);
+    this.products = [];
   }
 
   create() {
@@ -97,7 +103,6 @@ export class CreateDealComponent implements OnInit {
       for (let i = 0; i < this.products.length; i++) {
         this.model.products[i].productPhoto = this.products[i]?.productPhoto;
       }
-      console.log(this.items);
       this.dealService.create(this.model).subscribe(() => {
         this.formSubmitted = true;
         this.router.navigateByUrl("/deals/my-deals");

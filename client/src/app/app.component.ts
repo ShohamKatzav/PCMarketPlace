@@ -18,7 +18,6 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.setCurrentUser();
-    this.getCategories();
   }
 
   setCurrentUser() {
@@ -30,11 +29,5 @@ export class AppComponent {
     this.http.get('https://localhost:5001/api/users').subscribe(
       response => { this.users = response; }
     )
-  }
-
-  getCategories() {
-    this.http.get('https://localhost:5001/api/category').subscribe(
-      response => { localStorage.setItem("categories", JSON.stringify(response)); }
-    );
   }
 }

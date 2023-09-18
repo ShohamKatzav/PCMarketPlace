@@ -14,10 +14,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Stripe;
-using Stripe.Checkout; // Explicit reference to the Checkout namespace
 
 namespace API.Controllers
 {
@@ -96,7 +96,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateDeal(UpdateDealDto dealUpdateDto)
+        public async Task<ActionResult> UpdateDeal([FromBody]UpdateDealDto dealUpdateDto)
         {
             var deal = await _dealRepository.GetDealForUpdateAsync(dealUpdateDto.Id);
             deal.LastModified = DateTime.Now;
@@ -104,15 +104,9 @@ namespace API.Controllers
 
             _dealRepository.Update(deal);
 
-            try
-            {
-                await _dealRepository.SaveAllAsync();
-                return NoContent();
-            }
-            catch
-            {
-                return BadRequest("Failed to update deal.");
-            }
+            if(await _dealRepository.SaveAllAsync()) return NoContent();
+            
+            return BadRequest("Failed to update deal.");
         }
 
         [HttpDelete("delete-deal/{dealId}")]
@@ -134,18 +128,25 @@ namespace API.Controllers
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
             Request.Headers.TryGetValue("ProductId", out var headerValue);
-
             var procuctId = headerValue;
-            var product = await _dealRepository.GetProductForUpdateAsync(int.Parse(procuctId));
+
             var result = await _photoService.UploadPhotoAsync(file);
-
             if (result.Error != null) return BadRequest(result.Error.Message);
-
             var photo = new ProductPhoto
             {
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId,
             };
+
+            API.Entities.Product product;
+            try
+            {
+                product =  await _dealRepository.GetProductForUpdateAsync(int.Parse(procuctId));
+            }
+            catch (Exception)
+            {
+                product = null;
+            }
             if (product != null)
                 product.ProductPhoto = photo;
             else

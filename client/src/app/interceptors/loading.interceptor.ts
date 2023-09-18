@@ -11,6 +11,10 @@ export class LoadingInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+    if (req.headers.get('Skip-Spinner')) {
+      return next.handle(req);
+    }
+
     // show the spinner
     this.spinnerStatusService.busy();
 

@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription, of, pipe, } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-categories-management',
   templateUrl: './categories-management.component.html',
-  styleUrls: ['./categories-management.component.css']
+  styleUrls: ['./categories-management.component.css'],
 })
 export class CategoriesManagementComponent implements OnInit {
 
+  categoriesNames: string[];
   categories$: Observable<Category[]>;
-  categoriesSubscription: Subscription;
-  categories: Category[];
   categoryNameToAdd: string;
   categoryToEdit: string[] = [];
 
@@ -23,97 +21,84 @@ export class CategoriesManagementComponent implements OnInit {
   totalItemsCount: number;
 
   constructor(private categoryService: CategoryService, private toastr: ToastrService) {
-    this.categoriesSubscription = new Subscription();
+    this.categories$ = this.categoryService.getCategories();
   }
 
   ngOnInit() {
-    this.categories$ = this.categoryService.getCategories();
-    this.categoriesSubscription.add(this.categories$.pipe(take(1)).subscribe(categories => this.categories = categories));
-    this.totalItemsCount = this.categories.length;
+    this.categories$.subscribe(categories => {
+      this.categoriesNames = categories.map(cat => cat.name.toLowerCase());
+      this.totalItemsCount = categories.length;
+    });
   }
 
-  async addCategory(categoryToAdd: string) {
-    if (!this.validateCategoryName(categoryToAdd, this.categories)) {
+  addCategory(categoryToAdd: string) {
+    if (!this.validateCategoryName(categoryToAdd)) {
       return;
     }
-    var newCategory;
-    this.categoriesSubscription.add(this.categoryService.addCategory(categoryToAdd).pipe(take(1))
-      .subscribe(category => {
-        newCategory = category;
-        if (newCategory) {
-          this.categories.push(newCategory);
-          const totalPages = Math.ceil(++this.totalItemsCount / this.pageSize);
-          if (this.currentPage < totalPages) {
-            this.currentPage = totalPages;
-          }
-          this.toastr.success('Category added successfully');
-          this.updateLocalStorage(this.categories);
-        } else {
-          this.toastr.error('Failed to add the category');
+    const add$ = this.categoryService.addCategory(categoryToAdd);
+    add$.subscribe(category => {
+      if (category) {
+        const totalPages = Math.ceil(this.totalItemsCount / this.pageSize);
+        if (this.currentPage < totalPages) {
+          this.currentPage = totalPages;
         }
-      }));
+        this.toastr.success('Category added successfully');
+      }
+      else {
+        this.toastr.error('Failed to add the category');
+      }
+    })
   }
-  async removeCategory(categoryId: number) {
-    const indexCatToRemove = this.categories.findIndex(category => category.id == categoryId);
+  removeCategory(categoryToDel: Category) {
+    const indexCatToRemove = this.categoriesNames.findIndex(category => category == categoryToDel.name);
     var error;
-    this.categoriesSubscription.add(this.categoryService.removeCategory(categoryId).pipe(take(1))
-      .subscribe(res => {
-        error = res;
-        if (!error) {
-          this.categories.splice(indexCatToRemove, 1);
-          const totalPages = Math.ceil(--this.totalItemsCount / this.pageSize);
-          if (this.currentPage > totalPages) {
-            this.currentPage = totalPages;
-          }
-          this.toastr.success('Category delete successfully');
-          this.updateLocalStorage(this.categories);
-        } else {
-          this.toastr.error('Failed to delete the category');
+    const remove$ = this.categoryService.removeCategory(categoryToDel.id);
+    remove$.subscribe(res => {
+      error = res;
+      if (!error) {
+        this.categoriesNames.splice(indexCatToRemove, 1);
+        const totalPages = Math.ceil(this.totalItemsCount / this.pageSize);
+        if (this.currentPage > totalPages) {
+          this.currentPage = totalPages;
         }
-      }));
+        this.toastr.success('Category delete successfully');
+      } else {
+        this.toastr.error('Failed to delete the category');
+      }
+    })
   }
-  async editCategory(caregoryId: number, categoryToEdit: string) {
-    const indexToReplace = this.categories.findIndex(category => category.id == caregoryId);
-    const editedCategory: Category = { id: caregoryId, name: categoryToEdit }
-    if (!this.validateCategoryName(editedCategory.name, this.categories)) {
+  editCategory(categoryToEdit: Category, newCategory: string) {
+    const indexToReplace = this.categoriesNames.findIndex(category => category == categoryToEdit.name);
+    const editedCategory: Category = { id: categoryToEdit.id, name: newCategory }
+    if (!this.validateCategoryName(editedCategory.name)) {
       return;
     }
     var error;
-    this.categoriesSubscription.add(this.categoryService.editCategory(editedCategory).pipe(take(1))
-      .subscribe(res => {
+    const edit$ = this.categoryService.editCategory(editedCategory);
+    edit$.subscribe(res => {
         error = res;
         if (!error) {
           this.toastr.success('Category edited successfully');
-          this.categories.splice(indexToReplace, 1, editedCategory);
-          this.updateLocalStorage(this.categories);
+          this.categoriesNames.splice(indexToReplace, 1, editedCategory.name);
         }
         else {
-          console.log(error);
           this.toastr.error('Failed to edit the category');
         }
-      }));
-  }
-  async updateLocalStorage(categories) {
-    localStorage.setItem("categories", JSON.stringify(categories));
+      });
   }
 
   onTableDataChange(event: any) {
     this.currentPage = event;
   }
-  validateCategoryName(categoryName, categories) {
+  validateCategoryName(categoryName) {
     if (!categoryName?.trim()) {
       this.toastr.error("Please specify a category name");
       return false
     }
-    if (categories.some(category => category.name == categoryName)) {
+    if (this.categoriesNames.includes(categoryName.toLowerCase())) {
       this.toastr.error("Category name already exist");
       return false
     }
     return true;
-  }
-  ngOnDestroy() {
-    if (this.categoriesSubscription) {
-      this.categoriesSubscription.unsubscribe();
-    }
   }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Deal } from 'src/app/models/deal';
 import { DealService } from 'src/app/services/deal.service';
 

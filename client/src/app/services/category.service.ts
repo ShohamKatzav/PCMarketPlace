@@ -1,9 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Category } from '../models/category';
+
+
+import { Store } from '@ngrx/store';
+
+import { selectAllCategories } from '../state/categories/category.selectors';
+import * as fromCategoryActions from '../state/categories/category.actions';
+import { AppState } from '../state/app.state';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,31 +19,49 @@ import { Category } from '../models/category';
 export class CategoryService {
 
   baseUrl = environment.apiUrl;
-  constructor(private http: HttpClient) { }
+  private storeInitialised = false;
 
-  getCategories(): Observable<any> {
-    const categories = JSON.parse(localStorage.getItem("categories"));
-    if(categories)
-      return of(categories);
-    else
-    {
-      const categories$ = this.http.get<Category[]>(this.baseUrl + 'category').pipe(
-        tap(categories => {
-          localStorage.setItem("categories", JSON.stringify(categories));
-        })
-      );
-      return categories$;
+  constructor(private http: HttpClient,
+    private store: Store<AppState>) { 
+      this.getCategories().subscribe();
     }
-  }
+
   addCategory(categoryToAdd: string): Observable<any> {
-    return this.http.post<Category>(this.baseUrl + 'category/create', {"name":categoryToAdd});
+    return this.http.post<Category>(this.baseUrl + 'category/create', { "name": categoryToAdd }).pipe(
+      tap(category => {
+        this.store.dispatch(fromCategoryActions.addCategory({ category }));
+      }))
   }
-  removeCategory(categoryId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}category/${categoryId}`);
+  removeCategory(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}category/${id}`).pipe(
+      tap(() => {
+        this.store.dispatch(fromCategoryActions.removeCategory({ id }));
+      }))
   }
 
   editCategory(category: any): Observable<any> {
-    return this.http.put<Category>(this.baseUrl + 'category', category);
+    return this.http.put<Category>(this.baseUrl + 'category', category).pipe(
+      tap(() => {
+        this.store.dispatch(fromCategoryActions.editCategory({ category }));
+      }))
   }
 
+  
+  getCategories(): Observable<Category[]> {
+    if (!this.storeInitialised) {
+      const categories$ = this.http.get<Category[]>(this.baseUrl + 'category').pipe(
+        tap((categories) => {
+          this.store.dispatch(fromCategoryActions.loadCategoriesSuccess({ categories }));
+          this.storeInitialised = true;
+        }),
+        shareReplay(1) // Cache the result and replay it to new subscribers
+      );
+      return categories$;
+    } else {
+      return this.store.select(selectAllCategories);
+    }
+  }
+  async saveCategoriesToStore(categories: Category[]) {
+    await this.store.dispatch(fromCategoryActions.saveCategories({ categories }));
+  }
 }

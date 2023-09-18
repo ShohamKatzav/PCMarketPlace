@@ -1,9 +1,10 @@
 <div class="row">
     <div class="col-md-6 col-12 text-center">
         <h4>Current Photo</h4>
-        <div class="row" *ngIf="product?.productPhoto && product?.productPhoto.url!='./assets/no-image.jpeg' else noPhoto;">
+        <div class="row"
+            *ngIf="product?.productPhoto && product?.productPhoto.url !== './assets/no-image.jpeg' else noPhoto;">
             <div>
-                <img [src]="product.productPhoto.url" [alt]="product.productPhoto.url" class="img-thumbnail p-2 w-75">
+                <img [src]="product.productPhoto?.url" [alt]="product.productPhoto.url" class="img-thumbnail p-2 w-75">
                 <div>
                     <button class="btn btn-sm btn-danger" type="button"
                         (click)="this.product.id!=null ? deletePhoto(this.product.id) : deletePhotoProductDidntCreated()">

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { Product } from 'src/app/models/product';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
@@ -23,6 +22,7 @@ export class PhotoChangeComponent implements OnInit {
 
   @Input() product: Product;
   @Output() productChange = new EventEmitter<Product>();
+  @Output() updateCacheAfterImageChange = new EventEmitter<void>();
 
   @ViewChild('photoInput') photoInputRef: ElementRef<HTMLInputElement>;
 
@@ -39,18 +39,20 @@ export class PhotoChangeComponent implements OnInit {
     };
   }
 
-  
+
   deletePhoto(productId: number) {
+    this.updateCacheAfterImageChange.emit();
     this.uploader.clearQueue();
     this.resetFileInput();
-    this.dealService.deletePhoto(productId).subscribe(() => {
-      this.product.productPhoto.url = "./assets/no-image.jpeg";
+    this.dealService.deletePhoto(productId).subscribe(() => {   
+      this.product.productPhoto.url = './assets/no-image.jpeg';
+      this.updateCacheAfterImageChange.emit();
     });
   }
   deletePhotoProductDidntCreated() {
     this.uploader.clearQueue();
     this.resetFileInput();
-    if (this.product?.productPhoto?.url) 
+    if (this.product?.productPhoto?.url)
       this.product.productPhoto.url = "./assets/no-image.jpeg";
   }
 
@@ -68,7 +70,7 @@ export class PhotoChangeComponent implements OnInit {
       autoUpload: false,
       maxFileSize: 10 * 1024 * 1024
     });
-    
+
 
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
@@ -77,18 +79,20 @@ export class PhotoChangeComponent implements OnInit {
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {
         const photo = JSON.parse(response);
-        if (this.product)
+        if (this.product?.id) {
           this.product.productPhoto = photo;
-        else
-        {
-          const newProduct: any = {
+          this.updateCacheAfterImageChange.emit();
+        }
+        else {
+          const newProductPhoto: any = {
             productPhoto: photo
           };
-          this.productChange.emit(newProduct);
+          // We just update the form and not the cache 'cause user didnt click on "update deal" and this product wasn't exist before.
+          this.productChange.emit(newProductPhoto);
         }
       }
     }
-    this.uploader.onErrorItem= (item, response, status, headers) => {
+    this.uploader.onErrorItem = (item, response, status, headers) => {
       console.log("Upload failed for item:", item);
       console.log("Response:", response);
       console.log("Status:", status);
@@ -99,10 +103,6 @@ export class PhotoChangeComponent implements OnInit {
 
   fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
-  }
-
-  addNewPhoto(value: Product) {
-    this.productChange.emit(value);
   }
 
   resetFileInput() {

@@ -10,8 +10,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 import { HomeComponent } from './home/home.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
-import { CreateDealComponent } from './deals/create-deal/create-deal.component';
-import { EditDealComponent } from './deals/edit-deal/edit-deal.component';
 
 const routes: Routes = [
   {
@@ -35,19 +33,8 @@ const routes: Routes = [
         canDeactivate: [PreventUnsavedChangesGuard]
       },
       {
-        path: 'deals/new-deal',
-        component: CreateDealComponent,
-        canDeactivate: [PreventUnsavedChangesGuard],
-        pathMatch: 'full'
-      },
-      {
         path: 'deals',
         loadChildren: () => import('./modules/deals.module').then(mod => mod.DealsModule)
-      },
-      { 
-        path: 'deals/edit',
-        component: EditDealComponent,
-        canDeactivate: [PreventUnsavedChangesGuard]
       },
       {
         path: 'categories',

@@ -16,7 +16,7 @@
         <div class="col card mr-1 mb-2"
           *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
           <div class="card shadow-sm">
-            <img class="img-thumbnail card-img-top" src={{deal.dealPhoto.url}} alt="deal.dealPhoto.url">
+            <img class="img-thumbnail card-img-top" [src]="deal?.dealPhoto?.url || 'https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg'" alt="deal.dealPhoto.url">
           </div>
 
           <div class="card-body">
@@ -31,7 +31,7 @@
                 <button type="button" class="btn btn-sm btn-outline-warning btn-custom"
                   (click)="editDeal(deal)">Edit</button>
                 <button type="button" class="btn btn-sm btn-outline-danger btn-custom"
-                  (click)="deleteDeal(deal.id)">Delete</button>
+                  (click)="deleteDeal(deal.id, currentPage + '-' + filterByCaregory)">Delete</button>
               </span>
             </div>
           </div>
