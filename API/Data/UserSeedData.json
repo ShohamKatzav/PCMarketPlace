@@ -10,7 +10,7 @@
     "City": "Kimmell",
     "Country": "Uzbekistan",
     "AppUserPhoto": {
-      "Url": "https://randomuser.me/api/portraits/women/54.jpg"
+      "Url": "https://api.multiavatar.com/lara.png"
     },
     "Deals": [
       {
@@ -49,7 +49,7 @@
     "City": "Thornport",
     "Country": "Bhutan",
     "AppUserPhoto": {
-      "Url": "https://randomuser.me/api/portraits/men/54.jpg"
+      "Url": "https://api.multiavatar.com/Moshe.png"
     },
     "Deals": [
       {
@@ -80,7 +80,7 @@
     "City": "Dale",
     "Country": "Benin",
     "AppUserPhoto": {
-      "Url": "https://randomuser.me/api/portraits/men/57.jpg"
+      "Url": "https://api.multiavatar.com/Leonor.png"
     },
     "Deals": [
       {
@@ -156,7 +156,7 @@
     "City": "Grazierville",
     "Country": "Nauru",
     "AppUserPhoto": {
-      "Url": "https://randomuser.me/api/portraits/women/52.jpg"
+      "Url": "https://api.multiavatar.com/marie.png"
     },
     "Deals": [
       {
@@ -187,7 +187,7 @@
     "City": "Magnolia",
     "Country": "Kenya",
     "AppUserPhoto": {
-      "Url": "https://randomuser.me/api/portraits/men/44.jpg"
+      "Url": "https://api.multiavatar.com/Binx Bond.png"
     }
   },
   {
@@ -201,7 +201,7 @@
     "City": "Gan-Yavne",
     "Country": "Israel",
     "AppUserPhoto": {
-      "Url": "https://randomuser.me/api/portraits/men/43.jpg"
+      "Url": "https://api.multiavatar.com/dan.png"
     },
     "Deals": [
       {
