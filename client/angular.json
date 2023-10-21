@@ -74,6 +74,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
+              "ssl": true,
               "browserTarget": "client:build:production"
             },
             "development": {
