@@ -4,8 +4,10 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:5001/api/',
+  apiUrl: 'https://pcmarketplace.azurewebsites.net/api/',
 };
+
+//apiUrl: 'https://20.217.52.1:5001/api/', aws public ip
 
 /*
  * For easier debugging in development mode, you can import the following file
