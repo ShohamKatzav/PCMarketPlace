@@ -39,4 +39,4 @@ jobs:
           app-name: 'PCMarketPlace'
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4CEB86D6A75343AEB1EEB9A38445D2CC }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A76444260B524D8E9E5C34F5B16D31AA }}
