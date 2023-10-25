@@ -1,18 +1,16 @@
 <div *ngIf="member">
   <div class="row">
-    <div class="col-2">
-
+    <div class="text-center">
       <img [src]="member?.appUserPhoto?.url" [alt]="member.appUserPhoto.url" class="img-thumbnail p-1">
-      <div class="text-center">
+      <div>
         <button (click)="deletePhoto(member.userName)" class="btn btn-sm btn-danger"><i
             class="fa fa-trash fa-3x"></i></button>
       </div>
-
     </div>
   </div>
 
 
-  <div class="row mt-3">
+  <div class="row mt-5">
 
     <div class="col-md-3">
 

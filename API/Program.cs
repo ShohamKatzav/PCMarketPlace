@@ -39,7 +39,7 @@ namespace API
 
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
     WebHost.CreateDefaultBuilder(args)
-        .UseUrls("https://0.0.0.0:5001") // Add this line to specify the URL
+        .UseUrls("https://0.0.0.0:5001") // Non localhost
         .UseStartup<Startup>();
     }
 }

@@ -1,16 +1,15 @@
-<div *ngIf="member">
-  <div class="row">
-    <div class="col-4 mt-4">
-      <h1>{{member.knownAs}}</h1>
+<div *ngIf="member" class="row">
+  <div class="col-4 mt-4">
+    <h1>{{member.knownAs}}</h1>
+  </div>
+  <div class="col-12 col-sm-8">
+    <div class="alert alert-info" *ngIf="editForm.dirty">
+      <strong>Information</strong>
+      You have made changes. any unsaved changes will be lost
     </div>
-    <div class="col-8">
-      <div class="alert alert-info" *ngIf="editForm.dirty">
-        <strong>Information</strong>
-        You have made changes. any unsaved changes will be lost
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="card"></div>
+  </div>
+  <div class="col-12 col-sm-4 mt-5">
+    <div class="card">
       <div *ngIf="member.appUserPhoto?.url">
         <img src="{{member.appUserPhoto?.url}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
       </div>
@@ -31,16 +30,16 @@
 
       </div>
       <div class="card-footer">
-        <button [disabled]="editForm.pristine" form="editForm" type="submit" class="btn btn-success btn-block">Save
-          Changes</button>
+        <button [disabled]="editForm.pristine" form="editForm" type="submit"
+        class="btn btn-success btn-block">Save Changes</button>
       </div>
     </div>
   </div>
-  <div class="col-8">
+  <div class="col-8 mt-5">
     <tabset class="member-tabset">
 
       <tab heading="Basic info">
-        <form #editForm="ngForm" (ngSubmit)="updateMember()" id="editForm" autocomplete="off">
+        <form class="mt-4" #editForm="ngForm" (ngSubmit)="updateMember()" id="editForm" autocomplete="off">
           <label for="knownAs">Known As:</label>
           <input name="knownAs" [(ngModel)]="member.knownAs" class="form-control mx-2" type="text">
           <h4 class="mt-2">Location Details</h4>
@@ -69,6 +68,6 @@
         </ng-template>
       </tab>
     </tabset>
-
   </div>
+
 </div>

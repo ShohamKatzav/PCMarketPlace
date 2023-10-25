@@ -1,6 +1,6 @@
 <div *ngIf="member" class="row">
-    <h2 class="mt-3">{{member.knownAs}}</h2>
-    <div class="col-4">
+    <h1 class="mt-3">{{member.knownAs}}</h1>
+    <div class="col-12 col-sm-4 mt-5">
         <div class="card">
             <img [src]="member.appUserPhoto.url" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
 
@@ -12,9 +12,8 @@
 
             </div>
         </div>
-
     </div>
-    <div class="col-8">
+    <div class="col-8 mt-5">
         <tabset class="member-tabset">
             <tab heading="Basic Info">
                 <h3 class="mt-4">Age: {{member.age}}</h3>
