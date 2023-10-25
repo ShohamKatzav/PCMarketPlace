@@ -18,30 +18,33 @@
               </td>
             </tr>
             <tr [formGroupName]="currentPage-1">
-              <td class="col-lg-3">
-                <input type="text" class="form-control" required placeholder="Name" formControlName="name">
-              </td>
-              <td class="col-lg-3">
-                <select class="form-select" required formControlName="category" value="Others">
-                  <option *ngFor="let category of categories$ | async" [value]="category.name">
-                    {{category.name}}
-                  </option>
-                </select>
-              </td>
-              <td class="col-lg-2">
-                <input type="number" min="0" class="form-control" required placeholder="Price" formControlName="price">
-              </td>
-              <td class="col-lg-2">
-                <button type='button' (click)="removeItem(currentPage-1)" class="btn btn-sm btn-danger">
-                  <i class="fa fa-trash fa-2x"></i>
-                </button>
-              </td>
-
+              <div class="row">
+                <td class="col-lg-3">
+                  <input type="text" class="form-control" required placeholder="Name" formControlName="name">
+                </td>
+                <td class="col-lg-3">
+                  <select class="form-select" required formControlName="category" value="Others">
+                    <option *ngFor="let category of categories$ | async" [value]="category.name">
+                      {{category.name}}
+                    </option>
+                  </select>
+                </td>
+                <td class="col-lg-2">
+                  <input type="number" min="0" class="form-control" required placeholder="Price"
+                    formControlName="price">
+                </td>
+                <td class="col-lg-2">
+                  <button type='button' (click)="removeItem(currentPage-1)" class="btn btn-sm btn-danger">
+                    <i class="fa fa-trash fa-2x"></i>
+                  </button>
+                </td>
+              </div>
             </tr>
           </tbody>
         </table>
         <div class="col-lg-6">
-          <app-photo-change [(product)]="deal.products[currentPage-1]" (updateCacheAfterImageChange)="updateCacheAfterImageChange()"></app-photo-change>
+          <app-photo-change [(product)]="deal.products[currentPage-1]"
+            (updateCacheAfterImageChange)="updateCacheAfterImageChange()"></app-photo-change>
         </div>
       </ng-container>
       <div class="d-flex justify-content-center mt-5" *ngIf="(getProducts())?.length != 0">
