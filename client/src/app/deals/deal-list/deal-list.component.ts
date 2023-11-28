@@ -25,7 +25,6 @@ export class DealListComponent implements OnInit {
 
   filterByCaregory: string;
 
-  noSpinnerHeader = new HttpHeaders().set('Skip-Spinner', 'true');
 
   constructor(private memberService: MemberService, private dealService: DealService,
     private route: ActivatedRoute, private router: Router) {

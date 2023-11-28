@@ -2,6 +2,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    margin-top: 12rem;
 }
 
 app-footer {

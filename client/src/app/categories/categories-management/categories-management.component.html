@@ -3,19 +3,19 @@
     <ul
         *ngFor="let category of categories$ | async | paginate: {itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItemsCount } let i = index">
         <li>
-            <div class="input-group col-sm-9">
-                <div class="col-md-3 col-6">
+            <div class="input-group">
+                <div class="col-md-3 col-8">
                     <div class="text-break">{{category.name}}</div>
                 </div>
-                <div class="col-md-1 col-6">
+                <div class="col-1 ml-md-0 ml-5">
                     <button type='button' (click)="removeCategory(category)" class="btn btn-sm btn-danger">
                         <i class="fa fa-trash fa-2x"></i>
                     </button>
                 </div>
-                <div class="col-md-4 ml-lg-5 mr-lg-5 ml-md-3 mr-md-3 col-6">
+                <div class="col-md-4 ml-lg-5 mr-lg-5 ml-md-3 mr-md-3 col-8">
                     <input class="form-control" name="categoryToEdit" [(ngModel)]="categoryToEdit[i]">
                 </div>
-                <div class="col-md-1 col-6">
+                <div class="col-1 ml-md-0 ml-5">
                     <button type='button' (click)="editCategory(category, categoryToEdit[i])"
                         class="btn btn-sm btn-info btn-square">
                         <i class="fa fa-pencil fa-2x"></i>
@@ -24,11 +24,13 @@
             </div>
         </li>
     </ul>
-    <div class="d-flex mt-5" *ngIf="(categories$| async)?.length != 0">
+    <div class="d-flex justify-content-center flex-wrap mt-5">
+        <input class="align-self-center" name="categoryNameToAdd" [(ngModel)]="categoryNameToAdd">
+        <button (click)="addCategory(categoryNameToAdd)" type='button' class="btn btn-sm btn-primary m-3">
+            <i class="fa fa-plus fa-2x">Add category</i>
+        </button>
+    </div>
+    <div class="d-flex justify-content-center mt-5 pt-5" *ngIf="(categories$| async)?.length != 0">
         <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
     </div>
-    <input name="categoryNameToAdd" [(ngModel)]="categoryNameToAdd">
-    <button (click)="addCategory(categoryNameToAdd)" type='button' class="btn btn-sm btn-primary m-3">
-        <i class="fa fa-plus fa-2x">Add category</i>
-    </button>
 </div>

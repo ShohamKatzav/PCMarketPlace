@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
@@ -16,7 +16,8 @@ export class NavComponent implements OnInit {
   model: any = {};
   currentUser$?: Observable<User>;
   currentMember$: Observable<Member>;
-  
+  @ViewChild('sidemenu') myCheckbox: ElementRef<HTMLInputElement>;
+
 
   constructor(private accountService: AccountService, private memberService: MemberService,
     private router: Router,
@@ -26,6 +27,7 @@ export class NavComponent implements OnInit {
 
   async ngOnInit() {
     this.currentMember$ = await this.memberService.currentMember$;
+    this.myCheckbox.nativeElement.checked = window.innerWidth <= 768 ? false : true;
   }
 
   login() {
@@ -39,6 +41,21 @@ export class NavComponent implements OnInit {
   logout() {
     this.router.navigateByUrl('/');
     this.accountService.logout();
+    this.closeNavbar();
+  }
+
+
+  closeNavbar() {
+    if (window.innerWidth <= 768)
+      this.myCheckbox.nativeElement.checked = false;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (window.innerWidth >= 768)
+      this.myCheckbox.nativeElement.checked = true;
+    else
+      this.myCheckbox.nativeElement.checked = false;
   }
 
 }

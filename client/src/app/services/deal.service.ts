@@ -21,7 +21,6 @@ import { MemberService } from './member.service';
 })
 export class DealService {
 
-
   private readonly dealKey = 'deal_data';
   private readonly pageCategoryKey = 'pageCategory_data';
   private readonly listTypeKey = 'listType_data';

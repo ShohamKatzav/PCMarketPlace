@@ -1,0 +1,111 @@
+/* Menu Icon */
+.hamb {
+    cursor: pointer;
+    float: right;
+    padding: 40px 20px;
+}
+
+/* Style label tag */
+
+.hamb-line {
+    background: var(--white);
+    display: block;
+    height: 2px;
+    position: relative;
+    width: 24px;
+
+}
+
+/* Style span tag */
+
+.hamb-line::before,
+.hamb-line::after {
+    background: var(--white);
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all .2s ease-out;
+    width: 100%;
+}
+
+.hamb-line::before {
+    top: 5px;
+}
+
+.hamb-line::after {
+    top: -5px;
+}
+
+.side-menu {
+    visibility: hidden;
+}
+
+.for-big-screen {
+    display: none;
+}
+
+.for-small-screen {
+    display: block;
+}
+
+
+/* Nav menu */
+.menu a {
+    display: block;
+}
+
+.nav {
+    height: 100vh;
+    background-color: var(--black);
+    overflow: hidden;
+    display: none;
+    transition: .5s ease-out;
+}
+
+
+
+/* Toggle menu icon */
+.side-menu:checked~.nav {
+    display: block;
+}
+
+.side-menu:checked~.hamb .hamb-line {
+    background: transparent;
+}
+
+.side-menu:checked~.hamb .hamb-line::before {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+.side-menu:checked~.hamb .hamb-line::after {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+/* Responsiveness */
+@media (min-width: 768px) {
+    .nav {
+        max-height: none;
+        height: auto;
+        overflow: visible;
+    }
+
+    .hamb {
+        display: none;
+    }
+
+    .side-menu:checked~.nav {
+        display: flex;
+    }
+
+    .for-big-screen {
+        display: block;
+    }
+
+    .for-small-screen {
+        display: none;
+    }
+
+}

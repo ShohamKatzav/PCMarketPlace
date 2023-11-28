@@ -20,7 +20,7 @@ export class LoadingInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       // hide the spinner
-      delay(1000),
+      delay(50),
       finalize(() => this.spinnerStatusService.idle())
     );
   }
