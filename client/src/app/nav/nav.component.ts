@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
@@ -21,7 +21,8 @@ export class NavComponent implements OnInit {
 
   constructor(private accountService: AccountService, private memberService: MemberService,
     private router: Router,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private renderer: Renderer2) {
     this.currentUser$ = this.accountService.currentUser$;
   }
 
@@ -46,8 +47,17 @@ export class NavComponent implements OnInit {
 
 
   closeNavbar() {
-    if (window.innerWidth <= 768)
+    if (window.innerWidth <= 768) {
       this.myCheckbox.nativeElement.checked = false;
+      this.hideOrShowContent();
+    }
+  }
+  hideOrShowContent() {
+    const isChecked: boolean = this.myCheckbox.nativeElement.checked;
+    if (isChecked)
+      this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    else
+      this.renderer.removeStyle(document.body, 'overflow');
   }
 
   @HostListener('window:resize', ['$event'])
@@ -56,6 +66,11 @@ export class NavComponent implements OnInit {
       this.myCheckbox.nativeElement.checked = true;
     else
       this.myCheckbox.nativeElement.checked = false;
+  }
+
+  ngOnDestroy() {
+    // Make sure to reset styles when the component is destroyed
+    this.renderer.removeStyle(document.body, 'overflow');
   }
 
 }
