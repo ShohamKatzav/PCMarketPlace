@@ -59,6 +59,7 @@
     background-color: var(--black);
     display: none;
     transition: .5s ease-out;
+    align-content: flex-start;
 }
 
 
@@ -96,7 +97,7 @@
 
     .side-menu:checked~.nav {
         display:flex;
-        justify-content:start
+        justify-content: flex-start;
     }
 
     .for-big-screen {
