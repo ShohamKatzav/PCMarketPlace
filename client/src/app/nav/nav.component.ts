@@ -17,6 +17,7 @@ export class NavComponent implements OnInit {
   currentUser$?: Observable<User>;
   currentMember$: Observable<Member>;
   @ViewChild('sidemenu') myCheckbox: ElementRef<HTMLInputElement>;
+  lastScreenSize: { width: number, height: number };
 
 
   constructor(private accountService: AccountService, private memberService: MemberService,
@@ -64,8 +65,20 @@ export class NavComponent implements OnInit {
   onResize() {
     if (window.innerWidth >= 768)
       this.myCheckbox.nativeElement.checked = true;
-    else
-      this.myCheckbox.nativeElement.checked = false;
+    else {
+      if (this.lastScreenSize.height >= 768 && window.innerWidth < 768)
+        this.myCheckbox.nativeElement.checked = false;
+    }
+    this.updateLastScreenSize();
+  }
+
+  private updateLastScreenSize(): void {
+    // Get the current window size
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Update the last screen size
+    this.lastScreenSize = { width, height };
   }
 
   ngOnDestroy() {
