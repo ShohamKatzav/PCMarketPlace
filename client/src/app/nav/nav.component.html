@@ -2,66 +2,61 @@
     <div class="container">
         <a (click)="closeNavbar()" class="navbar-brand ml-3 ml-md-0 for-small-screen" routerLink="/">PC Marketplace</a>
         <input (change)="hideOrShowContent()" class="side-menu" type="checkbox" id="side-menu" #sidemenu />
-        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
-        <div class="nav container">
+        <label class="hamb ml-auto" for="side-menu"><span class="hamb-line"></span></label>
+        <div class="container nav flex-md-row align-items-start">
             <a (click)="closeNavbar()" class="navbar-brand ml-3 ml-md-0 for-big-screen" routerLink="/">PC
                 Marketplace</a>
-            <div class="row row-cols-2 row-cols-md-1">
-                <ul class="menu navbar-nav col-md-11 col-sm-6 ml-4 ml-md-0">
+            <div class="row-cols-2 row-cols-md-1">
+                <ul class="menu navbar-nav ml-4 ml-md-0">
                     <ng-container *ngIf="currentUser$ | async">
-                        <li (click)="closeNavbar()" class="nav-item mt-4 mt-md-0">
+                        <li (click)="closeNavbar()" class="nav-item">
                             <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
                                 routerLink="/deals/my-deals">My Deals</a>
                         </li>
-                        <li (click)="closeNavbar()" class="nav-item mt-4 mt-md-0">
+                        <li (click)="closeNavbar()" class="nav-item">
                             <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
                                 routerLink="/deals">Available Deals</a>
                         </li>
-                        <li (click)="closeNavbar()" class="nav-item mt-4 mt-md-0">
+                        <li (click)="closeNavbar()" class="nav-item">
                             <a class="nav-link" routerLinkActive="active" routerLink="/deals/new-deal">List a new
                                 deal</a>
                         </li>
                         <ng-container *ngIf="currentMember$ | async as member">
                             <ng-container *ngIf="member.authorization === 'Admin'">
-                                <li (click)="closeNavbar()" class="nav-item mt-4 mt-md-0">
+                                <li (click)="closeNavbar()" class="nav-item">
                                     <a class="nav-link" routerLinkActive="active" routerLink="/members">Members</a>
                                 </li>
-                                <li (click)="closeNavbar()" class="nav-item mt-4 mt-md-0">
+                                <li (click)="closeNavbar()" class="nav-item">
                                     <a class="nav-link" routerLinkActive="active"
                                         routerLink="/categories">Categories</a>
                                 </li>
                             </ng-container>
                         </ng-container>
                     </ng-container>
-                    <li (click)="closeNavbar()" class="nav-item mt-4 mt-md-0">
+                    <li (click)="closeNavbar()" class="nav-item">
                         <a class="nav-link" routerLinkActive="active" routerLink="/about-us">About</a>
                     </li>
                 </ul>
-
-                <div class="dropdown mt-4 mt-md-0 row col-md-1 col-sm-6 align-self-center"
-                    *ngIf="currentUser$ | async as user" dropdown>
-                    <div class="row col">
-                        <a class="text-light dropdown-toggle" dropdownToggle>
-                            {{user.username | titlecase}}
-                        </a>
-                    </div>
-                    <div class="row col"></div>
-                    <span class="dropdown-menu mt-4" *dropdownMenu>
-                        <a (click)="closeNavbar()" class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
-                        <li class="dropdown-divider"></li>
-                        <a class="dropdown-item" (click)="logout();">Logout</a>
-                    </span>
+            </div>
+            <div class="dropdown align-self-md-center ml-md-auto mr-md-0 mr-auto pt-md-0 pt-3" *ngIf="currentUser$ | async as user" dropdown>
+                <a class="text-light dropdown-toggle" dropdownToggle>
+                    {{user.username | titlecase}}
+                </a>
+                <div class="dropdown-menu mt-4" *dropdownMenu>
+                    <a (click)="closeNavbar()" class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
+                    <li class="dropdown-divider"></li>
+                    <a class="dropdown-item" (click)="logout();">Logout</a>
                 </div>
             </div>
+            <form *ngIf="!(currentUser$ | async)" class="form-inline ml-auto" #loginForm="ngForm" (ngSubmit)="login()"
+                autocomplete="off">
+                <input name="username" [(ngModel)]="model.username" class="form-control mr-sm-2" type="text"
+                    placeholder="Username" autocomplete="username">
+                <input name="password" [(ngModel)]="model.password" class="form-control mr-sm-2" type="password"
+                    placeholder="Password" autocomplete="current-password">
+                <button (click)="closeNavbar()" class="btn btn-outline-success my-2 my-sm-0"
+                    type="submit">Login</button>
+            </form>
         </div>
-
-        <form *ngIf="!(currentUser$ | async)" class="form-inline mt-2 mt-md-0" #loginForm="ngForm" (ngSubmit)="login()"
-            autocomplete="off">
-            <input name="username" [(ngModel)]="model.username" class="form-control mr-sm-2" type="text"
-                placeholder="Username" autocomplete="username">
-            <input name="password" [(ngModel)]="model.password" class="form-control mr-sm-2" type="password"
-                placeholder="Password" autocomplete="current-password">
-            <button (click)="closeNavbar()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
-        </form>
     </div>
 </nav>

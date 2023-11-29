@@ -1,7 +1,6 @@
 /* Menu Icon */
 .hamb {
     cursor: pointer;
-    float: right;
     padding: 40px 20px;
 }
 
@@ -58,7 +57,6 @@
 .nav {
     height: 100vh;
     background-color: var(--black);
-    overflow: hidden;
     display: none;
     transition: .5s ease-out;
 }
@@ -67,7 +65,7 @@
 
 /* Toggle menu icon */
 .side-menu:checked~.nav {
-    display: block;
+    display: flex;
 }
 
 .side-menu:checked~.hamb .hamb-line {
@@ -97,11 +95,12 @@
     }
 
     .side-menu:checked~.nav {
-        display: flex;
+        display:flex;
+        justify-content:start
     }
 
     .for-big-screen {
-        display: block;
+        display: inline-block;
     }
 
     .for-small-screen {
