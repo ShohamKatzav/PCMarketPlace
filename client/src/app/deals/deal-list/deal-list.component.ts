@@ -6,8 +6,7 @@ import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
 import { Router } from '@angular/router';
-import { pluck, switchMap, take, tap } from 'rxjs/operators';
-import { HttpHeaders } from '@angular/common/http';
+import { pluck, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-deal-list',

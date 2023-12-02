@@ -6,8 +6,8 @@
         <div class="container nav">
             <a (click)="closeNavbar()" class="navbar-brand ml-3 ml-md-0 for-big-screen" routerLink="/">PC
                 Marketplace</a>
-            <div class="row-cols-2 row-cols-md-1">
-                <ul class="menu navbar-nav ml-4 ml-md-0">
+            <div class="row-cols-2">
+                <ul class="menu navbar-nav pl-4 pl-md-0 col-12">
                     <ng-container *ngIf="currentUser$ | async">
                         <li (click)="closeNavbar()" class="nav-item">
                             <a class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
@@ -38,11 +38,11 @@
                     </li>
                 </ul>
             </div>
-            <div class="dropdown align-self-md-center ml-md-auto mr-md-0 mr-auto pt-md-0 pt-3" *ngIf="currentUser$ | async as user" dropdown>
+            <div class="dropdown align-self-md-center ml-md-auto mr-md-0 mr-auto pt-md-0 pt-2 pb-2" *ngIf="currentUser$ | async as user" dropdown>
                 <a class="text-light dropdown-toggle" dropdownToggle>
                     {{user.username | titlecase}}
                 </a>
-                <div class="dropdown-menu mt-4" *dropdownMenu>
+                <div class="dropdown-menu" *dropdownMenu>
                     <a (click)="closeNavbar()" class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
                     <li class="dropdown-divider"></li>
                     <a class="dropdown-item" (click)="logout();">Logout</a>
