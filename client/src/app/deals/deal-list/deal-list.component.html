@@ -1,12 +1,12 @@
 <div *ngIf="(member$ | async) as member;" class="album py-5 bg-light">
   <div class="container">
-    <section *ngIf="listType == 'All Deals'">
+    <section *ngIf="listType === AvailableDeals">
       <h1 class="text-center">AVAILABLE DEALS</h1>
     </section>
-    <section *ngIf="listType == 'My Deals'">
-      <h1 class="text-center">{{member.knownAs || member.userName}} DEALS</h1>
+    <section *ngIf="listType === CurrentUserDeals">
+      <h1 class="text-center">{{member.knownAs || member.userName}}'s DEALS</h1>
     </section>
-    <app-filters (categoryChange)="categotyChange($event)"></app-filters>
+    <app-filters (categoryChange)="categotyChange($event)" (priceChange)="priceChange($event)"></app-filters>
     <div class="row g-3 mt-4 justify-content-around">
       <div *ngIf="(deals$| async)?.length == 0">
         <h1 class="text-center">No Deals Found</h1>
@@ -25,13 +25,13 @@
           <small class="text-muted">Total Price: {{deal.totalPrice}} ₪</small>
           <div class="mt-2">
             <button type="button" class="btn btn-sm btn-outline-info btn-custom" (click)="viewDeal(deal)">View</button>
-            <button *ngIf="listType != 'My Deals'" type="button" class="btn btn-sm btn-outline-success btn-custom"
+            <button *ngIf="listType !== CurrentUserDeals" type="button" class="btn btn-sm btn-outline-success btn-custom"
               (click)="buyNow(deal)">Buy Now</button>
-            <span *ngIf="member?.authorization =='Admin' || listType == 'My Deals'">
+            <span *ngIf="member?.authorization =='Admin' || listType == CurrentUserDeals">
               <button type="button" class="btn btn-sm btn-outline-warning btn-custom"
                 (click)="editDeal(deal)">Edit</button>
               <button type="button" class="btn btn-sm btn-outline-danger btn-custom"
-                (click)="deleteDeal(deal.id, currentPage + '-' + filterByCaregory)">Delete</button>
+                (click)="deleteDeal(deal.id, currentPage + '-' + filterByCategory)">Delete</button>
             </span>
           </div>
         </div>

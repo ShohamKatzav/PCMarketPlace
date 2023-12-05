@@ -15,6 +15,8 @@ import {
   selectTotalDealsCount
 } from '../state/deals/deal.selectors';
 import { MemberService } from './member.service';
+import { Price } from '../models/price';
+import { DealsListType } from '../models/dealsListType';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +57,7 @@ export class DealService {
     sessionStorage.setItem(this.listTypeKey, JSON.stringify(listType));
   }
 
-  getSavedListType(): string | null {
+  getSavedListType(): DealsListType | null {
     const listTypeData = sessionStorage.getItem(this.listTypeKey);
     return listTypeData ? JSON.parse(listTypeData) : null;
   }
@@ -98,12 +100,13 @@ export class DealService {
     );
   }
 
-  fetchDealsPageFromServerOrState(userId: number, currentPage: number, tableSize: number, category: string, currentUserOrAvailable: string, headers: any = null):
+  fetchDealsPageFromServerOrState(userId: number, currentPage: number, tableSize: number,
+    category: string, listType: DealsListType, headers: any = null):
     Observable<{ deals: Deal[], totalCount: number }> {
     const cacheKey = `${currentPage}-${category}`; // Include category in the cache key
 
-    const selectDeals = selectCachedForPage(cacheKey, currentUserOrAvailable);
-    const selectTotalDealsCountForList = selectTotalDealsCount(category, currentUserOrAvailable);
+    const selectDeals = selectCachedForPage(cacheKey, listType);
+    const selectTotalDealsCountForList = selectTotalDealsCount(category, listType);
 
     return combineLatest([
       this.store.select(selectDeals),
@@ -120,20 +123,28 @@ export class DealService {
     );
   }
 
-  fetchDealsPageFromServer(userId: number, currentPage: number, tableSize: number, category: string, headers: any = null):
+  fetchDealsPageFromServer(userId: number, currentPage: number, tableSize: number, category: string, headers: any = null,
+    price: Price = { min: null, max: null }):
     Observable<{ deals: Deal[], totalCount: number }> {
-    const queryParams = { "userId": userId.toString(), "currentPage": currentPage.toString(), "tableSize": tableSize.toString(), "category": category };
+    const queryMin = price.min ? price.min.toString() : "";
+    const queryMax = price.max ? price.max.toString() : "";
+    const queryParams = {
+      "userId": userId.toString(), "currentPage": currentPage.toString(),
+      "tableSize": tableSize.toString(), "category": category, "minPrice": queryMin, "maxPrice": queryMax
+    };
 
-    const loadDealsSuccessAction = this.getSavedListType() === "My Deals" ?
+    const loadDealsSuccessAction = this.getSavedListType() === DealsListType.CurrentUserDeals ?
       DealActions.loadCurrentUserDealsSuccessfully : DealActions.loadAvailableDealsSuccessfully;
 
     // Determine the API endpoint based on currentUserOrAvailable
-    const apiEndpoint = this.getSavedListType() === "My Deals" ? `${this.baseUrl}deals/GetDealsForUser` : `${this.baseUrl}deals`;
+    const apiEndpoint = this.getSavedListType() === DealsListType.CurrentUserDeals ? `${this.baseUrl}deals/GetDealsForUser` : `${this.baseUrl}deals`;
 
     return this.http.get<{ deals: Deal[], totalCount: number }>(apiEndpoint, { params: queryParams, headers: headers }).pipe(
       tap(response => {
         const result = { deals: response.deals, pageNumber: currentPage, category: category, totalCount: response.totalCount };
-        this.store.dispatch(loadDealsSuccessAction(result));
+        // Decided to not catch results filtered by price for now
+        if (price.min == null && price.max == null)
+          this.store.dispatch(loadDealsSuccessAction(result));
         return { deals: response.deals, totalCount: response.totalCount };
       })
     );
@@ -173,13 +184,13 @@ export class DealService {
   // For the other (unchanged) categories I call the edit state method.
   edit(model: any): Observable<any> {
 
-    const addDealAction = this.getSavedListType() === "My Deals" ?
+    const addDealAction = this.getSavedListType() === DealsListType.CurrentUserDeals ?
       DealActions.addDeal : DealActions.addDealFromAvailableDeals;
-    const removeDealAction = this.getSavedListType() === "My Deals" ?
+    const removeDealAction = this.getSavedListType() === DealsListType.CurrentUserDeals ?
       DealActions.removeDeal : DealActions.removeDealFromAvailableDeals;
-    const editDealAction = this.getSavedListType() === "My Deals" ?
+    const editDealAction = this.getSavedListType() === DealsListType.CurrentUserDeals ?
       DealActions.editDeal : DealActions.editDealFromAvailableDeals;
-    const setCountAction = this.getSavedListType() === "My Deals" ?
+    const setCountAction = this.getSavedListType() === DealsListType.CurrentUserDeals ?
       DealActions.setCountForCategoryInCurrentUser : DealActions.setCountForCategoryInAvailable;
 
     return this.getDeal(model.id).pipe(
@@ -245,7 +256,7 @@ export class DealService {
   }
 
   deleteDeal(dealId: number) {
-    const removeDealAction = this.getSavedListType() === "My Deals" ?
+    const removeDealAction = this.getSavedListType() === DealsListType.CurrentUserDeals ?
       DealActions.removeDeal : DealActions.removeDealFromAvailableDeals;
 
     return this.http.delete(`${this.baseUrl}deals/delete-deal/${dealId}`, { headers: this.noSpinnerHeader }).pipe(
@@ -277,7 +288,7 @@ export class DealService {
     const body = { dealId, paymentIntentId, paymentMethodId };
     return this.http.put(`${this.baseUrl}deals/checkout`, body).pipe(
       map(() => {
-        this.getDeal(dealId).subscribe( deal => {
+        this.getDeal(dealId).subscribe(deal => {
           const categories = Array.from(new Set(["Any", deal.products.map(p => p.category)])).flat();
 
           for (const category of categories) {

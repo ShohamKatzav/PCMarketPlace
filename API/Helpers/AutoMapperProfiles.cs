@@ -47,7 +47,7 @@ namespace API.Helpers
                 dest => dest.TotalPrice,
                 opt =>
                 {
-                    opt.MapFrom(d => d.Products.GetTotalPrice());
+                    opt.MapFrom(d => d.GetTotalPrice());
                 })
                 .ForMember(
                 dest => dest.DealPhoto,

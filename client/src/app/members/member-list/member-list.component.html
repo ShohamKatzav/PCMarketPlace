@@ -1,6 +1,8 @@
 <h1 class="text-center">Members list</h1>
-<div class="row row-cols-sm-1 row-cols-md-3 row-cols-lg-6 g-3 p-5 mr-5 ml-5 mt-5">
-  <div *ngFor="let member of members$ | async">
-    <app-member-card [member]="member"></app-member-card>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="row row-cols-sm-1 row-cols-md-3 row-cols-lg-6 mt-5 col-10">
+    <div *ngFor="let member of members$ | async">
+      <app-member-card [member]="member"></app-member-card>
+    </div>
   </div>
 </div>

@@ -16,7 +16,7 @@ export class NavComponent implements OnInit {
   model: any = {};
   currentUser$?: Observable<User>;
   currentMember$: Observable<Member>;
-  @ViewChild('sidemenu') myCheckbox: ElementRef<HTMLInputElement>;
+  @ViewChild('sidemenu') showNav: ElementRef<HTMLInputElement>;
   lastScreenSize: { width: number, height: number };
 
 
@@ -29,7 +29,7 @@ export class NavComponent implements OnInit {
 
   async ngOnInit() {
     this.currentMember$ = await this.memberService.currentMember$;
-    this.myCheckbox.nativeElement.checked = window.innerWidth <= 768 ? false : true;
+    this.showNav.nativeElement.checked = window.innerWidth < 768 ? false : true;
   }
 
   login() {
@@ -46,15 +46,19 @@ export class NavComponent implements OnInit {
     this.closeNavbar();
   }
 
-
   closeNavbar() {
-    if (window.innerWidth <= 768) {
-      this.myCheckbox.nativeElement.checked = false;
+    if (window.innerWidth < 768) {
+      this.showNav.nativeElement.checked = false;
       this.hideOrShowContent();
     }
+    this.scrollToTop();
   }
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
   hideOrShowContent() {
-    const isChecked: boolean = this.myCheckbox.nativeElement.checked;
+    const isChecked: boolean = this.showNav.nativeElement.checked;
     if (isChecked)
       this.renderer.setStyle(document.body, 'overflow', 'hidden');
     else
@@ -64,10 +68,10 @@ export class NavComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize() {
     if (window.innerWidth >= 768)
-      this.myCheckbox.nativeElement.checked = true;
+      this.showNav.nativeElement.checked = true;
     else {
-      if (this.lastScreenSize.height >= 768 && window.innerWidth < 768)
-        this.myCheckbox.nativeElement.checked = false;
+      if (this.lastScreenSize?.width >= 768 && window.innerWidth < 768)
+        this.showNav.nativeElement.checked = false;
     }
     this.updateLastScreenSize();
   }
