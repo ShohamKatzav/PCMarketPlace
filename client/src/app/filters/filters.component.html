@@ -9,7 +9,7 @@
                 {{category.name}}
             </option>
         </select>
-        <div class="mt-3 row row-cols-md-3 row-cols-1 align-items-end justify-content-between">
+        <div class="mt-3 row row-cols-md-2 row-cols-1 align-items-end justify-content-between">
             <span class="col-md-6">
                 <label for="minPrice" class="mt-3">Minimum price</label>
                 <input type="number" class="ml-2 ml-md-0 w-100" (change)="changePrice('min', $event)" id="minPrice"
@@ -21,13 +21,14 @@
                     name="minPrice" min="0" #maxPriceInput />
             </span>
         </div>
-        <span class="d-flex mt-3">
-            <div class="m-2">
-                <button type='button' (click)="onPriceFilter()" class="btn btn-sm btn-info">Filter by price</button>
+        <span class="d-flex flex-wrap mt-3">
+            <div class="p-2 p-md-0 mr-md-2">
+                <button type='button' (click)="onPriceFilter()" class="btn btn-sm btn-info"><span
+                        class="btn-text">Filter by price</span></button>
             </div>
-            <div class="m-2">
-                <button type='button' (click)="onInitPriceFilter()" class="btn btn-sm btn-success">Init price
-                    filter</button>
+            <div class="p-2 p-md-0">
+                <button type='button' (click)="onInitPriceFilter()" class="btn btn-sm btn-success"><span
+                    class="btn-text">Init price filter</span></button>
             </div>
         </span>
     </div>
