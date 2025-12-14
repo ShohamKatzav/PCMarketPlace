@@ -5,7 +5,7 @@
             "headers": [
                 {
                     "key": "Content-Security-Policy",
-                    "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pcmarketplace.azurewebsites.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://pcmarketplace.azurewebsites.net;"
+                    "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pcmarketplace.azurewebsites.net; **style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://res.cloudinary.com https://api.multiavatar.com;** font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://pcmarketplace.azurewebsites.net;"
                 }
             ]
         }
