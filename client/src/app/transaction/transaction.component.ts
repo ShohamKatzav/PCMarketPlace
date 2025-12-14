@@ -64,6 +64,7 @@ export class TransactionComponent implements OnInit {
     stripeScript.src = 'https://js.stripe.com/v3/';
     stripeScript.async = true;
     stripeScript.id = 'stripev3';
+    stripeScript.crossOrigin = 'anonymous';
     document.head.appendChild(stripeScript);
     await new Promise((resolve) => (stripeScript.onload = resolve));
   }

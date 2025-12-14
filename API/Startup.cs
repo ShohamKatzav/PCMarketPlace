@@ -63,10 +63,14 @@ namespace API
             app.UseRouting();
 
             app.UseCors(policy =>
-            policy
-            .AllowAnyHeader() // allow any header (like authentication related headers)
-            .AllowAnyMethod() // allow any method(HTTP Verb) (like GET, POST, PUT, DELETE)
-            .WithOrigins("http://localhost:4200", "https://pc-market-place.vercel.app/") // our frontend
+                policy
+                    .AllowAnyHeader() // allow any header (like authentication related headers)
+                    .AllowAnyMethod() // allow any method(HTTP Verb) (like GET, POST, PUT, DELETE)
+                    .WithOrigins(
+                        "http://localhost:4200", 
+                        "https://pc-market-place.vercel.app",
+                        "https://pcmarketplace.azurewebsites.net"
+                    )
             );
             app.UseAuthentication();
             app.UseAuthorization();
