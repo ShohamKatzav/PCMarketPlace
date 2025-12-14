@@ -25,7 +25,7 @@ import { FiltersComponent } from 'src/app/filters/filters.component';
 export class DealListComponent implements OnInit {
   deals$: Observable<Deal[]>;
   deleteDealSubscription: Subscription;
-  member$: Observable<Member> = this.memberService.currentMember$;
+  member$: Observable<Member>;
   currentPage: number = 1;
   tableSize: number = 6;
   totalItemsCount: number = 0;
