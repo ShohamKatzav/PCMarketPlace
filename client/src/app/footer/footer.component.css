@@ -1,0 +1,7 @@
+.btn-outline-light:hover i {
+    color: black !important;
+}
+
+.btn-outline-light:hover {
+    color: black !important;
+}
