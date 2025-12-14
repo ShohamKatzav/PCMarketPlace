@@ -1,14 +1,20 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AccountService } from '../services/account.service';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
+  imports: [
+    CommonModule,
+    FormsModule
+  ]
 })
 export class RegisterComponent implements OnInit {
-  
+
   model: any = {};
   @Output() cancelRegister = new EventEmitter<boolean>();
   subscription: Subscription;
@@ -21,7 +27,7 @@ export class RegisterComponent implements OnInit {
   register() {
     this.accountService.register(this.model).subscribe(
       {
-        next: res=>{
+        next: res => {
           this.cancel();
         }
       }

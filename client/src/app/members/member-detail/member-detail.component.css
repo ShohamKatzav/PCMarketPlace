@@ -1,27 +1,26 @@
 .img-thumbnail {
-    margin: 5%;
-    width: 85%;
-    height: 85%;
-  }
-  
-  .card-body {
-    padding: 0px 5%;
-  }
-  
-  .card-footer {
-    padding: 10px 15px;
-    background-color: #fff;
-    border-top: none;
-    text-wrap:wrap;
-  }
-  
-  /*::ng-deep will break thou the encapsulation and effect nested components */
-  ::ng-deep span {
-    font-size: larger;
-  }
-  
-  .ngx-gallery{
-    display: inline-block;
-    margin-bottom: 20px;
-  }
-  
+  margin: 5%;
+  width: 85%;
+  height: 85%;
+}
+
+.card-body {
+  padding: 0px 5%;
+}
+
+.card-footer {
+  padding: 10px 15px;
+  background-color: #fff;
+  border-top: none;
+  text-wrap: wrap;
+}
+
+/*::ng-deep will break thou the encapsulation and effect nested components */
+::ng-deep span {
+  font-size: larger;
+}
+
+.ngx-gallery {
+  display: inline-block;
+  margin-bottom: 20px;
+}

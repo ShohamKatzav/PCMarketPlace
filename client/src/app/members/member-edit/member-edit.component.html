@@ -11,7 +11,8 @@
   <div class="col-12 col-sm-4 mt-5">
     <div class="card">
       <div *ngIf="member.appUserPhoto?.url">
-        <img src="{{member.appUserPhoto?.url}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail">
+        <img src="{{member.appUserPhoto?.url}}" alt="{{member.knownAs}}" class="card-img-top img-thumbnail"
+          (error)="onImageError($event)">
       </div>
 
       <div class="card-body">
@@ -30,8 +31,8 @@
 
       </div>
       <div class="card-footer">
-        <button [disabled]="editForm.pristine" form="editForm" type="submit"
-        class="btn btn-success btn-block">Save Changes</button>
+        <button [disabled]="editForm.pristine" form="editForm" type="submit" class="btn btn-success btn-block">Save
+          Changes</button>
       </div>
     </div>
   </div>

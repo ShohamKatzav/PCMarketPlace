@@ -66,7 +66,7 @@ namespace API
             policy
             .AllowAnyHeader() // allow any header (like authentication related headers)
             .AllowAnyMethod() // allow any method(HTTP Verb) (like GET, POST, PUT, DELETE)
-            .WithOrigins("https://localhost:4200", "https://pc-market-place.vercel.app/") // our frontend
+            .WithOrigins("http://localhost:4200", "https://pc-market-place.vercel.app/") // our frontend
             );
             app.UseAuthentication();
             app.UseAuthorization();

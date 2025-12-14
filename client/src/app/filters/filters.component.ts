@@ -3,11 +3,14 @@ import { Observable } from 'rxjs';
 import { Category } from '../models/category';
 import { CategoryService } from '../services/category.service';
 import { Price } from '../models/price';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-filters',
   templateUrl: './filters.component.html',
-  styleUrls: ['./filters.component.css']
+  styleUrls: ['./filters.component.css'],
+  imports: [CommonModule],
 })
 export class FiltersComponent implements OnInit {
 

@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { Observable, Subscription, of } from 'rxjs';
 import { Deal } from 'src/app/models/deal';
 import { Member } from 'src/app/models/member';
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
-import { Router } from '@angular/router';
 import { pluck, switchMap, tap } from 'rxjs/operators';
 import { Price } from 'src/app/models/price';
 import { DealsListType } from 'src/app/models/dealsListType';
+import { SharedModule } from 'src/app/modules/shared.module';
+import { FiltersComponent } from 'src/app/filters/filters.component';
 
 @Component({
+  standalone: true,
   selector: 'app-deal-list',
   templateUrl: './deal-list.component.html',
-  styleUrls: ['./deal-list.component.css']
+  styleUrls: ['./deal-list.component.css'],
+  imports: [
+    SharedModule,
+    RouterModule,
+    FiltersComponent
+  ]
 })
 export class DealListComponent implements OnInit {
   deals$: Observable<Deal[]>;
@@ -24,11 +31,11 @@ export class DealListComponent implements OnInit {
   totalItemsCount: number = 0;
 
   filterByCategory: string;
-  filterByPrice: Price = { min: null, max: null};
+  filterByPrice: Price = { min: null, max: null };
 
   listType: DealsListType;
   AvailableDeals: DealsListType = DealsListType.AvailableDeals;
-  CurrentUserDeals : DealsListType = DealsListType.CurrentUserDeals;
+  CurrentUserDeals: DealsListType = DealsListType.CurrentUserDeals;
 
 
   constructor(private memberService: MemberService, private dealService: DealService,
@@ -53,8 +60,8 @@ export class DealListComponent implements OnInit {
         if (!member) return of([]);
         // Decided to not catch results filtered by price for now
         const dealsListObservable = this.filterByPrice.min == null && this.filterByPrice.max == null ?
-        this.dealService.getDealsPage(member.id, this.currentPage, this.tableSize, this.filterByCategory) :
-        this.dealService.fetchDealsPageFromServer(member.id, this.currentPage, this.tableSize, this.filterByCategory, null, this.filterByPrice);
+          this.dealService.getDealsPage(member.id, this.currentPage, this.tableSize, this.filterByCategory) :
+          this.dealService.fetchDealsPageFromServer(member.id, this.currentPage, this.tableSize, this.filterByCategory, null, this.filterByPrice);
         return dealsListObservable.pipe(
           tap(res => {
             this.totalItemsCount = res.totalCount;
@@ -70,7 +77,7 @@ export class DealListComponent implements OnInit {
 
       this.dealService.getTotalCountForCategory(this.filterByCategory).subscribe(count => this.totalItemsCount = count);
       const totalPages = Math.ceil(this.totalItemsCount / this.tableSize);
-      
+
       if (this.currentPage > totalPages && totalPages > 0) {
         this.currentPage = totalPages;
       }

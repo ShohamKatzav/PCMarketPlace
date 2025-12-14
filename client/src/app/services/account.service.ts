@@ -1,3 +1,4 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -12,10 +13,21 @@ import { MemberService } from './member.service';
 export class AccountService {
 
   baseUrl = environment.apiUrl;
-  private currentUserSource$ = new ReplaySubject<User>(1);
+  private currentUserSource$ = new ReplaySubject<User | null>(1);
   public currentUser$ = this.currentUserSource$.asObservable();
-  constructor(private http: HttpClient, private memberService: MemberService) {
 
+  constructor(private http: HttpClient, private memberService: MemberService) {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const user = JSON.parse(userString);
+      this.currentUserSource$.next(user);
+    } else {
+      this.currentUserSource$.next(null);
+    }
+  }
+  getCurrentUser(): User | null {
+    const userString = localStorage.getItem('user');
+    return userString ? JSON.parse(userString) : null;
   }
 
   login(model: any): Observable<any> {
@@ -41,7 +53,7 @@ export class AccountService {
       })
     );
   }
-  
+
   setCurrentUser(user: User) {
     this.currentUserSource$.next(user);
     this.memberService.setCurrentMember(user);
@@ -49,8 +61,8 @@ export class AccountService {
 
   logout() {
     localStorage.removeItem('user');
-    this.currentUserSource$.next();
+    this.currentUserSource$.next(null);
     this.memberService.logout();
   }
-  
+
 }

@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { Subscription } from 'rxjs';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
@@ -11,13 +12,17 @@ import { environment } from 'src/environments/environment';
   selector: 'app-photo-change',
   templateUrl: './photo-change.component.html',
   styleUrls: ['./photo-change.component.css'],
+  imports: [
+    CommonModule,
+    FileUploadModule
+  ]
 })
 export class PhotoChangeComponent implements OnInit {
-  uploader:FileUploader;
-  hasBaseDropZoneOver:boolean;
+  uploader: FileUploader;
+  hasBaseDropZoneOver: boolean;
   baseUrl = environment.apiUrl;
   user: User;
-  userSubscription : Subscription;
+  userSubscription: Subscription;
 
   @Input() member: Member;
   constructor(private accountService: AccountService, private memberService: MemberService) {
@@ -26,7 +31,7 @@ export class PhotoChangeComponent implements OnInit {
 
 
   ngOnInit() {
-    if(this.member)
+    if (this.member)
       this.initializeUploader();
   }
 
@@ -62,7 +67,7 @@ export class PhotoChangeComponent implements OnInit {
     }
   }
 
-  fileOverBase(e:any):void {
+  fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
   }
 

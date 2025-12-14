@@ -1,16 +1,26 @@
 import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Member } from '../models/member';
 import { User } from '../models/user';
 import { AccountService } from '../services/account.service';
 import { MemberService } from '../services/member.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @Component({
+  standalone: true,
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  styleUrls: ['./nav.component.css'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    BsDropdownModule
+  ]
 })
 export class NavComponent implements OnInit {
   model: any = {};
@@ -56,7 +66,7 @@ export class NavComponent implements OnInit {
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   hideOrShowContent() {
     const isChecked: boolean = this.showNav.nativeElement.checked;
     if (isChecked)
@@ -65,7 +75,7 @@ export class NavComponent implements OnInit {
       this.renderer.removeStyle(document.body, 'overflow');
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   onResize() {
     if (window.innerWidth >= 768)
       this.showNav.nativeElement.checked = true;

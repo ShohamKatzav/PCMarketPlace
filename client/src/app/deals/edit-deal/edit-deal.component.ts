@@ -1,19 +1,30 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription, pipe } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { Deal } from 'src/app/models/deal';
 import { Photo } from 'src/app/models/photo';
+import { SharedModule } from 'src/app/modules/shared.module';
 import { CategoryService } from 'src/app/services/category.service';
 import { DealService } from 'src/app/services/deal.service';
+import { PhotoChangeComponent } from '../photo-change/photo-change.component';
 
 
 @Component({
+  standalone: true,
   selector: 'app-edit-deal',
   templateUrl: './edit-deal.component.html',
-  styleUrls: ['./edit-deal.component.css']
+  styleUrls: ['./edit-deal.component.css'],
+  imports: [
+    SharedModule,
+    RouterModule,
+    CommonModule,
+    FormsModule,
+    PhotoChangeComponent
+  ]
 })
 export class EditDealComponent implements OnInit {
 

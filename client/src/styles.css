@@ -1,1 +1,58 @@
 /* You can add global styles to this file, and also import other style files */
+
+.card {
+    border: 1px solid rgba(0, 0, 0, 0.125) !important;
+    border-radius: 0.25rem !important;
+}
+
+/* Tab styling for Lux theme compatibility */
+.member-tabset {
+    margin-top: 1rem;
+}
+
+.member-tabset :host-context(.member-tabset) .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.member-tabset .nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.member-tabset .nav-item {
+    margin-bottom: -1px;
+}
+
+.member-tabset .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 0;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.member-tabset .nav-link:hover {
+    border-bottom-color: #0c5460;
+    color: #0c5460;
+}
+
+.member-tabset .nav-link.active {
+    border-bottom-color: #0c5460;
+    color: #0c5460;
+    background-color: transparent;
+    font-weight: 500;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.member-tabset .tab-content {
+    padding-top: 1rem;
+}

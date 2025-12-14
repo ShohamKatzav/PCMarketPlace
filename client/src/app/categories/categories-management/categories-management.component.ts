@@ -2,12 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
+import { SharedModule } from 'src/app/modules/shared.module';
 import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
+  standalone: true,
   selector: 'app-categories-management',
   templateUrl: './categories-management.component.html',
   styleUrls: ['./categories-management.component.css'],
+  imports: [
+    SharedModule
+  ]
 })
 export class CategoriesManagementComponent implements OnInit {
 
@@ -76,15 +81,15 @@ export class CategoriesManagementComponent implements OnInit {
     var error;
     const edit$ = this.categoryService.editCategory(editedCategory);
     edit$.subscribe(res => {
-        error = res;
-        if (!error) {
-          this.toastr.success('Category edited successfully');
-          this.categoriesNames.splice(indexToReplace, 1, editedCategory.name);
-        }
-        else {
-          this.toastr.error('Failed to edit the category');
-        }
-      });
+      error = res;
+      if (!error) {
+        this.toastr.success('Category edited successfully');
+        this.categoriesNames.splice(indexToReplace, 1, editedCategory.name);
+      }
+      else {
+        this.toastr.error('Failed to edit the category');
+      }
+    });
   }
 
   onTableDataChange(event: any) {

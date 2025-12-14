@@ -1,28 +1,19 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { delay, finalize } from 'rxjs/operators';
-import { SpinnerStatusService } from '../services/spinner-status.service'; 
+import { SpinnerStatusService } from '../services/spinner-status.service';
 
-@Injectable()
-export class LoadingInterceptor implements HttpInterceptor {
+export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+  const spinnerStatusService = inject(SpinnerStatusService);
 
-  constructor(private spinnerStatusService: SpinnerStatusService) { }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    if (req.headers.get('Skip-Spinner')) {
-      return next.handle(req);
-    }
-
-    // show the spinner
-    this.spinnerStatusService.busy();
-
-    return next.handle(req).pipe(
-      // hide the spinner
-      delay(50),
-      finalize(() => this.spinnerStatusService.idle())
-    );
+  if (req.headers.get('Skip-Spinner')) {
+    return next(req);
   }
 
-}
+  spinnerStatusService.busy();
+
+  return next(req).pipe(
+    delay(50),
+    finalize(() => spinnerStatusService.idle())
+  );
+};

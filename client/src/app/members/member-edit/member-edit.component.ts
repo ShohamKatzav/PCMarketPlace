@@ -1,18 +1,28 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { Member } from 'src/app/models/member';
 import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
 import { MemberService } from 'src/app/services/member.service';
+import { PhotoChangeComponent } from '../photo-change/photo-change.component';
 
 @Component({
+  standalone: true,
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',
   styleUrls: ['./member-edit.component.css'],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    CommonModule,
+    FormsModule,
+    TabsModule,
+    PhotoChangeComponent
+  ]
 })
 export class MemberEditComponent implements OnInit {
   member: Member;
@@ -41,6 +51,10 @@ export class MemberEditComponent implements OnInit {
       this.OtherUser = state['OtherUser'];
   }
 
+  onImageError(event: any) {
+    event.target.src = './assets/user.png';
+  }
+
   async ngOnInit() {
     this.subscription.add(this.accountService.currentUser$.subscribe(user => {
       this.user = user
@@ -52,7 +66,7 @@ export class MemberEditComponent implements OnInit {
     if (this.OtherUser)
       this.member = this.OtherUser;
     else {
-      this.subscription.add(this.memberService.getMember(this.user.username).subscribe( member => this.member = member));
+      this.subscription.add(this.memberService.getMember(this.user.username).subscribe(member => this.member = member));
     }
   }
 

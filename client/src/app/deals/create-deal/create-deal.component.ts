@@ -5,13 +5,20 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
+import { SharedModule } from 'src/app/modules/shared.module';
 import { CategoryService } from 'src/app/services/category.service';
 import { DealService } from 'src/app/services/deal.service';
+import { PhotoChangeComponent } from '../photo-change/photo-change.component';
 
 @Component({
+  standalone: true,
   selector: 'app-create-deal',
   templateUrl: './create-deal.component.html',
-  styleUrls: ['./create-deal.component.css']
+  styleUrls: ['./create-deal.component.css'],
+  imports: [
+    SharedModule,
+    PhotoChangeComponent
+  ]
 })
 export class CreateDealComponent implements OnInit {
 
@@ -59,7 +66,7 @@ export class CreateDealComponent implements OnInit {
   removeItem(index: any) {
     this.items.removeAt(index);
 
-    const updatedProducts = [ ...this.products ];
+    const updatedProducts = [...this.products];
     updatedProducts.splice(index, 1);
     this.products = updatedProducts;
 
@@ -92,23 +99,23 @@ export class CreateDealComponent implements OnInit {
     if (validationResult == 1)
       this.toastr.error("Please Enter description (8 characters) and at least 1 product");
     else
-    if (validationResult == 2)
-      this.toastr.warning("Please do not forget any field");
-    else
-     if (validationResult == 3)
-      this.toastr.warning("Deal price has to be 5 ILS and above");
-    else {
-      this.model.description = this.dealForm.get("description").value ? this.dealForm.get("description").value : undefined;
-      this.model.products = this.items ? Array.from(this.items?.value) : undefined;
-      for (let i = 0; i < this.products.length; i++) {
-        this.model.products[i].productPhoto = this.products[i]?.productPhoto;
-      }
-      this.dealService.create(this.model).subscribe(() => {
-        this.formSubmitted = true;
-        this.router.navigateByUrl("/deals/my-deals");
-        this.toastr.success("Deal created");
-      });
-    }
+      if (validationResult == 2)
+        this.toastr.warning("Please do not forget any field");
+      else
+        if (validationResult == 3)
+          this.toastr.warning("Deal price has to be 5 ILS and above");
+        else {
+          this.model.description = this.dealForm.get("description").value ? this.dealForm.get("description").value : undefined;
+          this.model.products = this.items ? Array.from(this.items?.value) : undefined;
+          for (let i = 0; i < this.products.length; i++) {
+            this.model.products[i].productPhoto = this.products[i]?.productPhoto;
+          }
+          this.dealService.create(this.model).subscribe(() => {
+            this.formSubmitted = true;
+            this.router.navigateByUrl("/deals/my-deals");
+            this.toastr.success("Deal created");
+          });
+        }
   }
 
   checkValidation(): number {

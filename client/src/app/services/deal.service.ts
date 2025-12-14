@@ -41,7 +41,17 @@ export class DealService {
 
   getSavedDeal(): Deal | null {
     const dealData = sessionStorage.getItem(this.dealKey);
-    return dealData ? JSON.parse(dealData) : null;
+
+    if (!dealData || dealData === 'undefined' || dealData === 'null') {
+      return null;
+    }
+
+    try {
+      return JSON.parse(dealData);
+    } catch (e) {
+      console.error('Error parsing deal from sessionStorage:', e);
+      return null;
+    }
   }
   setSavedPageCategory(pageCategory: string) {
     sessionStorage.setItem(this.pageCategoryKey, JSON.stringify(pageCategory));
@@ -49,7 +59,17 @@ export class DealService {
 
   getSavedPageCategory(): string | null {
     const pageCategoryData = sessionStorage.getItem(this.pageCategoryKey);
-    return pageCategoryData ? JSON.parse(pageCategoryData) : null;
+
+    if (!pageCategoryData || pageCategoryData === 'undefined' || pageCategoryData === 'null') {
+      return null;
+    }
+
+    try {
+      return JSON.parse(pageCategoryData);
+    } catch (e) {
+      console.error('Error parsing pageCategory from sessionStorage:', e);
+      return null;
+    }
   }
 
 
@@ -59,7 +79,17 @@ export class DealService {
 
   getSavedListType(): DealsListType | null {
     const listTypeData = sessionStorage.getItem(this.listTypeKey);
-    return listTypeData ? JSON.parse(listTypeData) : null;
+
+    if (!listTypeData || listTypeData === 'undefined' || listTypeData === 'null') {
+      return null;
+    }
+
+    try {
+      return JSON.parse(listTypeData);
+    } catch (e) {
+      console.error('Error parsing listType from sessionStorage:', e);
+      return null;
+    }
   }
 
 

@@ -1,16 +1,23 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FileUploader } from 'ng2-file-upload';
 import { Subscription } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { User } from 'src/app/models/user';
+import { SharedModule } from 'src/app/modules/shared.module';
 import { AccountService } from 'src/app/services/account.service';
 import { DealService } from 'src/app/services/deal.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
+  standalone: true,
   selector: 'app-photo-change',
   templateUrl: './photo-change.component.html',
-  styleUrls: ['./photo-change.component.css']
+  styleUrls: ['./photo-change.component.css'],
+  imports: [
+    SharedModule,
+    RouterModule
+  ]
 })
 export class PhotoChangeComponent implements OnInit {
 
@@ -44,7 +51,7 @@ export class PhotoChangeComponent implements OnInit {
     this.updateCacheAfterImageChange.emit();
     this.uploader.clearQueue();
     this.resetFileInput();
-    this.dealService.deletePhoto(productId).subscribe(() => {   
+    this.dealService.deletePhoto(productId).subscribe(() => {
       this.product.productPhoto.url = './assets/no-image.jpeg';
       this.updateCacheAfterImageChange.emit();
     });

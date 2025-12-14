@@ -4,11 +4,17 @@ import { loadStripe, StripeCardElement, Stripe } from '@stripe/stripe-js';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Deal } from '../models/deal';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
-  styleUrls: ['./transaction.component.css']
+  styleUrls: ['./transaction.component.css'],
+  imports: [
+    CommonModule,
+    FormsModule
+  ]
 })
 export class TransactionComponent implements OnInit {
   @ViewChild('cardElement') cardElement: ElementRef;
@@ -90,7 +96,7 @@ export class TransactionComponent implements OnInit {
     }
 
   }
-  isValidEmail(email) : boolean {
+  isValidEmail(email): boolean {
     const atIndex = email.indexOf('@');
     const dotIndex = email.lastIndexOf('.');
     return atIndex > 0 && dotIndex > atIndex + 1 && dotIndex < email.length - 1;
