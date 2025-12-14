@@ -12,6 +12,11 @@ export const routes: Routes = [
         pathMatch: 'full'
     },
     {
+        path: 'home',
+        loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
+        pathMatch: 'full'
+    },
+    {
         path: '',
         canActivate: [AuthGuard],
         runGuardsAndResolvers: 'always',
