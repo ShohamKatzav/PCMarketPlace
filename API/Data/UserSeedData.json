@@ -10,7 +10,7 @@
     "City": "Kimmell",
     "Country": "Uzbekistan",
     "AppUserPhoto": {
-      "Url": "https://api.multiavatar.com/lara.png"
+      "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1765793407/fcusfgbafueyhngdj4lz.jpg"
     },
     "Deals": [
       {
@@ -22,7 +22,7 @@
             "Category": "Monitors",
             "Price": 700,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764424/Monitors1_tvcyrz.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764424/Monitors1_tvcyrz.png"
             }
           },
           {
@@ -30,7 +30,7 @@
             "Category": "Monitors",
             "Price": 1500,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764426/Monitors2_s9q1wq.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764426/Monitors2_s9q1wq.png"
             }
           }
         ],
@@ -49,7 +49,7 @@
     "City": "Thornport",
     "Country": "Bhutan",
     "AppUserPhoto": {
-      "Url": "https://api.multiavatar.com/Moshe.png"
+      "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1765793458/hvlp4ktidqsqap3l8ee1.jpg"
     },
     "Deals": [
       {
@@ -61,7 +61,7 @@
             "Category": "Mice",
             "Price": 1100,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764430/Mice2_eu0iov.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764430/Mice2_eu0iov.png"
             }
           },
           {
@@ -69,7 +69,7 @@
             "Category": "Mice",
             "Price": 300,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764429/Mice1_y0sndz.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764429/Mice1_y0sndz.png"
             }
           }
         ],
@@ -84,7 +84,7 @@
             "Category": "GPU",
             "Price": 2250,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764434/GPU4_mvu6br.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764434/GPU4_mvu6br.png"
             }
           }
         ],
@@ -103,7 +103,7 @@
     "City": "Dale",
     "Country": "Benin",
     "AppUserPhoto": {
-      "Url": "https://api.multiavatar.com/Leonor.png"
+      "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1765793501/dwnx6b6uyhyg9exptsx7.jpg"
     },
     "Deals": [
       {
@@ -115,7 +115,7 @@
             "Category": "CPU",
             "Price": 3000,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764438/CPU1_a4rv6q.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764438/CPU1_a4rv6q.png"
             }
           }
         ],
@@ -130,7 +130,7 @@
             "Category": "GPU",
             "Price": 2700,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764431/GPU1_mg3bl6.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764431/GPU1_mg3bl6.png"
             }
           }
         ],
@@ -145,7 +145,7 @@
             "Category": "RAM",
             "Price": 600,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764436/RAM1_jshoec.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764436/RAM1_jshoec.png"
             }
           }
         ],
@@ -160,7 +160,7 @@
             "Category": "Other",
             "Price": 40,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764442/Mouse_Pad_yusbl7.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764442/Mouse_Pad_yusbl7.png"
             }
           }
         ],
@@ -179,7 +179,7 @@
     "City": "Grazierville",
     "Country": "Nauru",
     "AppUserPhoto": {
-      "Url": "https://api.multiavatar.com/marie.png"
+      "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1765793501/dwnx6b6uyhyg9exptsx7.jpg"
     },
     "Deals": [
       {
@@ -191,7 +191,7 @@
             "Category": "Keyboards",
             "Price": 900,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764427/Keyboard1_vvoejs.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764427/Keyboard1_vvoejs.png"
             }
           },
           {
@@ -199,7 +199,7 @@
             "Category": "Keyboards",
             "Price": 450,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764428/Keyboards2_xojdb8.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764428/Keyboards2_xojdb8.png"
             }
           }
         ],
@@ -218,7 +218,7 @@
     "City": "Magnolia",
     "Country": "Kenya",
     "AppUserPhoto": {
-      "Url": "https://api.multiavatar.com/Binx Bond.png"
+      "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1765794798/njzf3vws8deo13u4j0ms.jpg"
     }
   },
   {
@@ -232,7 +232,7 @@
     "City": "Gan-Yavne",
     "Country": "Israel",
     "AppUserPhoto": {
-      "Url": "https://api.multiavatar.com/dan.png"
+      "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1765794657/qz3solaxwqlpl3lupqfl.png"
     },
     "Deals": [
       {
@@ -244,7 +244,7 @@
             "Category": "Laptops",
             "Price": 3500,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764448/Laptops1_ux9tcg.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764448/Laptops1_ux9tcg.png"
             }
           }
         ],
@@ -259,7 +259,7 @@
             "Category": "Laptops",
             "Price": 4000,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764450/Laptops2_wsucu4.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764450/Laptops2_wsucu4.png"
             }
           }
         ],
@@ -274,7 +274,7 @@
             "Category": "Laptops",
             "Price": 2900,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764452/Laptops3_xur7wd.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764452/Laptops3_xur7wd.png"
             }
           }
         ],
@@ -289,7 +289,7 @@
             "Category": "Desktops",
             "Price": 3700,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764447/Desktops5_nni6wm.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764447/Desktops5_nni6wm.png"
             }
           }
         ],
@@ -304,7 +304,7 @@
             "Category": "Desktops",
             "Price": 2200,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764424/Desktops1_rsf7st.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764424/Desktops1_rsf7st.png"
             }
           }
         ],
@@ -319,7 +319,7 @@
             "Category": "Desktops",
             "Price": 2500,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764446/Desktops3_jwqd2k.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764446/Desktops3_jwqd2k.png"
             }
           }
         ],
@@ -334,7 +334,7 @@
             "Category": "Other",
             "Price": 750,
             "ProductPhoto": {
-              "Url":"https://res.cloudinary.com/diamedrhv/image/upload/v1701764441/SSD_lltree.png"
+              "Url": "https://res.cloudinary.com/diamedrhv/image/upload/v1701764441/SSD_lltree.png"
             }
           }
         ],
