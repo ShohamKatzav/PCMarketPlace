@@ -34,7 +34,7 @@
     "ngx-toastr": "^19.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
-    "webpack": "^5.76.0",
+    "webpack": "^5.104.0",
     "zone.js": "^0.16.0"
   },
   "devDependencies": {
