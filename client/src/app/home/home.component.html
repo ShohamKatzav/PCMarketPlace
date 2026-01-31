@@ -1,19 +1,33 @@
-<div
-  [ngStyle]="{'background': 'url(' + './assets/Best-Computer-Stores-in-Canberra-696x462.jpg' + ') no-repeat 0 0 / cover'}"
-  class="container mt-2">
-  <div *ngIf="!registerMode" style="text-align: center" class="text-white">
-    <h1 class="text-white">Here you can find or list to sell computers and peripherals</h1>
-    <p class="lead">All you need to do is a quick sign up!</p>
-    <div class="text-center">
-      <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">Register</button>
-      <button class="btn btn-info btn-lg mr-2" routerLink="/about-us">About us</button>
-    </div>
-  </div>
-  <div *ngIf="registerMode" class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-4">
-        <p><app-register (cancelRegister)="cancelRegisterMode($event)"></app-register></p>
+<div class="home-hero-container">
+  <div class="container h-100 d-flex align-items-center justify-content-center">
+
+    @if (!registerMode) {
+    <div class="text-center text-white hero-content p-5 shadow-lg">
+      <h1 class="display-4 fw-bold mb-3 text-white">Find or sell computers and peripherals</h1>
+      <p class="lead mb-4">All you need to do is a quick sign up!</p>
+
+      <div class="d-flex justify-content-center gap-3">
+        <button (click)="registerToggle()" class="btn btn-primary btn-lg px-4 shadow">
+          Register Now
+        </button>
+        <button class="btn btn-info btn-lg px-4 text-white shadow" routerLink="/about-us">
+          About Us
+        </button>
       </div>
     </div>
+    } @else {
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="card shadow-lg border-0">
+            <div class="card-body p-4">
+              <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
   </div>
 </div>

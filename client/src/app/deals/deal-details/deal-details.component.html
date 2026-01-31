@@ -1,15 +1,59 @@
-<div *ngIf="deal">
-    <div class="p-3 border shadow-sm rounded overflow-hidden">
-        <h2 class="mt-3">Description: {{deal.description}}</h2>
+@if (deal()) {
+<div class="container mt-4">
+    <div class="p-4 border shadow-sm rounded bg-white">
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="mb-3 text-primary">Description: {{ deal()?.description }}</h2>
 
-        <div class="flex-md-row mb-4 h-md-250">
-            <h3 class="mt-3">Include the products:</h3>
-            <app-product-list [products]="deal.products"></app-product-list>
+                <div class="included-products">
+                    <h5 class="text-muted mb-3 border-bottom pb-2">INCLUDED PRODUCTS:</h5>
+                    <div class="products-wrapper">
+                        <app-product-list [products]="deal()?.products"></app-product-list>
+                    </div>
+                </div>
+            </div>
 
-            <h4 class="mt-5">Created on: {{deal.created | date:'medium'}}</h4>
-            <h4>Last Modified on: {{deal.lastModified | date:'medium'}}</h4>
-            <h5>Total Price: {{deal.totalPrice}}</h5>
-            <h5>Status: {{deal.status}}</h5>
+            <div class="col-md-4 bg-light p-3 rounded d-flex flex-column">
+                <div class="mb-3">
+                    <strong>Status:</strong>
+                    <span class="badge" [class.bg-success]="deal()?.status === 'Active'"
+                        [class.bg-secondary]="deal()?.status !== 'Active'">
+                        {{ deal()?.status }}
+                    </span>
+                </div>
+
+                <h5 class="text-success mb-4">Total Price: {{ deal()?.totalPrice }} ₪</h5>
+
+                @if (listType !== CurrentUserDeals) {
+                <button type="button" class="btn btn-buy btn-lg w-100 mb-3" (click)="buyNow(deal()!)">
+                    <i class="fa fa-shopping-cart me-2"></i> BUY NOW
+                </button>
+                } @else {
+                <button type="button" class="btn btn-edit btn-lg w-100 mb-3" (click)="editDeal(deal()!)">
+                    <i class="fa fa-pencil me-2"></i> EDIT DEAL
+                </button>
+                <button type="button" class="btn btn-delete btn-lg w-100 mb-3" (click)="deleteDeal(deal().id)">
+                    <i class="fa fa-trash me-1"></i> DELETE
+                </button>
+                }
+
+                <hr class="mt-auto">
+
+                <small class="text-muted d-block">
+                    Created: {{ deal()?.created | date:'medium' }}
+                </small>
+                <small class="text-muted d-block">
+                    Last Modified: {{ deal()?.lastModified | date:'medium' }}
+                </small>
+            </div>
         </div>
     </div>
 </div>
+} @else {
+<div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading deal...</span>
+    </div>
+    <p class="mt-2">Fetching deal details...</p>
+</div>
+}

@@ -1,44 +1,104 @@
-<div *ngIf="(member$ | async) as member;" class="album py-5 bg-light">
-  <div class="container">
-    <section *ngIf="listType === AvailableDeals">
-      <h1 class="text-center">AVAILABLE DEALS</h1>
-    </section>
-    <section *ngIf="listType === CurrentUserDeals">
-      <h1 class="text-center">{{member.knownAs || member.userName}}'s DEALS</h1>
-    </section>
-    <app-filters (categoryChange)="categotyChange($event)" (priceChange)="priceChange($event)"></app-filters>
-    <div class="row g-3 mt-4 justify-content-around">
-      <div *ngIf="(deals$| async)?.length == 0">
-        <h1 class="text-center">No Deals Found</h1>
+@if (member(); as m) {
+<div class="bg-light min-vh-100 py-5">
+  <div class="container" style="margin-top: 2rem;">
+
+    <div class="text-center mb-4">
+      @if (listType === AvailableDeals) {
+      <section>
+        <h1 class="display-4 fw-bold mb-2" style="letter-spacing: 0.05em;">AVAILABLE DEALS</h1>
+        <p class="text-muted">Browse and purchase amazing deals</p>
+      </section>
+      } @else if (listType === CurrentUserDeals) {
+      <section>
+        <h1 class="display-4 fw-bold mb-2" style="letter-spacing: 0.05em;">
+          {{m.knownAs || m.userName}}'S DEALS
+        </h1>
+        <p class="text-muted">Manage your listed deals</p>
+      </section>
+      }
+    </div>
+
+    <div class="card shadow-sm mb-5" style="border: 1px solid #e0e0e0; background-color: white;">
+      <div class="card-body p-4">
+        <app-filters (categoryChange)="categotyChange($event)" (priceChange)="priceChange($event)"></app-filters>
       </div>
+    </div>
 
-      <div class="card mb-3 mr-1 col-md-3 col-sm-5"
-        *ngFor="let deal of deals$ | async | paginate: { itemsPerPage: tableSize, currentPage: currentPage, totalItems: totalItemsCount }">
-        <div class="card shadow-sm">
-          <img class="img-thumbnail card-img-top"
-            [src]="deal?.dealPhoto?.url || 'https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg'"
-            alt="deal.dealPhoto.url">
-        </div>
+    @if (deals(); as allDeals) {
+    <div class="row g-4">
+      @for (deal of allDeals | paginate: {
+      id: 'deal_pg',
+      itemsPerPage: tableSize,
+      currentPage: page(),
+      totalItems: totalItemsCount()
+      }; track deal.id) {
+      <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card h-100 shadow-sm border-0 deal-card" style="transition: transform 0.2s, box-shadow 0.2s;">
 
-        <div class="card-body">
-          <h5 class="card-text">{{deal.description}}</h5>
-          <small class="text-muted">Total Price: {{deal.totalPrice}} ₪</small>
-          <div class="mt-2">
-            <button type="button" class="btn btn-sm btn-outline-info btn-custom" (click)="viewDeal(deal)">View</button>
-            <button *ngIf="listType !== CurrentUserDeals" type="button" class="btn btn-sm btn-outline-success btn-custom"
-              (click)="buyNow(deal)">Buy Now</button>
-            <span *ngIf="member?.authorization =='Admin' || listType == CurrentUserDeals">
-              <button type="button" class="btn btn-sm btn-outline-warning btn-custom"
-                (click)="editDeal(deal)">Edit</button>
-              <button type="button" class="btn btn-sm btn-outline-danger btn-custom"
-                (click)="deleteDeal(deal.id, currentPage + '-' + filterByCategory)">Delete</button>
-            </span>
+          <div class="position-relative overflow-hidden" style="height: 250px;">
+            <img class="w-100 h-100" style="object-fit: cover;"
+              [src]="deal?.dealPhoto?.url || 'https://www.creativefabrica.com/wp-content/uploads/2018/12/Deal-icon-by-back1design1.jpg'"
+              [alt]="deal.description">
+
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-dark px-3 py-2" style="font-size: 1.1rem; font-weight: 600;">
+                {{deal.totalPrice}} ₪
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body d-flex flex-column bg-white">
+            <h5 class="card-title mb-3 text-uppercase"
+              style="min-height: 3rem; font-size: 1rem; font-weight: 600; color: #666; letter-spacing: 0.05em;">
+              {{deal.description}}
+            </h5>
+
+            <div class="mt-auto">
+              <div class="d-grid gap-2">
+                <div class="btn-group w-100">
+                  <button type="button" class="btn btn-view" (click)="viewDeal(deal)">
+                    <i class="fa fa-eye me-1"></i> VIEW
+                  </button>
+
+                  @if (listType !== CurrentUserDeals) {
+                  <button type="button" class="btn btn-buy" (click)="buyNow(deal)">
+                    <i class="fa fa-shopping-cart me-1"></i> BUY NOW
+                  </button>
+                  }
+                </div>
+
+                @if (m.authorization === 'Admin' || listType === CurrentUserDeals) {
+                <div class="btn-group w-100 mt-1">
+                  <button type="button" class="btn btn-edit" (click)="editDeal(deal)">
+                    <i class="fa fa-pencil me-1"></i> EDIT
+                  </button>
+                  <button type="button" class="btn btn-delete" (click)="deleteDeal(deal.id)">
+                    <i class="fa fa-trash me-1"></i> DELETE
+                  </button>
+                </div>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      } @empty {
+      <div class="col-12">
+        <div class="text-center py-5">
+          <i class="fa fa-shopping-bag fa-4x text-muted mb-3"></i>
+          <h3 class="text-muted">No Deals Found</h3>
+          <p class="text-muted">Try adjusting your filters or check back later</p>
+        </div>
+      </div>
+      }
     </div>
-    <div class="d-flex justify-content-center mt-5" *ngIf="totalItemsCount > 0">
-      <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
+    }
+
+    @if (totalItemsCount() > 0) {
+    <div class="d-flex justify-content-center mt-5">
+      <pagination-controls id="deal_pg" (pageChange)="onTableDataChange($event)"></pagination-controls>
     </div>
+    }
   </div>
 </div>
+}

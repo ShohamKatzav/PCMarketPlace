@@ -1,6 +1,6 @@
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map } from "rxjs/operators";
 import { User } from '../models/user';
@@ -11,12 +11,14 @@ import { MemberService } from './member.service';
   providedIn: 'root'
 })
 export class AccountService {
+  private http = inject(HttpClient);
+  private memberService = inject(MemberService);
 
   baseUrl = environment.apiUrl;
   private currentUserSource$ = new ReplaySubject<User | null>(1);
   public currentUser$ = this.currentUserSource$.asObservable();
 
-  constructor(private http: HttpClient, private memberService: MemberService) {
+  constructor() {
     const userString = localStorage.getItem('user');
     if (userString) {
       const user = JSON.parse(userString);

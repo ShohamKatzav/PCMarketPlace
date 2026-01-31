@@ -1,0 +1,23 @@
+.profile-img-fixed {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    background-color: #fff;
+}
+
+.member-card {
+    transition: all 0.2s ease;
+    border: 1px solid transparent !important;
+}
+
+.member-card:hover {
+    border-color: #dee2e6 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Error fallback styling */
+.fallback-image {
+    object-fit: contain;
+    padding: 10px;
+}

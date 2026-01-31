@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Member } from 'src/app/models/member';
 import { MemberService } from 'src/app/services/member.service';
 
@@ -17,30 +17,19 @@ import { MemberService } from 'src/app/services/member.service';
   ]
 })
 export class MemberDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private memberService = inject(MemberService);
 
-  member: Member;
-  memberSubscription: Subscription;
-
-  constructor(private route: ActivatedRoute, private memberService: MemberService) { }
+  member$: Observable<Member>;
 
   onImageError(event: any) {
     event.target.src = './assets/user.png';
   }
 
   ngOnInit(): void {
-    this.loadMember();
-  }
-
-  async loadMember() {
-    const username = this.route.snapshot.paramMap.get('username') as string;
-    this.memberSubscription = this.memberService.getMember(username).subscribe(member => this.member = member);
-  }
-
-  ngOnDestroy() {
-    if (this.memberSubscription) {
-      this.memberSubscription.unsubscribe();
+    const username = this.route.snapshot.paramMap.get('username');
+    if (username) {
+      this.member$ = this.memberService.getMember(username);
     }
   }
-
-
 }

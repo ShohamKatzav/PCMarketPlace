@@ -1,5 +1,11 @@
-<div class="row row-cols-1 row-cols-sm-3">
-    <div *ngFor="let product of products">
-      <app-product-card [product]="product"></app-product-card>
+<div class="row row-cols-1 row-cols-md-2 g-2">
+  @for (product of products(); track product.id) {
+  <div class="col">
+    <app-product-card [product]="product" />
   </div>
+  } @empty {
+  <div class="col-12 no-products">
+    <p>No products were found in this deal.</p>
+  </div>
+  }
 </div>

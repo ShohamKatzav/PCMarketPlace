@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
-import { MEMBER_ROUTES } from './members/members.routes';
-import { DEAL_ROUTES } from './deals/deals.routes';
 
 export const routes: Routes = [
     {
@@ -24,7 +22,7 @@ export const routes: Routes = [
             {
                 path: 'members',
                 canActivate: [AdminGuard],
-                children: MEMBER_ROUTES
+                loadChildren: () => import('./members/members.routes').then(r => r.MEMBER_ROUTES)
             },
             {
                 path: 'member/edit',
@@ -33,7 +31,7 @@ export const routes: Routes = [
             },
             {
                 path: 'deals',
-                loadChildren: () => import('./deals/deals.module').then(m => m.DealsModule)
+                loadChildren: () => import('./deals/deals.routes').then(r => r.DEAL_ROUTES)
             },
             {
                 path: 'categories',

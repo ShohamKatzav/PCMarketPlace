@@ -1,131 +1,104 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
-import { Observable, Subscription, of } from 'rxjs';
-import { Deal } from 'src/app/models/deal';
-import { Member } from 'src/app/models/member';
+import { CommonModule } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { combineLatest, of, Observable } from 'rxjs'; // Added Observable import
+import { switchMap, tap, map, take } from 'rxjs/operators';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+
 import { DealService } from 'src/app/services/deal.service';
 import { MemberService } from 'src/app/services/member.service';
-import { pluck, switchMap, tap } from 'rxjs/operators';
-import { Price } from 'src/app/models/price';
-import { DealsListType } from 'src/app/models/dealsListType';
-import { SharedModule } from 'src/app/modules/shared.module';
 import { FiltersComponent } from 'src/app/filters/filters.component';
+import { DealsListType } from 'src/app/models/dealsListType';
+import { Price } from 'src/app/models/price';
+import { Deal } from 'src/app/models/deal';
 
 @Component({
   standalone: true,
   selector: 'app-deal-list',
   templateUrl: './deal-list.component.html',
   styleUrls: ['./deal-list.component.css'],
-  imports: [
-    SharedModule,
-    RouterModule,
-    FiltersComponent
-  ]
+  imports: [CommonModule, RouterModule, NgxPaginationModule, FiltersComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DealListComponent implements OnInit {
-  deals$: Observable<Deal[]>;
-  deleteDealSubscription: Subscription;
-  member$: Observable<Member>;
-  currentPage: number = 1;
-  tableSize: number = 6;
-  totalItemsCount: number = 0;
+  private memberService = inject(MemberService);
+  private dealService = inject(DealService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  filterByCategory: string;
-  filterByPrice: Price = { min: null, max: null };
+  // State Signals
+  page = signal<number>(1);
+  tableSize = 6;
+  category = signal<string>('Any');
+  price = signal<Price>({ min: null, max: null });
+  refresh = signal<number>(0);
+  totalItemsCount = signal<number>(0);
+  member = toSignal(this.memberService.currentMember$);
 
-  listType: DealsListType;
-  AvailableDeals: DealsListType = DealsListType.AvailableDeals;
-  CurrentUserDeals: DealsListType = DealsListType.CurrentUserDeals;
+  private combined$: Observable<Deal[]> = combineLatest([
+    this.memberService.currentMember$,
+    toObservable(this.page),
+    toObservable(this.category),
+    toObservable(this.price),
+    toObservable(this.refresh)
+  ]).pipe(
+    switchMap(([member, page, category, price]) => {
+      if (!member) return of({ deals: [] as Deal[], totalCount: 0 });
 
+      return (price.min == null && price.max == null)
+        ? this.dealService.getDealsPage(member.id, page, 6, category)
+        : this.dealService.fetchDealsPageFromServer(member.id, page, 6, category, null, price);
+    }),
+    tap(res => this.totalItemsCount.set(res.totalCount)),
+    map(res => res.deals)
+  );
 
-  constructor(private memberService: MemberService, private dealService: DealService,
-    private route: ActivatedRoute, private router: Router) {
-    this.member$ = this.memberService.currentMember$;
-  }
+  deals = toSignal(this.combined$, { initialValue: [] as Deal[] });
+
+  listType!: DealsListType;
+  AvailableDeals = DealsListType.AvailableDeals;
+  CurrentUserDeals = DealsListType.CurrentUserDeals;
 
   ngOnInit() {
-    this.filterByCategory = "Any";
-    this.route.data.subscribe(data => {
+    this.route.data.pipe(take(1)).subscribe(data => {
       this.listType = data.listType;
       this.dealService.setSavedListType(data.listType);
-    })
-    this.deals$ = this.loadDeals();
-  }
-
-
-  loadDeals() {
-    return this.member$.pipe(
-      // complete previous inner observable, emit values
-      switchMap(member => {
-        if (!member) return of([]);
-        // Decided to not catch results filtered by price for now
-        const dealsListObservable = this.filterByPrice.min == null && this.filterByPrice.max == null ?
-          this.dealService.getDealsPage(member.id, this.currentPage, this.tableSize, this.filterByCategory) :
-          this.dealService.fetchDealsPageFromServer(member.id, this.currentPage, this.tableSize, this.filterByCategory, null, this.filterByPrice);
-        return dealsListObservable.pipe(
-          tap(res => {
-            this.totalItemsCount = res.totalCount;
-          }),
-          pluck('deals')
-        );
-      })
-    );
-  }
-
-  deleteDeal(dealId: number, pageCategory: string) {
-    this.deleteDealSubscription = this.dealService.deleteDeal(dealId).subscribe(() => {
-
-      this.dealService.getTotalCountForCategory(this.filterByCategory).subscribe(count => this.totalItemsCount = count);
-      const totalPages = Math.ceil(this.totalItemsCount / this.tableSize);
-
-      if (this.currentPage > totalPages && totalPages > 0) {
-        this.currentPage = totalPages;
-      }
-      this.deals$ = this.loadDeals();
-
-      if (totalPages > this.currentPage) {
-        this.dealService.updateCacheAfterRemoving(pageCategory, totalPages);
-      }
     });
-  };
+  }
 
+  onTableDataChange(event: number) {
+    this.page.set(event);
+  }
 
-  onTableDataChange(event: any) {
-    this.currentPage = event;
-    this.deals$ = this.loadDeals();
+  categotyChange(category: string) {
+    this.page.set(1);
+    this.category.set(category);
+  }
+
+  priceChange(price: Price) {
+    this.page.set(1);
+    this.price.set(price);
+  }
+
+  deleteDeal(dealId: number) {
+    this.dealService.deleteDeal(dealId).pipe(take(1)).subscribe(() => {
+      this.refresh.update(n => n + 1);
+    });
   }
 
   viewDeal(deal: Deal) {
     this.dealService.setSavedDeal(deal);
     this.router.navigate(['deals/view-deal']);
   }
-  editDeal(deal: Deal) {
-    this.dealService.setSavedDeal(deal);
-    this.dealService.setSavedPageCategory(`${this.currentPage}-${this.filterByCategory}`);
-    this.router.navigate(['deals/edit']);
-  }
+
   buyNow(deal: Deal) {
     this.dealService.setSavedDeal(deal);
-    this.dealService.setSavedPageCategory(`${this.currentPage}-${this.filterByCategory}`);
     this.router.navigate(['deals/transaction']);
   }
 
-  categotyChange(category) {
-    this.currentPage = 1;
-    this.filterByCategory = category;
-    this.deals$ = this.loadDeals();
+  editDeal(deal: Deal) {
+    this.dealService.setSavedDeal(deal);
+    this.router.navigate(['deals/edit'], { state: { deal } });
   }
-
-  priceChange(price) {
-    this.currentPage = 1;
-    this.filterByPrice = price;
-    this.deals$ = this.loadDeals();
-  }
-
-  ngOnDestroy() {
-    if (this.deleteDealSubscription) {
-      this.deleteDealSubscription.unsubscribe();
-    }
-  }
-
 }

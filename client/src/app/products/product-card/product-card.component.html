@@ -2,16 +2,16 @@
   <div class="card p-3 w-75">
     <div class="card-img-wrapper">
       <div class="image">
-        <img [src]="product.productPhoto?.url!= null ? product.productPhoto?.url : './assets/no-image.jpeg'" />
+        <img [src]="productImageUrl()" [alt]="product().name" />
       </div>
     </div>
     <div class="card-inner">
       <div class="header">
-        <h2>{{product.name}}</h2>
-        <h5>Category: {{product.category}}</h5>
+        <h3>{{product().name}}</h3>
+        <h5>Category: {{product().category}}</h5>
       </div>
       <div class="content">
-        <p>Price: {{product.price}} ₪</p>
+        <p>Price: {{product().price}} ₪</p>
       </div>
     </div>
   </div>

@@ -1,27 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Member } from 'src/app/models/member';
 
 @Component({
   selector: 'app-member-card',
+  standalone: true,
+  imports: [RouterModule],
   templateUrl: './member-card.component.html',
-  styleUrls: ['./member-card.component.css'],
-  imports: [
-    CommonModule,
-    RouterModule
-  ]
+  styleUrls: ['./member-card.component.css']
 })
-export class MemberCardComponent implements OnInit {
-  @Input() member!: Member;
+export class MemberCardComponent {
+  member = input.required<Member>();
 
   onImageError(event: any) {
     event.target.src = './assets/user.png';
   }
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

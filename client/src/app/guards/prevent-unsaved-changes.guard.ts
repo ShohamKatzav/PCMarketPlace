@@ -6,12 +6,11 @@ import { CanDeactivate } from '@angular/router';
 })
 export class PreventUnsavedChangesGuard implements CanDeactivate<any> {
 
-  constructor() { }
   canDeactivate(component: any): boolean {
-    if (!component.formSubmitted) {
-      if (component.EForm?.dirty) {
-        return confirm('Are you sure you want to continue? Any unsaved changes will be lost');
-      }
+    const form = component.editForm?.() || component.dealForm || component.EForm;
+
+    if (form?.dirty && !component.formSubmitted) {
+      return confirm('Are you sure you want to continue? Any unsaved changes will be lost');
     }
     return true;
   }

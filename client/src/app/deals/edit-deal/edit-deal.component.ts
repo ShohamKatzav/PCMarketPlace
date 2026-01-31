@@ -1,17 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, NgForm, Validators } from '@angular/forms';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription, pipe } from 'rxjs';
-import { Category } from 'src/app/models/category';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 import { Deal } from 'src/app/models/deal';
-import { Photo } from 'src/app/models/photo';
-import { SharedModule } from 'src/app/modules/shared.module';
 import { CategoryService } from 'src/app/services/category.service';
 import { DealService } from 'src/app/services/deal.service';
 import { PhotoChangeComponent } from '../photo-change/photo-change.component';
-
 
 @Component({
   standalone: true,
@@ -19,206 +17,136 @@ import { PhotoChangeComponent } from '../photo-change/photo-change.component';
   templateUrl: './edit-deal.component.html',
   styleUrls: ['./edit-deal.component.css'],
   imports: [
-    SharedModule,
-    RouterModule,
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    NgxPaginationModule,
     PhotoChangeComponent
   ]
 })
 export class EditDealComponent implements OnInit {
+  private dealService = inject(DealService);
+  private categoryService = inject(CategoryService);
+  private toastr = inject(ToastrService);
+  private router = inject(Router);
 
-  @ViewChild('editForm') EForm: NgForm;
-  formSubmitted = false;
+  // Categories as a Signal for clean template access
+  categories = toSignal(this.categoryService.getCategories(), { initialValue: [] });
 
-  categories$: Observable<Category[]>;
   deal: Deal;
-  listType: string;
-  dealSubscription: Subscription;
-  model: any = {};
-  items!: FormArray;
   dealForm: FormGroup;
-
-  currentPage: number = 1;
-  totalItemsCount: number = 0;
-
-  pageCategory: string;
-
-  constructor(private router: Router,
-    private dealService: DealService,
-    private fb: FormBuilder,
-    private toastr: ToastrService,
-    private categoryService: CategoryService) {
-    this.dealSubscription = new Subscription();
-  }
+  currentPage = 1;
+  totalItemsCount = 0;
 
   ngOnInit() {
     this.deal = this.dealService.getSavedDeal();
-    this.pageCategory = this.dealService.getSavedPageCategory();
-    this.listType = this.dealService.getSavedListType();
+
+    // Initialize form
     this.dealForm = new FormGroup({
-      description: new FormControl('', Validators.required),
-      products: new FormArray([]),
+      description: new FormControl(this.deal?.description || '', [Validators.required, Validators.minLength(8)]),
+      products: new FormArray([])
     });
-    this.categories$ = this.categoryService.getCategories();
-    this.loadDeal();
-    this.totalItemsCount = this.deal.products.length;
+
+    if (this.deal?.products) {
+      this.populateProducts();
+    }
   }
 
-  getProducts() {
-    return this.dealForm?.get("products") as FormArray;
+  get productItems() {
+    return this.dealForm.get('products') as FormArray;
   }
-  getDescription() {
-    return this.dealForm?.get("description")?.value as string;
+
+  private populateProducts() {
+    this.deal.products.forEach(p => {
+      this.productItems.push(new FormGroup({
+        id: new FormControl(p.id),
+        name: new FormControl(p.name, Validators.required),
+        category: new FormControl(p.category, Validators.required),
+        price: new FormControl(p.price, [Validators.required, Validators.min(0)])
+      }));
+    });
+    this.totalItemsCount = this.productItems.length;
   }
+
   addNewRow() {
-    if (this.getProducts().controls.length < 10) {
-      this.items = this.getProducts();
-      this.items.push(this.genRow());
-      this.items.length > 0 ? this.currentPage = ++this.totalItemsCount : this.currentPage = 1;
+    if (this.productItems.length < 10) {
+      const row = new FormGroup({
+        id: new FormControl(null),
+        name: new FormControl(null, Validators.required),
+        category: new FormControl('Others', Validators.required),
+        price: new FormControl(null, [Validators.required, Validators.min(0)]),
+      });
 
-      const updatedDeal = { ...this.deal };
-      updatedDeal.products.push();
-      this.deal = updatedDeal;
+      this.productItems.push(row);
+
+      this.deal.products.push({
+        name: '',
+        category: 'Others',
+        price: 0,
+        productPhoto: { url: './assets/no-image.jpeg', publicId: '' }
+      } as any);
+
+      this.totalItemsCount = this.productItems.length;
+
+      // Use timeout to ensure the DOM is ready for the new page
+      setTimeout(() => {
+        this.currentPage = this.totalItemsCount;
+      });
+    } else {
+      this.toastr.warning("Maximum 10 products per deal.");
     }
-    else
-      this.toastr.warning("Sorry, maximum 10 products per deal.");
-  }
-  removeItem(index: any) {
-    this.items.removeAt(index);
-
-    const updatedDeal = { ...this.deal };
-    updatedDeal.products.splice(index, 1);
-    this.deal = updatedDeal;
-
-    this.totalItemsCount -= 1;
-    this.items.length > 0 && this.currentPage - 1 > 1 ? this.currentPage -= 1 : this.currentPage = 1;
   }
 
-
-  initTheFormWithDealInfo() {
-    const items: FormArray[] = [this.rowForEveryProduct()];
-    this.dealForm?.patchValue({
-      description: this.deal.description,
-      products: items
-    });
+  removeItem(index: number) {
+    this.productItems.removeAt(index);
+    this.deal.products.splice(index, 1);
+    this.totalItemsCount--;
+    // Ensure currentPage doesn't point to a non-existent page
+    this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalItemsCount));
   }
 
-  rowForEveryProduct(): FormArray {
-    this.items = this.getProducts();
-    for (let i = 0; i < this.deal.products.length; i++) {
-      this.items?.push(
-        this.fb.group(
-          {
-            name: this.fb.control(this.deal.products[i].name, Validators.required),
-            category: new FormControl(this.deal.products[i].category, Validators.required),
-            price: new FormControl(this.deal.products[i].price, Validators.required),
-          }));
+  edit() {
+    if (this.dealForm.invalid) {
+      this.toastr.error("Please fill all required fields correctly.");
+      return;
     }
-    return this.items;
-  }
 
+    const productsValue = this.productItems.value;
+    const totalPrice = productsValue.reduce((acc: number, curr: any) => acc + (curr.price || 0), 0);
 
+    if (totalPrice < 5) {
+      this.toastr.warning("Deal total price must be 5 ILS or above.");
+      return;
+    }
 
-  genRow(): FormGroup {
-    return new FormGroup({
-      name: new FormControl(null, Validators.required),
-      category: new FormControl(null, Validators.required),
-      price: new FormControl(null, Validators.required),
+    // Merging form data with existing photo URLs
+    const updatedModel = {
+      id: this.deal.id,
+      description: this.dealForm.value.description,
+      products: productsValue.map((p: any, i: number) => ({
+        ...p,
+        productPhoto: this.deal.products[i]?.productPhoto || { url: './assets/no-image.jpeg' }
+      }))
+    };
+
+    this.dealService.edit(updatedModel).subscribe({
+      next: () => {
+        this.toastr.success("Deal updated successfully");
+        this.dealService.getDeal(this.deal.id).subscribe(refreshedDeal => {
+          this.dealService.setSavedDeal(refreshedDeal);
+          this.router.navigate(['deals/view-deal']);
+        });
+      }
     });
   }
 
   clear() {
-    this.dealForm.patchValue({
-      description: "",
-    });
-    if (this.items)
-      while (this.items.length > 0)
-        this.removeItem(0);
-  }
-
-  edit() {
-    this.model.id = this.deal.id;
-    const validationResult = this.checkValidation();
-
-    if (validationResult == 1)
-      this.toastr.error("Please Enter description (8 characters) and at least 1 product");
-    else if (validationResult == 2)
-      this.toastr.warning("Please do not forget any field");
-    else if (validationResult == 3)
-      this.toastr.warning("Deal price has to be 5 ILS and above");
-    else {
-      this.model.description = this.dealForm.get("description")?.value;
-      // attach products information exclude photos (name category and price)
-      this.model.products = Array.from(this.items.value);
-      // attach products photos information
-      for (let i = 0; i < this.deal.products.length; i++) {
-        const newPhoto: any = {
-          url: this.deal.products[i]?.productPhoto?.url ?? './assets/no-image.jpeg'
-        }
-        this.model.products[i].productPhoto = newPhoto;
-      }
-      // attach exist products id
-      for (let i = 0; i < this.deal.products.length; i++) {
-        // if (this.deal.products[i].id) mean the product is already exist, else we won't send the id property(the server will create one). 
-        if (this.deal.products[i].id)
-          this.model.products[i].id = this.deal.products[i].id;
-      }
-
-      this.dealSubscription.add(this.dealService.edit(this.model).subscribe(pipe(() => {
-        this.formSubmitted = true;
-        this.toastr.success("Deal edited successfully");
-        this.dealService.getDeal(this.deal.id).subscribe(deal => {
-          this.deal = deal
-          this.dealService.setSavedDeal(this.deal);
-          this.router.navigate(['deals/view-deal']);
-        });
-      })));
-
+    this.dealForm.get('description')?.reset();
+    while (this.productItems.length > 0) {
+      this.productItems.removeAt(0);
     }
-  }
-
-  loadDeal() {
-    this.initTheFormWithDealInfo();
-  }
-
-  checkValidation(): number {
-    if (!this.dealForm.get("description")?.value || !Array.from(this.items.value))
-      return 1;
-    else {
-      this.model.description = this.dealForm.get("description")?.value;
-      this.model.products = Array.from(this.items.value);
-    }
-    if (!this.model.description || !this.model.products ||
-      this.model.description.length < 8 || this.model.products.length < 1) {
-      return 1;
-    }
-    if (this.items.invalid)
-      return 2;
-    const prices = this.model.products.map((item) => item.Price);
-    const sumPrices = prices.reduce((total, price) => total + price, 0);
-    if (sumPrices < 5)
-      return 3;
-    return 4;
-  }
-
-  onTableDataChange(event: any) {
-    this.currentPage = event;
-  }
-
-
-  updateCacheAfterImageChange() {
-    const dealClone = JSON.parse(JSON.stringify(this.deal));
-    const { dealPhoto, ...dealToSend } = dealClone;
-    for (const product of dealToSend.products) {
-      product.productPhoto = { url: product.productPhoto?.url ?? './assets/no-image.jpeg' } as Photo;
-    }
-    this.dealService.edit(dealToSend).subscribe();
-  }
-
-  ngOnDestroy() {
-    if (this.dealSubscription) {
-      this.dealSubscription.unsubscribe();
-    }
+    this.deal.products = [];
+    this.totalItemsCount = 0;
+    this.currentPage = 1;
   }
 }

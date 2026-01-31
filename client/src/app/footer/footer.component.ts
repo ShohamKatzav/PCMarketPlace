@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -10,11 +10,12 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ]
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
 
-  constructor() { }
+  private router = inject(Router);
 
-  ngOnInit(): void {
+  navigateToRegister() {
+    this.router.navigate(['/home'], { state: { openRegister: true } });
   }
 
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
@@ -7,10 +7,9 @@ import { DealService } from 'src/app/services/deal.service';
 
 @Injectable()
 export class DealEffects {
-  constructor(
-    private actions$: Actions,
-    private dealService: DealService,
-  ) { }
+
+  private actions$ = inject(Actions);
+  private dealService = inject(DealService);
 
   loadDeals$ = createEffect(() =>
     this.actions$.pipe(

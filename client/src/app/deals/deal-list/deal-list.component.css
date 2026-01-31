@@ -1,9 +1,72 @@
-.card-img-top {
-    width: 100%;
-    height: 25vh;
-    object-fit: scale-down;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-button.btn {
-    padding: 0.5rem 0.9rem;
+::ng-deep app-filters input[type="text"],
+::ng-deep app-filters input[type="number"],
+::ng-deep app-filters select {
+    background-color: white !important;
+    border: 1px solid #ddd !important;
+    color: #333 !important;
+}
+
+::ng-deep app-filters input::placeholder {
+    color: #999 !important;
+}
+
+/* 1) Font is a little too small - increasing to 0.9rem or 1rem */
+.btn {
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-width: 2px;
+    /* 2) Ensuring all buttons have a visible border */
+    transition: all 0.3s ease;
+    /* 4) Background color change transition */
+}
+
+/* Standardizing the buttons to look like your second screenshot */
+.btn-view {
+    color: #5bc0de;
+    border-color: #5bc0de;
+    background-color: transparent;
+}
+
+.btn-view:hover {
+    background-color: #5bc0de;
+    color: white;
+}
+
+.btn-buy {
+    color: #5cb85c;
+    border-color: #5cb85c;
+    background-color: transparent;
+}
+
+.btn-buy:hover {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.btn-edit {
+    color: #f0ad4e;
+    border-color: #f0ad4e;
+    background-color: transparent;
+}
+
+.btn-edit:hover {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-delete {
+    color: #d9534f;
+    border-color: #d9534f;
+    background-color: transparent;
+}
+
+.btn-delete:hover {
+    background-color: #d9534f;
+    color: white;
 }

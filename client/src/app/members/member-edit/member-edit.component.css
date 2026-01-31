@@ -1,24 +1,47 @@
-.img-thumbnail {
-  margin: 5%;
-  width: 85%;
-  height: 85%;
+/* Card & Sidebar Styling */
+.profile-image-container {
+  padding: 15px;
+  background-color: #f8f9fa;
+  text-align: center;
 }
 
-.card-body {
-  padding: 0px 5%;
+.img-thumbnail-custom {
+  width: 100%;
+  max-width: 250px;
+  /* Adjust based on your preference */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  /* Circle look from your screenshot */
+  border: 5px solid white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.card-footer {
-  padding: 10px 15px;
+.member-tabset {
+  min-height: 400px;
+}
+
+/* Fix for ngx-bootstrap tabs to look modern */
+.nav-tabs .nav-link {
+  border: none;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 1rem 1.5rem;
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom: 3px solid #0d6efd !important;
+  color: #0d6efd !important;
+  background: none;
+}
+
+.form-control {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+}
+
+.form-control:focus {
   background-color: #fff;
-  border-top: none;
-}
-
-::ng-deep span {
-  font-size: larger;
-}
-
-.ngx-gallery {
-  display: inline-block;
-  margin-bottom: 20px;
+  border-color: #0d6efd;
+  box-shadow: none;
 }

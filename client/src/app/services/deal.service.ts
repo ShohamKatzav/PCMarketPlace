@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable, combineLatest, of } from 'rxjs';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -22,21 +22,25 @@ import { DealsListType } from '../models/dealsListType';
   providedIn: 'root'
 })
 export class DealService {
+  private http = inject(HttpClient);
+  private store = inject(Store<AppState>);
+  private memberService = inject(MemberService);
 
   private readonly dealKey = 'deal_data';
   private readonly pageCategoryKey = 'pageCategory_data';
   private readonly listTypeKey = 'listType_data';
 
+  private _currentDeal = signal<Deal | null>(this.getSavedDeal());
+  readonly currentDeal = this._currentDeal.asReadonly();
+
+
   baseUrl = environment.apiUrl;
   pageSize: number = 6;
   noSpinnerHeader = new HttpHeaders().set('Skip-Spinner', 'true');
 
-  constructor(private http: HttpClient, private store: Store<AppState>, private memberService: MemberService) {
-  }
-
-
   setSavedDeal(deal: Deal) {
     sessionStorage.setItem(this.dealKey, JSON.stringify(deal));
+    this._currentDeal.set(deal);
   }
 
   getSavedDeal(): Deal | null {

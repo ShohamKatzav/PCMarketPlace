@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RegisterComponent } from '../register/register.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
+  standalone: true,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -14,11 +15,20 @@ import { RouterModule } from '@angular/router';
   ]
 })
 export class HomeComponent implements OnInit {
-  registerMode = false;
-  constructor() { }
+  private router = inject(Router);
 
   ngOnInit(): void {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { openRegister: boolean };
+
+    if (state?.openRegister) {
+      this.registerMode = true;
+    }
+    if (history.state?.openRegister) {
+      this.registerMode = true;
+    }
   }
+  registerMode = false;
 
   registerToggle() {
     this.registerMode = !this.registerMode;
@@ -27,5 +37,4 @@ export class HomeComponent implements OnInit {
   cancelRegisterMode(cancel: boolean) {
     this.registerMode = cancel;
   }
-
 }

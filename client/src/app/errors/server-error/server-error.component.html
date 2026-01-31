@@ -1,16 +1,32 @@
+<div class="container mt-5">
+  <h4 class="text-secondary">Internal Server Error</h4>
+  <p class="text-muted">Note: Refreshing this page will make the error disappear as the router state is cleared.</p>
 
-<h4>Internal Server Error - refreshing this page will make the error disappear</h4>
-<ng-container *ngIf="error">
-  <h5 class="text-danger">Error: {{error.message}}</h5>
-  <p class="font-wight-bold">Note: if you are seeing this then Angular is probably not to blame</p>
-  <p>what to do next</p>
-  <ol>
-    <li>Open the chrome dev tools</li>
-    <li>Inspect the network tab</li>
-    <li>check the failing request</li>
-    <li>Examine the request URL - make sure it is correct</li>
-    <li>reproduce the error in Postman - if we see the same response then the issue is not with Angular</li>
-  </ol>
-  <p>Following is the stack trace  - this is where your investigation should start</p>
-  <code class="mt-5" style="background-color: whitesmoke"> {{error.details}} </code>
-</ng-container>
+  @if (error) {
+  <div class="alert alert-danger mt-4">
+    <h5 class="fw-bold">Error: {{ error.message }}</h5>
+    <p class="mb-0">Angular is likely working correctly; the issue is typically on the server side.</p>
+  </div>
+
+  <div class="mt-4">
+    <h6>Next Steps for Investigation:</h6>
+    <ol class="list-group list-group-numbered">
+      <li class="list-group-item border-0">Open Chrome DevTools (F12)</li>
+      <li class="list-group-item border-0">Inspect the <strong>Network</strong> tab</li>
+      <li class="list-group-item border-0">Examine the failing request URL and headers</li>
+      <li class="list-group-item border-0">Try to reproduce the same request in <strong>Postman</strong></li>
+    </ol>
+  </div>
+
+  <div class="mt-5">
+    <h6>Stack Trace:</h6>
+    <pre class="p-3 border rounded bg-light" style="max-height: 400px; overflow: auto;">
+        <code>{{ error.details }}</code>
+      </pre>
+  </div>
+  }
+
+  <button class="btn btn-primary mt-3" routerLink="/deals">
+    <i class="fa fa-arrow-left"></i> Return to Home
+  </button>
+</div>

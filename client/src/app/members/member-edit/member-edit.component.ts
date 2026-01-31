@@ -1,15 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, inject, signal, viewChild, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
-import { Subscription } from 'rxjs';
 import { Member } from 'src/app/models/member';
-import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
 import { MemberService } from 'src/app/services/member.service';
 import { PhotoChangeComponent } from '../photo-change/photo-change.component';
+import { DatePipe } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -17,70 +16,62 @@ import { PhotoChangeComponent } from '../photo-change/photo-change.component';
   templateUrl: './member-edit.component.html',
   styleUrls: ['./member-edit.component.css'],
   encapsulation: ViewEncapsulation.None,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TabsModule,
-    PhotoChangeComponent
-  ]
+  imports: [FormsModule, TabsModule, PhotoChangeComponent, DatePipe]
 })
 export class MemberEditComponent implements OnInit {
-  member: Member;
-  user: User;
+  private accountService = inject(AccountService);
+  private memberService = inject(MemberService);
+  private toastr = inject(ToastrService);
+  private router = inject(Router);
 
-  OtherUser: Member;
-  subscription: Subscription;
+  editForm = viewChild<NgForm>('editForm');
 
-  @ViewChild('editForm') EForm: NgForm;
+  member = signal<Member | null>(null);
+  user = toSignal(this.accountService.currentUser$);
 
-  @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
-    if (this.EForm.dirty) {
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.editForm()?.dirty) {
       $event.returnValue = true;
     }
   }
 
-  constructor(
-    private accountService: AccountService,
-    private memberService: MemberService,
-    private toastr: ToastrService,
-    private router: Router
-  ) {
-    this.subscription = new Subscription();
-    const state = this.router.getCurrentNavigation().extras.state;
-    if (state)
-      this.OtherUser = state['OtherUser'];
-  }
+  ngOnInit() {
+    const state = history.state;
 
-  onImageError(event: any) {
-    event.target.src = './assets/user.png';
-  }
-
-  async ngOnInit() {
-    this.subscription.add(this.accountService.currentUser$.subscribe(user => {
-      this.user = user
+    if (state && state['OtherUser']) {
+      this.member.set(state['OtherUser']);
+    } else {
       this.loadMember();
-    }));
+    }
   }
 
-  async loadMember() {
-    if (this.OtherUser)
-      this.member = this.OtherUser;
-    else {
-      this.subscription.add(this.memberService.getMember(this.user.username).subscribe(member => this.member = member));
+  loadMember() {
+    const currentUser = this.user();
+    if (currentUser) {
+      this.memberService.getMember(currentUser.username).subscribe({
+        next: m => {
+          const memberClone = JSON.parse(JSON.stringify(m));
+          this.member.set(memberClone);
+        }
+      });
     }
   }
 
   updateMember() {
-    this.memberService.updateMember(this.member).subscribe(() => {
-      this.memberService.setCurrentMember(this.user);
-      this.toastr.success('Profile updated successfully');
-      this.EForm.reset(this.member);
-    })
+    const m = this.member();
+    const form = this.editForm();
+    if (!m || !form) return;
+
+    this.memberService.updateMember(m).subscribe({
+      next: () => {
+        this.toastr.success('Profile updated successfully');
+        form.reset(m);
+      }
+    });
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+  onImageError(event: any) {
+    event.target.src = './assets/user.png';
   }
 }

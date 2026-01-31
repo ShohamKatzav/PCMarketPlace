@@ -1,17 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { Product } from 'src/app/models/product';
 
 @Component({
   selector: 'app-product-card',
+  standalone: true,
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.css']
 })
-export class ProductCardComponent implements OnInit {
+export class ProductCardComponent {
+  product = input.required<Product>();
 
-  @Input() product!: Product;
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  productImageUrl = computed(() =>
+    this.product().productPhoto?.url ?? './assets/no-image.jpeg'
+  );
 }

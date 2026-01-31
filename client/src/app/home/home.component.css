@@ -1,3 +1,26 @@
 .container {
     height: 100vh;
 }
+
+.home-hero-container {
+    /* Using a linear gradient overlay so the text pops regardless of the image */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('/assets/Best-Computer-Stores-in-Canberra-696x462.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 85vh;
+    /* Covers most of the screen height */
+    border-radius: 15px;
+    margin-top: 1rem;
+}
+
+.hero-content {
+    background: rgba(0, 0, 0, 0.3);
+    /* Subtle backdrop for the text */
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    /* Modern glass-morphism effect */
+}
+
+.display-4 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}

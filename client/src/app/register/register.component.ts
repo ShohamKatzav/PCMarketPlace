@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { AccountService } from '../services/account.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -13,16 +13,12 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ]
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
+  private accountService = inject(AccountService);
 
   model: any = {};
   @Output() cancelRegister = new EventEmitter<boolean>();
   subscription: Subscription;
-
-  constructor(private accountService: AccountService) { }
-
-  ngOnInit(): void {
-  }
 
   register() {
     this.accountService.register(this.model).subscribe(

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { User } from './models/user';
 import { AccountService } from './services/account.service';
 import { CommonModule } from '@angular/common';
@@ -20,12 +20,11 @@ import { FooterComponent } from './footer/footer.component';
     FooterComponent
   ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  private accountService = inject(AccountService);
   title = 'PC Marketplace';
   users: any;
-
-  constructor(private accountService: AccountService) {
-  }
 
   ngOnInit(): void {
     this.setCurrentUser();

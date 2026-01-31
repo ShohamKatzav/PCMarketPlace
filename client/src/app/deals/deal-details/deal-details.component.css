@@ -1,0 +1,80 @@
+/* Ensure the product list items have enough width */
+app-product-list {
+    display: block;
+    width: 100%;
+}
+
+/* Target the individual cards to make them wider */
+::ng-deep .product-card {
+    width: 220px !important;
+    /* Increase width from standard narrow size */
+    min-height: auto !important;
+}
+
+/* Make the image take up more space */
+::ng-deep .product-card img {
+    height: 180px !important;
+    /* Larger fixed height */
+    object-fit: cover;
+}
+
+/* Fix the text wrapping issue */
+::ng-deep .product-card h5,
+::ng-deep .product-card p {
+    white-space: nowrap;
+    /* Prevent text from jumping to new lines */
+    overflow: hidden;
+    /* Hide overlap */
+    text-overflow: ellipsis;
+    /* Add '...' if it's too long */
+    width: 100%;
+    display: block;
+}
+
+/* Ensure icons scale with font */
+.fa {
+    font-size: 1.2rem;
+}
+
+.btn-buy,
+.btn-edit,
+.btn-delete {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-width: 2px;
+    border-style: solid;
+    background-color: transparent;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-buy {
+    color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.btn-buy:hover {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.btn-edit {
+    color: #f0ad4e;
+    border-color: #f0ad4e;
+}
+
+.btn-edit:hover {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-delete {
+    color: #d9534f;
+    border-color: #d9534f;
+}
+
+.btn-delete:hover {
+    background-color: #d9534f;
+    color: white;
+}

@@ -1,24 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-server-error',
   templateUrl: './server-error.component.html',
   styleUrls: ['./server-error.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
 })
-export class ServerErrorComponent implements OnInit {
-
+export class ServerErrorComponent {
+  private router = inject(Router);
   error: any;
 
-  constructor(private router: Router) {
-    const navigation = this.router.getCurrentNavigation();
-    this.error = navigation?.extras?.state?.error;// ?. optional chain
+  constructor() {
+    const navigation = this.router.currentNavigation();
+    this.error = navigation?.extras?.state?.['error'];
   }
-
-  ngOnInit(): void {
-  }
-
 }

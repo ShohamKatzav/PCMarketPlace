@@ -1,21 +1,24 @@
 <div class="row">
     <div class="col-md-6 col-12 text-center">
         <h4>Current Photo</h4>
-        <div class="row"
-            *ngIf="product?.productPhoto && product?.productPhoto.url !== './assets/no-image.jpeg' else noPhoto;">
+
+        @if (product()?.productPhoto && product()?.productPhoto?.url !== './assets/no-image.jpeg') {
+        <div class="row">
             <div>
-                <img [src]="product.productPhoto?.url" [alt]="product.productPhoto.url" class="img-thumbnail p-2 w-75">
+                <img [src]="product()?.productPhoto?.url" class="img-thumbnail p-2 w-75">
                 <div>
                     <button class="btn btn-sm btn-danger" type="button"
-                        (click)="this.product.id!=null ? deletePhoto(this.product.id) : deletePhotoProductDidntCreated()">
-                        <i class="fa fa-trash fa-3x"></i></button>
+                        (click)="product()?.id ? deletePhoto(product()!.id) : deletePhotoProductDidntCreated()">
+                        <i class="fa fa-trash fa-3x"></i>
+                    </button>
                 </div>
             </div>
         </div>
-        <ng-template #noPhoto>
-            <h4 class="mt-5">No photo</h4>
-        </ng-template>
+        } @else {
+        <h4 class="mt-5">No photo</h4>
+        }
     </div>
+
     <div class="col-md-6 col-12">
         <div class="row">
             <div class="col-md-6 container-fluid">
@@ -37,27 +40,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of uploader?.queue">
+                        @for (item of uploader?.queue; track item.file.name) {
+                        <tr>
                             <td><strong>{{ item?.file?.name }}</strong></td>
-                            <td *ngIf="uploader?.options.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }}
-                            </td>
+                            @if (uploader?.options?.isHTML5) {
+                            <td nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                            }
                         </tr>
+                        }
                     </tbody>
                 </table>
             </div>
 
-            <div class="col-md-6" *ngIf="uploader?.queue.length">
+            @if (uploader?.queue?.length) {
+            <div class="col-md-6">
                 <div>
-                    <div>
-                        Queue progress:
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar"
-                                [ngStyle]="{ 'width': uploader.progress + '%' }">
-                            </div>
+                    Queue progress:
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }">
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="mt-2">
                     <button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
                         [disabled]="!uploader.getNotUploadedItems().length">
                         <span class="fa fa-upload"></span> Upload
@@ -66,12 +70,12 @@
                         [disabled]="!uploader.isUploading">
                         <span class="fa fa-ban"></span> Cancel
                     </button>
-                    <button type="button" class="btn btn-danger btn-s" (click)="deletePhotoProductDidntCreated()"
-                        [disabled]="!uploader.queue.length">
+                    <button type="button" class="btn btn-danger btn-s" (click)="deletePhotoProductDidntCreated()">
                         <span class="fa fa-trash"></span> Remove
                     </button>
                 </div>
             </div>
+            }
         </div>
     </div>
 </div>

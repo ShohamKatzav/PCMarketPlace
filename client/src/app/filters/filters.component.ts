@@ -1,7 +1,8 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Category } from '../models/category';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CategoryService } from '../services/category.service';
+import { Category } from '../models/category';
 import { Price } from '../models/price';
 import { CommonModule } from '@angular/common';
 
@@ -10,37 +11,35 @@ import { CommonModule } from '@angular/common';
   selector: 'app-filters',
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent {
+  private categoryService = inject(CategoryService);
 
-  categories$: Observable<Category[]>;
-  price: Price = { min: null, max: null };
-  @Output() categoryChange = new EventEmitter<Category>();
+  categories = toSignal(this.categoryService.getCategories(), { initialValue: [] as Category[] });
+
+  @Output() categoryChange = new EventEmitter<string>();
   @Output() priceChange = new EventEmitter<Price>();
-  @ViewChild('minPriceInput') minPriceInput!: ElementRef;
-  @ViewChild('maxPriceInput') maxPriceInput!: ElementRef;
 
-  constructor(private categoryService: CategoryService) { }
+  filterForm = new FormGroup({
+    category: new FormControl('Any'),
+    min: new FormControl<number | null>(null),
+    max: new FormControl<number | null>(null)
+  });
 
-  ngOnInit(): void {
-    this.categories$ = this.categoryService.getCategories();
+  onSelectCategory() {
+    const selectedName = this.filterForm.value.category ?? 'Any';
+    this.categoryChange.emit(selectedName);
   }
 
-  changePrice(type: string, e) {
-    type == 'min' ? this.price.min = e.target.value : this.price.max = e.target.value
-  }
-  onSelectCategory(event) {
-    this.categoryChange.emit(event.target.value);
-  }
   onPriceFilter() {
-    this.priceChange.emit(this.price);
-  }
-  onInitPriceFilter() {
-    this.minPriceInput.nativeElement.value = '';
-    this.maxPriceInput.nativeElement.value = '';
-    this.price = { min: null, max: null };
-    this.priceChange.emit(this.price);
+    const { min, max } = this.filterForm.value;
+    this.priceChange.emit({ min: min ?? null, max: max ?? null });
   }
 
+  onInitFilter() {
+    this.filterForm.patchValue({ category: 'Any', min: null, max: null });
+    this.priceChange.emit({ min: null, max: null });
+    this.categoryChange.emit('Any');
+  }
 }

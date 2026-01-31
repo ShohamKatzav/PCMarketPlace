@@ -1,30 +1,30 @@
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Member } from 'src/app/models/member';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { MemberService } from 'src/app/services/member.service';
 import { MemberCardComponent } from '../member-card/member-card.component';
 
 @Component({
+  standalone: true,
   selector: 'app-member-list',
   templateUrl: './member-list.component.html',
   styleUrls: ['./member-list.component.css'],
-  imports: [
-    CommonModule,
-    MemberCardComponent
-  ]
+  imports: [CommonModule, MemberCardComponent, FormsModule]
 })
-export class MemberListComponent implements OnInit {
+export class MemberListComponent {
+  private memberService = inject(MemberService);
 
-  members$: Observable<Member[]>;
-  constructor(private memberService: MemberService) { }
+  private membersRaw = toSignal(this.memberService.getMembers(), { initialValue: [] });
 
-  ngOnInit(): void {
-    this.members$ = this.memberService.getMembers();
-  }
+  searchTerm = signal('');
 
-  onImageError(event: any) {
-    event.target.src = './assets/user.png';
-  }
+  filteredMembers = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    return this.membersRaw().filter(m =>
+      m.userName.toLowerCase().includes(term) ||
+      m.knownAs?.toLowerCase().includes(term)
+    );
+  });
 
 }

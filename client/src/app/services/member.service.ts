@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -11,13 +11,13 @@ import { User } from '../models/user';
   providedIn: 'root'
 })
 export class MemberService {
+  private http = inject(HttpClient);
+
   baseUrl = environment.apiUrl;
   members: Member[] = [];
 
   private currentMemberSource$ = new ReplaySubject<Member>(1);
   public currentMember$ = this.currentMemberSource$.asObservable();
-
-  constructor(private http: HttpClient) { }
 
   getMembers(): Observable<Member[]> {
     return this.http.get<Member[]>(`${this.baseUrl}users`).pipe(tap(members => this.members = members));
@@ -37,7 +37,7 @@ export class MemberService {
     }));
   }
   deletePhoto(userName: string) {
-    return this.http.delete(`${this.baseUrl}users/delete-photo`, {headers: {"UserName":userName.toString()}});
+    return this.http.delete(`${this.baseUrl}users/delete-photo`, { headers: { "UserName": userName.toString() } });
   }
 
   setCurrentMember(user: User) {

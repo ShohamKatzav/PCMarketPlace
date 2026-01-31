@@ -1,52 +1,43 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { FileUploader, FileUploadModule } from 'ng2-file-upload';
-import { Subscription } from 'rxjs';
+import { Component, inject, model, OnInit } from '@angular/core';
+import { DecimalPipe, NgClass, NgStyle } from '@angular/common';
+import { FileUploadModule, FileUploader } from 'ng2-file-upload';
 import { Member } from 'src/app/models/member';
-import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
 import { MemberService } from 'src/app/services/member.service';
 import { environment } from 'src/environments/environment';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-photo-change',
+  standalone: true,
+  imports: [NgClass, NgStyle, DecimalPipe, FileUploadModule],
   templateUrl: './photo-change.component.html',
-  styleUrls: ['./photo-change.component.css'],
-  imports: [
-    CommonModule,
-    FileUploadModule
-  ]
+  styleUrls: ['./photo-change.component.css']
 })
 export class PhotoChangeComponent implements OnInit {
-  uploader: FileUploader;
-  hasBaseDropZoneOver: boolean;
+  private accountService = inject(AccountService);
+  private memberService = inject(MemberService);
+
+  member = model.required<Member>();
+
+  user = toSignal(this.accountService.currentUser$);
+
+  uploader!: FileUploader;
+  hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
-  user: User;
-  userSubscription: Subscription;
-
-  @Input() member: Member;
-  constructor(private accountService: AccountService, private memberService: MemberService) {
-    this.userSubscription = this.accountService.currentUser$.subscribe(user => this.user = user);
-  }
-
 
   ngOnInit() {
-    if (this.member)
-      this.initializeUploader();
+    this.initializeUploader();
   }
 
+  initializeUploader() {
+    const currentUser = this.user();
+    if (!currentUser) return;
 
-  deletePhoto(userName: string) {
-    this.memberService.deletePhoto(userName).subscribe(() => {
-      this.member.appUserPhoto.url = "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png";
-    });
-  }
-
-  async initializeUploader() {
     this.uploader = new FileUploader({
-      url: this.baseUrl + 'users/add-photo',
-      headers: [{ name: 'UserName', value: this.member.userName }],
-      authToken: 'Bearer ' + this.user.token,
+      url: `${this.baseUrl}users/add-photo`,
+      headers: [{ name: 'UserName', value: this.member().userName }],
+      authToken: `Bearer ${currentUser.token}`,
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
@@ -54,27 +45,26 @@ export class PhotoChangeComponent implements OnInit {
       maxFileSize: 10 * 1024 * 1024
     });
 
+    this.uploader.onAfterAddingFile = (file) => (file.withCredentials = false);
 
-    this.uploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    }
-
-    this.uploader.onSuccessItem = (item, response, status, headers) => {
+    this.uploader.onSuccessItem = (item, response) => {
       if (response) {
         const photo = JSON.parse(response);
-        this.member.appUserPhoto = photo;
+        this.member.update(m => ({ ...m, appUserPhoto: photo }));
       }
-    }
+    };
   }
 
-  fileOverBase(e: any): void {
+  deletePhoto(userName: string) {
+    this.memberService.deletePhoto(userName).subscribe(() => {
+      this.member.update(m => ({
+        ...m,
+        appUserPhoto: { ...m.appUserPhoto, url: "https://res.cloudinary.com/diamedrhv/image/upload/v1675783506/user_p3sxnc.png" }
+      }));
+    });
+  }
+
+  fileOverBase(e: boolean): void {
     this.hasBaseDropZoneOver = e;
   }
-
-  ngOnDestroy() {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-  }
-
 }

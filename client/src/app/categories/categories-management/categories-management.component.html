@@ -1,36 +1,63 @@
-<div class="container">
-    <h1 class="mb-5 pb-5 text-center">Current categories:</h1>
-    <ul
-        *ngFor="let category of categories$ | async | paginate: {itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItemsCount } let i = index">
-        <li>
-            <div class="input-group">
-                <div class="col-md-3 col-8">
-                    <div class="text-break">{{category.name}}</div>
-                </div>
-                <div class="col-1 ml-md-0 ml-5">
-                    <button type='button' (click)="removeCategory(category)" class="btn btn-sm btn-danger">
-                        <i class="fa fa-trash fa-2x"></i>
-                    </button>
-                </div>
-                <div class="col-md-4 ml-lg-5 mr-lg-5 ml-md-3 mr-md-3 col-8">
-                    <input class="form-control" name="categoryToEdit" [(ngModel)]="categoryToEdit[i]">
-                </div>
-                <div class="col-1 ml-md-0 ml-5">
-                    <button type='button' (click)="editCategory(category, categoryToEdit[i])"
-                        class="btn btn-sm btn-info btn-square">
-                        <i class="fa fa-pencil fa-2x"></i>
-                    </button>
-                </div>
+<div class="container-fluid mt-4 px-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="fw-bold mb-0 text-dark">CATEGORY MANAGEMENT</h1>
+        </div>
+
+        <div class="col-lg-6 d-flex justify-content-end">
+            <div class="input-group shadow-sm" style="max-width: 400px;">
+                <input type="text" class="form-control" placeholder="New category name..."
+                    [ngModel]="categoryNameToAdd()" (ngModelChange)="categoryNameToAdd.set($event)"
+                    (keyup.enter)="addCategory(categoryNameToAdd())">
+                <button class="btn btn-success px-4" (click)="addCategory(categoryNameToAdd())">
+                    <i class="fa fa-plus me-1"></i> Add
+                </button>
             </div>
-        </li>
-    </ul>
-    <div class="d-flex justify-content-center flex-wrap mt-5">
-        <input class="align-self-center" name="categoryNameToAdd" [(ngModel)]="categoryNameToAdd">
-        <button (click)="addCategory(categoryNameToAdd)" type='button' class="btn btn-sm btn-primary m-3">
-            <i class="fa fa-plus fa-2x">Add category</i>
-        </button>
+        </div>
     </div>
-    <div class="d-flex justify-content-center mt-5 pt-5" *ngIf="(categories$| async)?.length != 0">
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted small">
+                    <tr>
+                        <th class="ps-4 py-3" style="width: 10%">ID</th>
+                        <th style="width: 65%">NAME</th>
+                        <th class="text-end pe-4" style="width: 25%">ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (cat of categories() | paginate: { itemsPerPage: pageSize(), currentPage: currentPage() };
+                    track cat.id) {
+                    <tr>
+                        <td class="ps-4 text-secondary">#{{ cat.id }}</td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm w-75 border-0 bg-transparent fw-bold"
+                                [ngModel]="cat.name" #inputRef>
+                        </td>
+                        <td class="pe-4 text-end">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button class="btn btn-link p-0"
+                                    [style.color]="inputRef.value !== cat.name ? 'blue' : 'grey'"
+                                    [disabled]="inputRef.value === cat.name" (click)="editCategory(cat, inputRef.value)"
+                                    title="Save Changes">
+                                    <i class="fa fa-save fs-5"></i>
+                                </button>
+
+                                <button class="btn btn-link text-danger p-0" (click)="removeCategory(cat)"
+                                    title="Delete">
+                                    <i class="fa fa-trash fs-5"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
         <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
     </div>
 </div>
