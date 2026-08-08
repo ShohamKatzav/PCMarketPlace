@@ -11,14 +11,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "20.3.16",
-    "@angular/common": "20.3.16",
-    "@angular/compiler": "20.3.16",
-    "@angular/core": "20.3.16",
-    "@angular/forms": "20.3.16",
-    "@angular/platform-browser": "20.3.16",
-    "@angular/platform-browser-dynamic": "20.3.16",
-    "@angular/router": "20.3.16",
+    "@angular/animations": "20.3.27",
+    "@angular/common": "20.3.27",
+    "@angular/compiler": "20.3.27",
+    "@angular/core": "20.3.27",
+    "@angular/forms": "20.3.27",
+    "@angular/platform-browser": "20.3.27",
+    "@angular/platform-browser-dynamic": "20.3.27",
+    "@angular/router": "20.3.27",
     "@babel/traverse": "^7.23.2",
     "@ngrx/effects": "^20.1.0",
     "@ngrx/store": "^20.1.0",
@@ -32,20 +32,20 @@
     "ngx-pagination": "^6.0.3",
     "ngx-spinner": "^19.0.0",
     "ngx-toastr": "^19.1.0",
-    "qs": "^6.14.1",
+    "qs": "^6.15.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "webpack": "^5.104.0",
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.3.15",
-    "@angular/cli": "^20.3.15",
-    "@angular/compiler-cli": "^20.3.16",
+    "@angular-devkit/build-angular": "^20.3.33",
+    "@angular/cli": "^20.3.33",
+    "@angular/compiler-cli": "^20.3.27",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.11.1",
-    "@typescript-eslint/eslint-plugin": "^6.2.1",
-    "@typescript-eslint/parser": "^6.2.1",
+    "@typescript-eslint/eslint-plugin": "^8.66.0",
+    "@typescript-eslint/parser": "^8.66.0",
     "eslint": "^8.46.0",
     "jasmine-core": "~3.8.0",
     "karma": "^6.4.4",
@@ -57,7 +57,12 @@
   },
   "overrides": {
     "@angular/cli": {
-      "@modelcontextprotocol/sdk": "1.24.0"
-    }
+      "@modelcontextprotocol/sdk": "1.30.0"
+    },
+    "less": "4.8.1",
+    "image-size": "2.0.2",
+    "uuid": "11.1.1",
+    "sockjs": "0.3.24",
+    "webpack-dev-server": "6.0.0"
   }
 }
